@@ -1,0 +1,21 @@
+.circle-loader-wrapper {
+  > .circle-loader {
+    width: 1em;
+    height: 1em;
+    margin: .25em;
+    display: inline-flex;
+    border: .2em solid transparent;
+    border-radius: 50%;
+    border-left-color: $white;
+    flex: none;
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    animation: spin 1.2s linear infinite;
+  }
+
+  > .circle-loader-text { margin-left: .25em; }
+}
+

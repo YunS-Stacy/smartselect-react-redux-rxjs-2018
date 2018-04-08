@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es5",
+    "lib": [
+      "es2015",
+      "es2017",
+      "dom"
+    ],
+    "jsx": "react",
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
+  },
+  // "include": [
+  //   "./src/**/**/*"
+  // ],
+  "exclude": [
+    "src/**/*.test.*",
+    "node_modules"
+  ]
+}

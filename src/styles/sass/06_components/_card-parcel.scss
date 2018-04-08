@@ -1,0 +1,11 @@
+.card-info-front {
+  display: flex;
+  flex-direction: column;
+
+  > .project-actions > .btn.save {
+    padding: 0;
+    width: 9em;
+    height: 2.25em;
+    justify-content: space-between;
+  }
+}

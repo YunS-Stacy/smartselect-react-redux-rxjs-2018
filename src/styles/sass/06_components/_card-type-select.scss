@@ -1,0 +1,28 @@
+.card-type-select {
+  display: flex;
+  
+  > .typelist-wrapper > .dropdown-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    > .dropdown {
+      width: 60%;
+    }
+
+    > .confirmation-wrapper {
+      display: inline-flex;
+      flex-direction: column;
+      
+      > .btn {
+        text-align: left;
+
+        &.approve.confirmed {
+          color: $dark-blue;
+        }
+      }
+
+      
+    }
+  }
+}
