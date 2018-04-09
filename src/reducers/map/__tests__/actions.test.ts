@@ -1,6 +1,9 @@
-import { setMap } from '../actions';
-import { MAP_SET, ANGLE_SET } from '../../../constants/action-types';
+import { setMap, initMap, setInstance } from '../actions';
+import { MAP_SET, MAP_INIT, INSTANCE_SET } from '../../../constants/action-types';
+import { Map } from 'mapbox-gl';
 
+const element = document.createElement('div');
+const instance = new Map();
 describe('actions', () => {
   it('should create an action to toggle the mode', () => {
     const expectedAction = {
@@ -10,14 +13,19 @@ describe('actions', () => {
     expect(setMap('welcome')).toEqual(expectedAction);
   });
 
-  it('should create an action to set the map angle', () => {
+  it('should create an action to init map', () => {
     const expectedAction = {
-      type: ANGLE_SET,
-      payload: {
-        bearing: 1,
-        // center:
-      },
+      type: MAP_INIT,
+      payload: element,
     };
-    expect(setMap('welcome')).toEqual(expectedAction);
+    expect(initMap(element)).toEqual(expectedAction);
+  });
+
+  it('should create an action to set map instance', () => {
+    const expectedAction = {
+      type: INSTANCE_SET,
+      payload: instance,
+    };
+    expect(setInstance(instance)).toEqual(expectedAction);
   });
 });

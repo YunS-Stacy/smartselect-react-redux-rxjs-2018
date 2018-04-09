@@ -19,6 +19,10 @@ export const PITCH_SET = 'PITCH_SET';
 export type PITCH_SET = typeof PITCH_SET;
 export const ANGLE_SET = 'ANGLE_SET';
 export type ANGLE_SET = typeof ANGLE_SET;
+export const INSTANCE_SET = 'INSTANCE_SET';
+export type INSTANCE_SET = typeof INSTANCE_SET;
+export const IS_LOADED = 'IS_LOADED';
+export type IS_LOADED = typeof IS_LOADED;
 
 /**
  * Global

@@ -27,7 +27,9 @@ import { combineReducers } from 'redux';
 // import scenario from './scenario/index';
 // import modals from './modals/index';
 import app from './app';
+import map from './map';
 
 export default combineReducers({
   app,
+  map,
 });

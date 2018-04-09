@@ -16,17 +16,19 @@ const style = {
     display: 'inline-flex',
     position: 'relative',
   },
-  button: {
-    width: '8.8em',
-    height: '3.2em',
-    borderRadius: '8px',
-    fontSize: '1.2em',
-    backgroundColor: 'rgba(255,255,255,0.8)',
-    color: 'rgb(82, 186, 213)',
-  },
+  // button: {
+  //   width: '8.8em',
+  //   height: '3.2em',
+  //   borderRadius: '8px',
+  //   fontSize: '1.2em',
+  //   backgroundColor: 'rgba(255,255,255,0.8)',
+  //   color: 'rgb(82, 186, 213)',
+  // },
 };
 
 const MainBtn = ({ loaded, handleToggleApp }: Props) => (
+  <div className="main-btn-container">
+  {loaded === true ? (
   <Button
     // style={{textShadow: '0'}}
     onClick={(e) => {
@@ -34,12 +36,24 @@ const MainBtn = ({ loaded, handleToggleApp }: Props) => (
       e.preventDefault();
       handleToggleApp();
     }}
+    className="main-btn"
     // }}//use bind(this), if not using constructor
     // id='btn-get-started-loader'
-    style={style.button}
+    // style={style.button}
   >
     GET STARTED
   </Button>
+  ) : (
+    <RefreshIndicator
+      size={60}
+      left={0}
+      top={6}
+      status="loading"
+      // style={style.refresh}
+    />
+  )}
+  </div>
+
 );
 // }
 // export default class MainButton extends Component{

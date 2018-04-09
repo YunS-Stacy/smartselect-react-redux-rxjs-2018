@@ -8,7 +8,7 @@
 '02_tools/mixins';
 
 @import
-'03_vendors/calcite-web',
+'03_vendors/mapbox-gl',
 '03_vendors/include-media';
 
 @import
@@ -19,21 +19,20 @@
 // '05_basics/type';
 
 @import
-'06_components/app-container',
-'06_components/card-import',
-'06_components/card-inputs',
-'06_components/card-outputs',
-'06_components/card-parcel',
+'06_components/app-container';
+// '06_components/card-import',
+// '06_components/card-inputs',
+// '06_components/card-outputs',
+// '06_components/card-parcel',
 
-'06_components/card-type-select',
-'06_components/circle-loader',
-'06_components/drawer-scenario-list',
-'06_components/modal-container',
+// '06_components/card-type-select',
+// '06_components/circle-loader',
+// '06_components/drawer-scenario-list',
+// '06_components/modal-container',
 
-'06_components/panel-main',
+// '06_components/panel-main',
 
-'06_components/stepper';
+// '06_components/stepper';
 @import
-'07_overrides/calcite-fix',
 '07_overrides/web-default';
 

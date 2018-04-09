@@ -17,12 +17,16 @@ import { combineReducers } from 'redux';
 
 import bearing from './bearing';
 import center from './center';
+import instance from './instance';
+import loaded from './loaded';
 import pitch from './pitch';
 import zoom from './zoom';
 
 export default combineReducers({
   bearing,
   center,
+  instance,
+  loaded,
   pitch,
   zoom,
 });

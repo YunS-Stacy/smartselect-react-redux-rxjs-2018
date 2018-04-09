@@ -21,8 +21,8 @@ export interface RootState {
     instance: mapbox.Map;
     bounds: number[][];
     center: number[];
-    pitch: number[];
-    zoom: number[];
+    pitch: number;
+    zoom: number;
     bearing: number;
     style: {
       url: string;

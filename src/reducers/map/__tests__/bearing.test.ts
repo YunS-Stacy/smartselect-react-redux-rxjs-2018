@@ -1,5 +1,5 @@
 import reducer, { initialState } from '../bearing';
-import { MAP_SET, ANGLE_SET } from '../../../constants/action-types';
+import { MAP_SET } from '../../../constants/action-types';
 import { RootState } from '../../../types';
 
 const state = 0;
@@ -14,13 +14,6 @@ describe('map reducer', () => {
     expect(reducer(state, {
       payload,
       type: MAP_SET,
-    })).toEqual(9.2);
-  });
-
-  it('should handle ANGLE_SET', () => {
-    expect(reducer(state, {
-      payload,
-      type: ANGLE_SET,
     })).toEqual(9.2);
   });
 });

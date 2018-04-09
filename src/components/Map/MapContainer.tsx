@@ -2,23 +2,17 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import MainBtn from './MainBtn';
+import Map from './Map';
 import { toggleApp } from '../../reducers/app/actions';
+import { initMap } from '../../reducers/map/actions';
 
 import { RootState } from '../../types';
 import { Dispatch } from '../../types/redux';
 
-const mapStateToProps = ({
-  app,
-  map: { loaded },
-}: RootState) => ({
-  app,
-  loaded,
-});
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  handleToggleApp: bindActionCreators(toggleApp, dispatch),
+  // handleToggleApp: bindActionCreators(toggleApp, dispatch),
+  handleInitMap: bindActionCreators(initMap, dispatch),
 });
 
-const MainBtnContainer = connect(mapStateToProps, mapDispatchToProps)(MainBtn);
-export default MainBtnContainer;
+const MapContainer = connect(null, mapDispatchToProps)(Map);
+export default MapContainer;

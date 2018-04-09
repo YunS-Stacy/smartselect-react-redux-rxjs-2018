@@ -37,20 +37,6 @@ if (process.env.NODE_ENV === 'production') {
   ));
 
   if (module.hot) {
-    // enhancers
-    module.hot.accept('./middleware/sceneview', () => {
-      const nextStore = require('./store/store').default;
-      // tslint:disable-next-line
-      console.log('HMR accept store replacement');
-      renderRoot((
-        <AppContainer>
-          <Provider store={nextStore}>
-            <Home />
-          </Provider>
-        </AppContainer>
-      ));
-    });
-
     // app
     module.hot.accept('./components/Home', () => {
       const NextApp = require('./components/Home').default;
