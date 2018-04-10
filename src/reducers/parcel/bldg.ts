@@ -14,10 +14,12 @@
  *
  */
 import { ALL_RESET, SCENARIO_RESET, STATES_SWITCH, PARCEL_TYPE_SET } from '../../constants/action-types';
+import { RootState } from '../../types';
+import { Action } from 'redux';
 
-const initialState = { value: null, status: null };
+const initialState: RootState['parcel']['bldg'] = { value: null, status: null };
 
-export default (state = initialState, { type, payload }) => {
+export default (state = initialState, { type, payload }: Action & { payload?: any }) => {
   switch (type) {
     case STATES_SWITCH:
       return payload.parcel.bldg;

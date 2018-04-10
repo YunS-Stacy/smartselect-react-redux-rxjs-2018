@@ -41,12 +41,13 @@ module.exports = (env = {}) => {
       PATHS.src + '/index.tsx',
     ]
   return {
+    node: {
+      fs: 'empty'
+    },
     cache: true,
     devtool: isDev ? 'eval-source-map' : 'source-map',
     devServer: DEV_SERVER,
-
     context: PATHS.root,
-
     entry: {
       'main': entry
     },

@@ -1,6 +1,7 @@
 import { combineEpics, ActionsObservable } from 'redux-observable';
 import * as mapboxgl from 'mapbox-gl';
 import * as mapboxDraw from '@mapbox/mapbox-gl-draw';
+import * as MapboxGeocoder from 'mapbox-gl-geocoder';
 
 import { Observable } from 'rxjs/Rx';
 import {
@@ -33,7 +34,7 @@ let map$: Observable<mapboxgl.Map>;
 
 const scaleControl = new mapboxgl.ScaleControl({ unit: 'imperial' });
 const geolocateControl = new mapboxgl.GeolocateControl();
-const naviControl = new mapboxgl.NavigationControl(),;
+const naviControl = new mapboxgl.NavigationControl();
 const drawControl = new mapboxDraw({
   displayControlsDefault: true,
   controls: {
@@ -65,11 +66,11 @@ const initMapEpic = (action$: ActionsObservable<Action>) => action$
   // get map instance
   tap(instance => map$ = of(instance)),
   // dispatch action
-  mapTo(mapLoaded())
+  mapTo(mapLoaded()),
 );
 
 export const epics = combineEpics(
-  initMapEpic
+  initMapEpic,
 );
 
 export default epics;
