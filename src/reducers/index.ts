@@ -16,20 +16,12 @@
 
 import { combineReducers } from 'redux';
 
-// import webscene from './webscene/index';
-// import selection from './selection/index';
-// import stats from './stats/index';
-// import global from './global/index';
-// import proforma from './proforma/index';
-// import parcel from './parcel/index';
-// import typelists from './typelists/index';
-// import geometry from './geometry/index';
-// import scenario from './scenario/index';
-// import modals from './modals/index';
 import app from './app';
 import map from './map';
+import mode from './mode';
 
 export default combineReducers({
   app,
   map,
+  mode,
 });

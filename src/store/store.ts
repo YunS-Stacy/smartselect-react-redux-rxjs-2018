@@ -28,12 +28,12 @@ function configureStore(initialState?: RootState) {
 
   // compose enhancers
   const enhancer = composeEnhancers(
-    applyMiddleware(...middlewares)
+    applyMiddleware(...middlewares),
   );
   const store = createStore(
     reducers,
     initialState!,
-    enhancer
+    enhancer,
   );
 
   return store;

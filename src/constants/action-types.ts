@@ -1,8 +1,10 @@
 /**
- * Mode
+ * App
  */
 export const APP_TOGGLE = 'APP_TOGGLE';
 export type APP_TOGGLE = typeof APP_TOGGLE;
+export const MODE_SET = 'MODE_SET';
+export type MODE_SET = typeof MODE_SET;
 
 /**
  * Map

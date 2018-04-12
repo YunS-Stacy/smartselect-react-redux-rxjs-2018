@@ -15,6 +15,7 @@ interface Stats {
 
 export interface RootState {
   app: boolean;
+  mode: string;
   query: boolean;
   map: {
     loaded: boolean;
