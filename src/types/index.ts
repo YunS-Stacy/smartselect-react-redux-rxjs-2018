@@ -15,11 +15,12 @@ interface Stats {
 
 export interface RootState {
   app: boolean;
-  mode: string;
   query: boolean;
   map: {
+    mode: 'intro' | 'query' | 'measure' | 'build' | 'decide' | null;
+    layers: Map<string, string>; // 'footprint', 'visible'
     loaded: boolean;
-    instance: mapbox.Map;
+    instance: any;
     bounds: number[][];
     center: number[];
     pitch: number;

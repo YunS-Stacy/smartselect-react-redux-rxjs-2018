@@ -18,10 +18,8 @@ import { combineReducers } from 'redux';
 
 import app from './app';
 import map from './map';
-import mode from './mode';
 
 export default combineReducers({
   app,
   map,
-  mode,
 });

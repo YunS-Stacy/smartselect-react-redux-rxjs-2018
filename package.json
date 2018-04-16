@@ -5,13 +5,13 @@
   "dependencies": {
     "@antv/data-set": "^0.8.6",
     "@mapbox/mapbox-gl-draw": "^1.0.7",
+    "@mapbox/mapbox-gl-geocoder": "^2.2.0",
     "@types/arcgis-js-api": "^4.6.0",
     "antd": "^3.4.0",
     "bizcharts": "^3.1.4-beta.3",
     "esri-loader": "^2.2.0",
     "file-saver": "^1.3.3",
     "mapbox-gl": "^0.44.2",
-    "mapbox-gl-geocoder": "^2.0.1",
     "material-ui": "^0.20.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
@@ -20,7 +20,7 @@
     "redux": "^3.7.2",
     "redux-observable": "^0.18.0",
     "redux-thunk": "^2.2.0",
-    "rxjs": "^5.5.8",
+    "rxjs": "^5.5.9",
     "ssf": "^0.10.1",
     "xlsx": "^0.11.17",
     "xlsx-calc": "^0.3.5"

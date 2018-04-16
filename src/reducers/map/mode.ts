@@ -2,7 +2,7 @@ import { MODE_SET } from '../../constants/action-types';
 import { RootState } from '../../types';
 import { Action } from 'redux';
 
-const initialState: RootState['mode'] = null;
+const initialState: RootState['map']['mode'] = null;
 
 export default (state = initialState, { type, payload }: Action & { payload?: string }) => {
   switch (type) {

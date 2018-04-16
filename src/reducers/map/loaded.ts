@@ -4,10 +4,10 @@ import { Action } from 'redux';
 
 const initialState: RootState['map']['loaded'] = false;
 
-export default (state = initialState, { type, payload }: Action & { payload?: any }) => {
+export default (state = initialState, { type, payload }: Action & { payload?: boolean }) => {
   switch (type) {
     case IS_LOADED:
-      return true;
+      return payload || !state;
     default:
       return state;
   }

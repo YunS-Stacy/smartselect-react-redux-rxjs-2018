@@ -13,6 +13,8 @@ export const MAP_INIT = 'MAP_INIT';
 export type MAP_INIT = typeof MAP_INIT;
 export const MAP_SET = 'MAP_SET';
 export type MAP_SET = typeof MAP_SET;
+export const MAP_RESET = 'MAP_RESET';
+export type MAP_RESET = typeof MAP_RESET;
 export const BEARING_SET = 'BEARING_SET';
 export type BEARING_SET = typeof BEARING_SET;
 export const CENTER_SET = 'CENTER_SET';
@@ -25,6 +27,8 @@ export const INSTANCE_SET = 'INSTANCE_SET';
 export type INSTANCE_SET = typeof INSTANCE_SET;
 export const IS_LOADED = 'IS_LOADED';
 export type IS_LOADED = typeof IS_LOADED;
+export const LAYER_SET = 'LAYER_SET';
+export type LAYER_SET = typeof LAYER_SET;
 
 /**
  * Global
