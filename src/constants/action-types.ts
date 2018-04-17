@@ -3,14 +3,14 @@
  */
 export const APP_TOGGLE = 'APP_TOGGLE';
 export type APP_TOGGLE = typeof APP_TOGGLE;
-export const MODE_SET = 'MODE_SET';
-export type MODE_SET = typeof MODE_SET;
 
 /**
  * Map
  */
 export const MAP_INIT = 'MAP_INIT';
 export type MAP_INIT = typeof MAP_INIT;
+export const MODE_SET = 'MODE_SET';
+export type MODE_SET = typeof MODE_SET;
 export const MAP_SET = 'MAP_SET';
 export type MAP_SET = typeof MAP_SET;
 export const MAP_RESET = 'MAP_RESET';
@@ -29,14 +29,19 @@ export const IS_LOADED = 'IS_LOADED';
 export type IS_LOADED = typeof IS_LOADED;
 export const LAYER_SET = 'LAYER_SET';
 export type LAYER_SET = typeof LAYER_SET;
+export const STEP_SET = 'STEP_SET';
+export type STEP_SET = typeof STEP_SET;
+export const STEP_ADD = 'STEP_ADD';
+export type STEP_ADD = typeof STEP_ADD;
+export const STEP_MINUS = 'STEP_MINUS';
+export type STEP_MINUS = typeof STEP_SET;
 
 /**
  * Global
  */
 export const GLOBAL_SET = 'GLOBAL_SET';
 export type GLOBAL_SET = typeof GLOBAL_SET;
-export const STEP_SET = 'STEP_SET';
-export type STEP_SET = typeof STEP_SET;
+
 export const LOADING_SET = 'LOADING_SET';
 export type LOADING_SET = typeof LOADING_SET;
 export const LOADINGTEXT_SET = 'LOADINGTEXT_SET';

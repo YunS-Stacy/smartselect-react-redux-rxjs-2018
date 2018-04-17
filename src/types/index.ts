@@ -1,4 +1,3 @@
-import { WorkBook } from 'xlsx';
 import * as mapbox from 'mapbox-gl';
 interface Stats {
   show: boolean;
@@ -17,6 +16,7 @@ export interface RootState {
   app: boolean;
   query: boolean;
   map: {
+    step: number;
     mode: 'intro' | 'query' | 'measure' | 'build' | 'decide' | null;
     layers: Map<string, string>; // 'footprint', 'visible'
     loaded: boolean;
@@ -52,118 +52,5 @@ export interface RootState {
       lines: any[];
       pts: any[];
     };
-  };
-  user: {
-    identity: any;
-  };
-  webscene: {
-    current: {
-      id: number;
-    };
-  };
-  selection: { layer: string; OID: number }[];
-  vizType: string;
-  stats: Stats;
-  global: {
-    loading: boolean;
-    loadingText: string;
-    step: number;
-  };
-  proforma: {
-    workbook: WorkBook;
-    inputs: {
-      name: string;
-      sheet: string;
-      cell: string;
-      value: string | number;
-      [key: string]: any;
-    }[];
-    inputCates: string[];
-    selectedCate: string;
-    outputs: {
-      name: string;
-      sheet: string;
-      cell: string;
-      value: string | number;
-      [key: string]: any;
-    }[];
-  };
-  parcel: {
-    info: {
-      OBJECTID: number;
-      [key: string]: any;
-    }[];
-    zoning: {
-      value: string;
-      status: boolean;
-    };
-    bldg: {
-      value: string;
-      status: boolean;
-    };
-  };
-  typelists: {
-    zoning: string[];
-    bldg: string[];
-  };
-  geometry: {
-    response: {
-      [key: string]: any;
-    };
-    params: object;
-    override: {
-      [key: string]: any;
-    };
-  };
-  scenario: {
-    compare?: string[];
-    current?: string;
-    services?: {
-      [key: string]: {
-        serviceItemId?: string;
-        status?: string;
-      };
-    };
-    states?: {
-      [key: string]: {
-        src?: string;
-        status?: string;
-        parcel?: {
-          info: object[];
-          zoning: {
-            value: string;
-            status: boolean;
-          };
-          bldg: {
-            value: string;
-            status: boolean;
-          };
-        };
-        proforma?: {
-          workbook: WorkBook;
-          inputs: {
-            name: string;
-            sheet: string;
-            cell: string;
-            value: string | number;
-            [key: string]: any;
-          }[];
-          inputCates: string[];
-          selectedCate: string;
-          outputs: {
-            name: string;
-            sheet: string;
-            cell: string;
-            value: string | number;
-            [key: string]: any;
-          }[];
-        };
-        stats?: Stats;
-      };
-    };
-    show?: boolean;
-  };
-  modals: {
-    [key: string]: boolean;
   };
 }

@@ -1,14 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
+import * as injectTapEventPlugin from 'react-tap-event-plugin';
+
 // tslint:disable:no-import-side-effect
 // side-effect imports here
 import './styles/sass/main.scss';
 
-// import {
-//   APP_ID,
-//   APP_PORTAL_URL
-// } from './constants/app-constants';
+injectTapEventPlugin();
 
 import { Provider } from 'react-redux';
 import Home from './components/Home';

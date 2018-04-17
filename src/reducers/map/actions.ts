@@ -1,5 +1,5 @@
 import {
-  MAP_SET, MAP_INIT, INSTANCE_SET, IS_LOADED, MAP_RESET, LAYER_SET, MODE_SET
+  MAP_SET, MAP_INIT, INSTANCE_SET, IS_LOADED, MAP_RESET, LAYER_SET, MODE_SET, STEP_SET, STEP_MINUS, STEP_ADD
 } from '../../constants/action-types';
 
 export const setMap = (payload: string) => ({
@@ -32,4 +32,17 @@ export const setLayer = (name: string, viz: string) => ({
 export const setMode = (payload: string) => ({
   payload,
   type: MODE_SET,
+});
+
+export const setStep = (payload: number) => ({
+  payload,
+  type: STEP_SET,
+});
+
+export const addStep = () => ({
+  type: STEP_ADD,
+});
+
+export const minusStep = () => ({
+  type: STEP_MINUS,
 });

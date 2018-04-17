@@ -4,13 +4,9 @@ import * as mapboxDraw from '@mapbox/mapbox-gl-draw';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 import { Observable } from 'rxjs/Rx';
-import {
-  of,
-} from 'rxjs/observable/of';
+import { of } from 'rxjs/observable/of';
 
-import {
-  interval,
-} from 'rxjs/observable/interval';
+import { interval } from 'rxjs/observable/interval';
 
 import { _throw } from 'rxjs/observable/throw';
 import {
@@ -35,9 +31,8 @@ import {
 import { APP_TOGGLE, MAP_INIT, IS_LOADED, INSTANCE_SET, MODE_SET, MAP_RESET } from '../constants/action-types';
 import { updateHighlights } from '../utils/highlights';
 import { Store, Action } from '../types/redux';
-import { setInstance, mapLoaded, resetMap, setLayer } from '../reducers/map/actions';
+import { setInstance, mapLoaded, resetMap, setLayer, setMode } from '../reducers/map/actions';
 import { MAPBOX_TOKEN, MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES } from '../constants/app-constants';
-import { setMode } from '../reducers/mode/actions';
 
 type IAction = Action & { payload?: any };
 (mapboxgl as any).accessToken = MAPBOX_TOKEN;
@@ -78,8 +73,17 @@ const initMapEpic = (action$: ActionsObservable<Action & { payload: HTMLDivEleme
         (window as any).mapping = mapping;
       });
     }),
-    // for internal use in this map epic middleware
-    mapTo({ type: 'LOADED_CHECK' }),
+    // check if map is loaded
+    mergeMap(
+      // send signal per 1000ms
+      () => interval(1000),
+      (val: mapboxgl.Map, timer: number) => val,
+      2,
+    ),
+    // take 1 time when loaded is true
+    filter((val: mapboxgl.Map) => val.loaded()),
+    take(1),
+    mapTo(mapLoaded()),
 );
 
 const resetMapEpic = (action$: ActionsObservable<Action>, store: Store) => action$
@@ -87,7 +91,7 @@ const resetMapEpic = (action$: ActionsObservable<Action>, store: Store) => actio
   .pipe(
     // reset map when exit the map application
     tap(() => {
-      (mapping || (window as any).mapping).easeTo(MAP_SETTINGS_DEFAULT);
+      mapping.easeTo(MAP_SETTINGS_DEFAULT);
       // set layers viz
       mapping.setLayoutProperty('footprint', 'visibility', 'visible');
     }),
@@ -118,9 +122,8 @@ const setCameraEpic = (action$: ActionsObservable<Action & { payload: string }>)
 
         // mapping.setLayoutProperty('footprint', 'visibility', 'none');
         mapping.setStyle(MAP_STYLES.light);
-        mapping.on('load', () => {
+        return mapping.on('load', () => {
           mapping.setLayoutProperty('aptParcel', 'visibility', 'visible');
-          return mapping;
         });
         // return setLayer('footprint', mapping.getLayer('footptint').layout.visibility);
       }
@@ -133,12 +136,17 @@ const setModeIntroEpic = (action$: ActionsObservable<Action & { payload: string 
   .ofType(MODE_SET)
   .pipe(
     filter((action: Action & { payload: string }) => action.payload === 'intro'),
-    map(() => {
-      (mapping || (window as any).mapping).easeTo({
+    tap(() => {
+      console.log(mapping, (window as any).mapping, 'check after HMR');
+      mapping.easeTo({
         ...MAP_CAMERA.plane,
         zoom: 15,
       });
       mapping.setLayoutProperty('footprint', 'visibility', 'none');
+      mapping.addControl(scaleControl, 'bottom-right');
+      mapping.addControl(naviControl, 'bottom-right');
+      mapping.addControl(drawControl, 'bottom-right');
+      mapping.addControl(geolocateControl, 'bottom-right');
     }),
     mergeMap(() => Observable.empty<never>()),
 );
@@ -147,16 +155,38 @@ const setModeQueryEpic = (action$: ActionsObservable<Action & { payload: string 
   .ofType(MODE_SET)
   .pipe(
     filter((action: Action & { payload: string }) => action.payload === 'query'),
-    map(() => {
-      (mapping || (window as any).mapping).setStyle(MAP_STYLES.light);
-      (mapping || (window as any).mapping).setLayoutProperty('vacantParcel', 'visibility', 'visible');
-      (mapping || (window as any).mapping).setLayoutProperty('aptParcel', 'visibility', 'visible');
-
+    map(() => mapping.setStyle(MAP_STYLES.light)),
+    // check if map style is loaded
+    mergeMap(
+      // send signal per 1000ms
+      () => interval(1000),
+      (val: mapboxgl.Map, timer: number) => val,
+      2,
+    ),
+    // take 1 time when loaded is true
+    filter((val: mapboxgl.Map) => val.isStyleLoaded()),
+    take(1),
+    // set layer vizs after map style is loaded
+    map((val: mapboxgl.Map) => {
+      val.setLayoutProperty('vacantParcel', 'visibility', 'visible');
+      val.setLayoutProperty('aptParcel', 'visibility', 'visible');
     }),
+    mergeMap(() => Observable.empty<never>()),
+);
+
+const setModeMeasureEpic = (action$: ActionsObservable<Action & { payload: string }>) => action$
+  .ofType(MODE_SET)
+  .pipe(
+    filter((action: Action & { payload: string }) => action.payload === 'measure'),
+    tap(() => {
+      mapping.setLayoutProperty('aptParcel', 'visibility', 'none');
+      mapping.addControl(drawControl, 'bottom-right');
+    }),
+    mergeMap(() => Observable.empty<never>()),
 );
 
 const checkMapLoadingEpic = (action$: ActionsObservable<Action>) => action$
-  // for internal use in this map epic middleware
+  // for internal use in this epic middleware
   .ofType('LOADED_CHECK')
   .pipe(
     mergeMap(
@@ -166,22 +196,20 @@ const checkMapLoadingEpic = (action$: ActionsObservable<Action>) => action$
       2,
     ),
     // take 1 time when loaded is true
-    filter((map: mapboxgl.Map) => map.loaded()),
+    filter((val: mapboxgl.Map) => val.loaded()),
     take(1),
-    map((val: mapboxgl.Map) => setInstance(val.getStyle())),
     mapTo(mapLoaded()),
-
 );
 
 export const epics = combineEpics(
   initMapEpic,
   enterAppEpic,
   setModeIntroEpic,
-  // setModeQueryEpic,
-  // setModeMeasureEpic,
+  setModeQueryEpic,
+  setModeMeasureEpic,
   // SetModeBuildEpic,
   // setModeDecideE
-  // resetMapEpic,
+  resetMapEpic,
   checkMapLoadingEpic,
 );
 

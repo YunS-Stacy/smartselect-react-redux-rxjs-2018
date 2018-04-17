@@ -1,4 +1,4 @@
-import { MODE_SET } from '../../constants/action-types';
+import { MODE_SET, MAP_RESET } from '../../constants/action-types';
 import { RootState } from '../../types';
 import { Action } from 'redux';
 
@@ -8,6 +8,8 @@ export default (state = initialState, { type, payload }: Action & { payload?: st
   switch (type) {
     case MODE_SET:
       return payload;
+    case MAP_RESET:
+      return initialState;
     default:
       return state;
   }
