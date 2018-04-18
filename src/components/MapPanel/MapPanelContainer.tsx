@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import MapPanel from './MapPanel';
-import { toggleApp } from '../../reducers/app/actions';
-import { initMap } from '../../reducers/map/actions';
+import { minusStep, addStep } from '../../reducers/map/actions';
 
 import { RootState } from '../../types';
 import { Dispatch } from '../../types/redux';
@@ -16,9 +15,9 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  handleToggleApp: bindActionCreators(toggleApp, dispatch),
-  handleInitMap: bindActionCreators(initMap, dispatch),
+  handleMinusStep: bindActionCreators(minusStep, dispatch),
+  handleAddStep: bindActionCreators(addStep, dispatch),
 });
 
-const MapPanelContainer = connect(mapStateToProps)(MapPanel);
+const MapPanelContainer = connect(mapStateToProps, mapDispatchToProps)(MapPanel);
 export default MapPanelContainer;

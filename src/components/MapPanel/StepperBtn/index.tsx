@@ -1,3 +1,3 @@
-import StepperBtnContainer from './StepperBtnContainer';
+import StepperBtn from './StepperBtn';
 
-export default StepperBtnContainer;
+export default StepperBtn;

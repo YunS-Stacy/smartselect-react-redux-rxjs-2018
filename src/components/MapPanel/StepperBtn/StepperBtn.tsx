@@ -33,6 +33,27 @@ const paperStyle = {
   backgroundColor: 'rgba(255,255,255,0.8)',
 };
 
-const StepperBtn = () => <div>yeah</div>;
+interface Props {
+  step: RootState['map']['step'];
+
+  handleMinusStep: () => void;
+  handleAddStep: () => void;
+}
+const StepperBtn = ({ step, handleAddStep, handleMinusStep }: Props) => (
+  <div style={{ margin: '1em 0 0 2em', float: 'right' }}>
+    {step > 0 && (
+      <FlatButton
+        label="Back"
+        onClick={() => handleMinusStep()}
+      />
+    )}
+    {step < 4 && (
+      <RaisedButton
+        label="Next"
+        primary={true}
+        onClick={() => handleAddStep()}
+      />
+    )}
+  </div>);
 
 export default StepperBtn;

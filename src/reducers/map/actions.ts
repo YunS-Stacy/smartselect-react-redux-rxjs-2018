@@ -1,5 +1,9 @@
 import {
-  MAP_SET, MAP_INIT, INSTANCE_SET, IS_LOADED, MAP_RESET, LAYER_SET, MODE_SET, STEP_SET, STEP_MINUS, STEP_ADD
+  MAP_SET, MAP_INIT, INSTANCE_SET,
+  IS_LOADED, MAP_RESET, LAYER_SET, MODE_SET,
+  STEP_SET, STEP_MINUS, STEP_ADD,
+  GEOMETRY_GET,
+  GEOMETRY_SET
 } from '../../constants/action-types';
 
 export const setMap = (payload: string) => ({
@@ -45,4 +49,13 @@ export const addStep = () => ({
 
 export const minusStep = () => ({
   type: STEP_MINUS,
+});
+
+export const getGeometry = () => ({
+  type: GEOMETRY_GET,
+});
+
+export const setGeometry = (payload: any) => ({
+  payload,
+  type: GEOMETRY_SET,
 });

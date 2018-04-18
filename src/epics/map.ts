@@ -2,6 +2,9 @@ import { combineEpics, ActionsObservable } from 'redux-observable';
 import * as mapboxgl from 'mapbox-gl';
 import * as mapboxDraw from '@mapbox/mapbox-gl-draw';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+// import * as turf from 'turf';
+import polygonToLine from '@turf/polygon-to-line';
+import area from '@turf/area';
 
 import { Observable } from 'rxjs/Rx';
 import { of } from 'rxjs/observable/of';
@@ -28,11 +31,15 @@ import {
   ignoreElements,
 } from 'rxjs/operators';
 
-import { APP_TOGGLE, MAP_INIT, IS_LOADED, INSTANCE_SET, MODE_SET, MAP_RESET } from '../constants/action-types';
+import {
+  APP_TOGGLE,
+  MAP_INIT, IS_LOADED, INSTANCE_SET, MODE_SET, MAP_RESET, GEOMETRY_GET
+} from '../constants/action-types';
 import { updateHighlights } from '../utils/highlights';
 import { Store, Action } from '../types/redux';
-import { setInstance, mapLoaded, resetMap, setLayer, setMode } from '../reducers/map/actions';
+import { setInstance, mapLoaded, resetMap, setLayer, setMode, setGeometry } from '../reducers/map/actions';
 import { MAPBOX_TOKEN, MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES } from '../constants/app-constants';
+import { FeatureCollection, Feature, GeometryObject, LineString, Polygon, Point } from 'geojson';
 
 type IAction = Action & { payload?: any };
 (mapboxgl as any).accessToken = MAPBOX_TOKEN;
@@ -48,6 +55,7 @@ const drawControl = new mapboxDraw({
   controls: {
     polygon: true,
     trash: true,
+    point: false,
   },
 });
 const geocoderControl = new MapboxGeocoder({
@@ -145,7 +153,6 @@ const setModeIntroEpic = (action$: ActionsObservable<Action & { payload: string 
       mapping.setLayoutProperty('footprint', 'visibility', 'none');
       mapping.addControl(scaleControl, 'bottom-right');
       mapping.addControl(naviControl, 'bottom-right');
-      mapping.addControl(drawControl, 'bottom-right');
       mapping.addControl(geolocateControl, 'bottom-right');
     }),
     mergeMap(() => Observable.empty<never>()),
@@ -181,8 +188,34 @@ const setModeMeasureEpic = (action$: ActionsObservable<Action & { payload: strin
     tap(() => {
       mapping.setLayoutProperty('aptParcel', 'visibility', 'none');
       mapping.addControl(drawControl, 'bottom-right');
+      mapping.on('draw.create', (e: Event) => console.log(e));
     }),
     mergeMap(() => Observable.empty<never>()),
+);
+
+const getGeometryEpic = (action$: ActionsObservable<Action>) => action$
+  .ofType(GEOMETRY_GET)
+  .pipe(
+    map(() => {
+      const data: FeatureCollection<any> = drawControl.getAll();
+      const num: number = data.features.length;
+
+      const lines: Feature<LineString>[] = data.features
+        .filter(datum => datum.geometry.type === 'LineString');
+      const line = lines && lines[lines.length - 1];
+      const lineLength = turf.lineDistance(line, 'miles');
+      const polygons: Feature<Polygon>[] = data.features
+        .filter(item => item.geometry.type === 'Polygon');
+      const polygon = polygons && polygons[polygons.length - 1];
+      const polyLength = turf.lineDistance(polygonToLine(polygon), 'miles');
+      const polyArea = area(polygon) * 10.7639;
+      return {
+        num,
+        line: { length: lineLength },
+        polygon: { length: polyLength, area: polyArea },
+      };
+    }),
+    map(val => setGeometry(val)),
 );
 
 const checkMapLoadingEpic = (action$: ActionsObservable<Action>) => action$
@@ -211,6 +244,7 @@ export const epics = combineEpics(
   // setModeDecideE
   resetMapEpic,
   checkMapLoadingEpic,
+  getGeometryEpic,
 );
 
 export default epics;

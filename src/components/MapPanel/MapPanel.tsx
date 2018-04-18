@@ -22,6 +22,8 @@ import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-rig
 import NavigationChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
 import { RootState } from '../../types';
 
+import StepperBtn from './StepperBtn';
+
 // import SearchInput from '../components/SearchInput';
 // import Joyride from 'react-joyride';
 
@@ -35,9 +37,12 @@ const paperStyle = {
 
 interface Props {
   step: RootState['map']['step'];
+
+  handleMinusStep: () => void;
+  handleAddStep: () => void;
 }
 
-const MapPanel = ({ step }: Props) => (
+const MapPanel = ({ step, handleAddStep, handleMinusStep }: Props) => (
   <Paper
     style={{
       position: 'absolute',
@@ -56,9 +61,7 @@ const MapPanel = ({ step }: Props) => (
       orientation="vertical"
     >
       <Step>
-        <StepLabel>
-          Intro
-								</StepLabel>
+        <StepLabel>Intro</StepLabel>
         <StepContent>
           {/* <Button style={{display: 'inline-block', float:'right'}}>Replay</Button> */}
           <p style={{ whiteSpace: 'pre-line' }}>
@@ -66,33 +69,24 @@ const MapPanel = ({ step }: Props) => (
 
 											Click "Next" to find your next INVESTMENT!`}
           </p>
-          <div style={{ margin: '1em 0 0 2em', float: 'right' }}>
-            {step > 0 && (
-              <FlatButton
-                label="Back"
-              // onTouchTap={this.handlePrev}
-              />
-            )}
-            {step < 4 && (
-              <RaisedButton
-                label="Next"
-                primary={true}
-              // onTouchTap={this.handleNext}
-              />
-            )}
-          </div>
+          <StepperBtn
+            step={step}
+            handleMinusStep={handleMinusStep}
+            handleAddStep={handleAddStep}
+          />
         </StepContent>
       </Step>
       <Step>
-        <StepLabel>
-          Find
-								</StepLabel>
+        <StepLabel>Find</StepLabel>
         <StepContent>
-          <p>
-            Don't forget to use the slider below to define a price range.
-									</p>
+          <p>Don't forget to use the slider below to define a price range.</p>
           {/* <SearchInput dispatch={this.props.dispatch} /> */}
           {/* {this.renderStepActions(1)} */}
+          <StepperBtn
+            step={step}
+            handleMinusStep={handleMinusStep}
+            handleAddStep={handleAddStep}
+          />
         </StepContent>
       </Step>
       <Step>
@@ -201,7 +195,7 @@ const MapPanel = ({ step }: Props) => (
             >
               <em>Use the slider to set the height</em><br /><br />
               Your building will be
-											<br />
+							<br />
               <span
                 style={{
                   fontSize: '1.5em',
@@ -212,7 +206,8 @@ const MapPanel = ({ step }: Props) => (
                 {/* {this.props.height} */}
               </span>
               feet!
-					  </div>
+            </div>
+
             <br />
           </div>
           {/* {this.renderStepActions(3)} */}

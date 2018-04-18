@@ -16,9 +16,9 @@ const Home = ({ app }: Props) => (
   <MuiThemeProvider>
     <div className="app-container">
       <section className="map-container">
-        {/* <MainBtn />
+        <MainBtn />
         <MapMask />
-        <Map /> */}
+        <Map />
         <MapPanel />
       </section>
     </div>

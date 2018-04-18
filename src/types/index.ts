@@ -36,7 +36,7 @@ export interface RootState {
       parcel: string;
       vacant: string;
     };
-    calc: {
+    geometry: {
       polygon: {
         area: number;
         length: number;

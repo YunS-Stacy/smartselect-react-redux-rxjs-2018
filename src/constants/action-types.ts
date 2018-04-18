@@ -36,6 +36,11 @@ export type STEP_ADD = typeof STEP_ADD;
 export const STEP_MINUS = 'STEP_MINUS';
 export type STEP_MINUS = typeof STEP_SET;
 
+export const GEOMETRY_GET = 'GEOMETRY_GET';
+export type GEOMETRY_GET = typeof GEOMETRY_GET;
+export const GEOMETRY_SET = 'GEOMETRY_SET';
+export type GEOMETRY_SET = typeof GEOMETRY_SET;
+
 /**
  * Global
  */
@@ -111,12 +116,6 @@ export const SIGN_IN = 'SIGN_IN';
 export const SIGN_OUT = 'SIGN_OUT';
 export const GET_USER_WEBSCENES = 'GET_USER_WEBSCENES';
 export const SET_USER_WEBSCENES = 'SET_USER_WEBSCENES';
-
-/**
- * GP Service Geometry
- */
-export const GEOMETRY_GET = 'GEOMETRY_GET';
-export type GEOMETRY_GET = typeof GEOMETRY_GET;
 
 export const RESPONSE_SET = 'RESPONSE_SET';
 export const PARAMS_SET = 'PARAMS_SET';
