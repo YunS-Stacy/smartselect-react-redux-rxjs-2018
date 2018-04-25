@@ -1,8 +1,7 @@
-import reducer from '../step';
+import reducer, { initialState } from '../step';
 import { STEP_SET, MAP_RESET, STEP_MINUS, STEP_ADD } from '../../../constants/action-types';
 import { RootState } from '../../../types';
 
-const initialState = null;
 const state: RootState['map']['step'] = 2;
 
 describe('map reducer', () => {

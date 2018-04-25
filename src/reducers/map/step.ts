@@ -2,7 +2,7 @@ import { STEP_SET, MAP_RESET, STEP_ADD, STEP_MINUS } from '../../constants/actio
 import { RootState } from '../../types';
 import { Action } from 'redux';
 
-const initialState: RootState['map']['step'] = 0;
+export const initialState: RootState['map']['step'] = 0;
 
 export default (state = initialState, { type, payload }: Action & { payload?: number }) => {
   switch (type) {

@@ -49,5 +49,19 @@ if (process.env.NODE_ENV === 'production') {
         </AppContainer>
       ));
     });
+
+    // store
+    module.hot.accept('./store/store', () => {
+      const nextStore = require('./store/store').default;
+      // tslint:disable-next-line
+      console.log('HMR accept store replacement');
+      renderRoot((
+        <AppContainer>
+          <Provider store={nextStore}>
+            <Home />
+          </Provider>
+        </AppContainer>
+      ));
+    });
   }
 }

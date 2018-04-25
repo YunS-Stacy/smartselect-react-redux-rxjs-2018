@@ -22,6 +22,7 @@ import zoom from './zoom';
 import mode from './mode';
 import instance from './instance';
 import step from './step';
+import geometry from './geometry';
 
 export default combineReducers({
   bearing,
@@ -31,4 +32,5 @@ export default combineReducers({
   mode,
   instance,
   step,
+  geometry,
 });

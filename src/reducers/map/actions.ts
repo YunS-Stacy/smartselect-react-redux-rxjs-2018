@@ -1,9 +1,8 @@
 import {
-  MAP_SET, MAP_INIT, INSTANCE_SET,
-  IS_LOADED, MAP_RESET, LAYER_SET, MODE_SET,
+  MAP_SET, MAP_INIT, MAP_RESET, INSTANCE_SET,
+  IS_LOADED, LAYER_SET, MODE_SET,
   STEP_SET, STEP_MINUS, STEP_ADD,
-  GEOMETRY_GET,
-  GEOMETRY_SET
+  GEOMETRY_GET, GEOMETRY_SET,
 } from '../../constants/action-types';
 
 export const setMap = (payload: string) => ({

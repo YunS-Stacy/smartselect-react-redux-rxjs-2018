@@ -16,10 +16,10 @@ const Home = ({ app }: Props) => (
   <MuiThemeProvider>
     <div className="app-container">
       <section className="map-container">
-        <MainBtn />
-        <MapMask />
+        {!app && <MainBtn />}
+        {!app && <MapMask />}
         <Map />
-        <MapPanel />
+        {app && <MapPanel />}
       </section>
     </div>
   </MuiThemeProvider>

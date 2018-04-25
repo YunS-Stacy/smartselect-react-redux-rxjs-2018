@@ -22,7 +22,9 @@ import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-rig
 import NavigationChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
 import { RootState } from '../../types';
 
-import StepperBtn from './StepperBtn';
+import PanelBtns from './PanelBtns';
+import { Feature } from 'geojson';
+import { GeoJSONGeometry } from 'mapbox-gl';
 
 // import SearchInput from '../components/SearchInput';
 // import Joyride from 'react-joyride';
@@ -37,15 +39,22 @@ const paperStyle = {
 
 interface Props {
   step: RootState['map']['step'];
-
+  loaded: boolean;
+  geometry: RootState['map']['geometry'];
   handleMinusStep: () => void;
   handleAddStep: () => void;
+  handleToggleApp: () => void;
 }
 
-const MapPanel = ({ step, handleAddStep, handleMinusStep }: Props) => (
+const MapPanel = ({ loaded, step, geometry, handleAddStep, handleMinusStep, handleToggleApp }: Props) => (
+  <Spin
+    spinning={!loaded}
+    wrapperClassName="spinner leftPanel"
+    // style={{top: '30vh', left: '-38vw', position: 'absolute'}}
+  >
   <Paper
     style={{
-      position: 'absolute',
+      // position: 'absolute',
       width: '25vw',
       margin: '0',
       padding: '2em',
@@ -54,6 +63,7 @@ const MapPanel = ({ step, handleAddStep, handleMinusStep }: Props) => (
     zDepth={3}
     className="leftPanel"
   >
+
     <Stepper
       style={{ width: '100%' }}
       activeStep={step}
@@ -69,11 +79,7 @@ const MapPanel = ({ step, handleAddStep, handleMinusStep }: Props) => (
 
 											Click "Next" to find your next INVESTMENT!`}
           </p>
-          <StepperBtn
-            step={step}
-            handleMinusStep={handleMinusStep}
-            handleAddStep={handleAddStep}
-          />
+          <PanelBtns loaded={loaded}/>
         </StepContent>
       </Step>
       <Step>
@@ -82,11 +88,7 @@ const MapPanel = ({ step, handleAddStep, handleMinusStep }: Props) => (
           <p>Don't forget to use the slider below to define a price range.</p>
           {/* <SearchInput dispatch={this.props.dispatch} /> */}
           {/* {this.renderStepActions(1)} */}
-          <StepperBtn
-            step={step}
-            handleMinusStep={handleMinusStep}
-            handleAddStep={handleAddStep}
-          />
+          <PanelBtns loaded={loaded}/>
         </StepContent>
       </Step>
       <Step>
@@ -95,34 +97,41 @@ const MapPanel = ({ step, handleAddStep, handleMinusStep }: Props) => (
 								</StepLabel>
         <StepContent>
           <div>
-            <p>
               Draw and measure your footprint.
 											<br />
               <Button
               // className="calculateBtn"
               // onClick={this.handleCalculate}
-              >CALCULATE</Button>
+              >
+                CALCULATE
+              </Button>
               <br />
               <em>
                 *If you don't like it, clean and draw another one!
 											</em>
               <br />
-              <span
-                style={{
-                  fontSize: '1.15em',
-                  fontWeight: 500,
-                  color: '#2c9ab7',
-                }}
-              >
-                Polygon
-              </span>
-              <br />
-              &ensp;Perimeter:
-                      {/* <strong style={{ fontSize: '1.2em' }}>{this.props.calData.polygon.length}</strong> miles
-											<br />
-                &ensp;Area: <strong style={{ fontSize: '1.2em' }}>{this.props.calData.polygon.area}</strong> sqft
-
-											<br /> */}
+              {geometry.get('polygon') && (
+                geometry.get('polygon').map(each =>
+                  <div key={each.id}>
+                    <span
+                      style={{
+                        fontSize: '1.15em',
+                        fontWeight: 500,
+                        color: '#2c9ab7',
+                      }}
+                    >
+                      Polygon
+                    </span>
+                    <br />
+                    &ensp;Perimeter:
+                        <strong style={{ fontSize: '1.2em' }}>
+                      {each.properties.length}</strong> miles
+                        <br />
+                    &ensp;Area: <strong style={{ fontSize: '1.2em' }}>
+                      {each.properties.length}</strong> sqft
+                      <br />
+                  </div>,
+                ))}
               <span
                 style={{
                   fontSize: '1.15em',
@@ -137,20 +146,19 @@ const MapPanel = ({ step, handleAddStep, handleMinusStep }: Props) => (
               &ensp;Length: <strong style={{ fontSize: '1.2em' }}>
                 {/* {this.props.calData.line.length} */}
               </strong> miles
-										</p>
           </div>
-          <div
-            style={{
-              display: 'inline-flex',
-              justifyContent: 'space-around',
-              float: 'right',
-              flexDirection: 'column',
-              width: '40%',
-            }}
-          >
-            <div style={{ width: '0.5em' }} />
-          </div>
-          {/* {this.renderStepActions(2)} */}
+          {/* // <div
+          //   style={{
+          //     display: 'inline-flex',
+          //     justifyContent: 'space-around',
+          //     float: 'right',
+          //     flexDirection: 'column',
+          //     width: '40%',
+          //   }}
+          // >
+          //   <div style={{ width: '0.5em' }} />
+          // </div> */}
+          <PanelBtns loaded={loaded}/>
         </StepContent>
       </Step>
       <Step>
@@ -210,7 +218,7 @@ const MapPanel = ({ step, handleAddStep, handleMinusStep }: Props) => (
 
             <br />
           </div>
-          {/* {this.renderStepActions(3)} */}
+          <PanelBtns loaded={loaded}/>
         </StepContent>
       </Step>
       <Step>
@@ -220,11 +228,14 @@ const MapPanel = ({ step, handleAddStep, handleMinusStep }: Props) => (
         <StepContent>
           <p>
             Decision time!
-									</p>
-          {/* {this.renderStepActions(4)} */}
+          </p>
+          <PanelBtns loaded={loaded}/>
         </StepContent>
       </Step>
     </Stepper>
+
   </Paper>
+  </Spin>
+
 );
 export default MapPanel;

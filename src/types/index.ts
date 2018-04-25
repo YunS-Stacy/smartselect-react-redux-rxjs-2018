@@ -1,4 +1,5 @@
 import * as mapbox from 'mapbox-gl';
+import { Feature, GeometryObject } from 'geojson';
 interface Stats {
   show: boolean;
   spaceUseList: string[];
@@ -36,17 +37,7 @@ export interface RootState {
       parcel: string;
       vacant: string;
     };
-    geometry: {
-      polygon: {
-        area: number;
-        length: number;
-      };
-      line: {
-        length: number;
-      };
-      num: number;
-      point: boolean;
-    };
+    geometry: Map<string, Feature<GeometryObject>[]>;
     height: number;
     comps: {
       lines: any[];
