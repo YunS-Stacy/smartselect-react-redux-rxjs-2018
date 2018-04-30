@@ -1,13 +1,13 @@
-import { INSTANCE_SET } from '../../constants/action-types';
+import { DRAW_TOGGLE } from '../../constants/action-types';
 import { RootState } from '../../types';
 import { Action } from 'redux';
 
-const initialState: RootState['map']['instance'] = null;
+const initialState: RootState['map']['draw'] = false;
 
 export default (state = initialState, { type, payload }: Action & { payload: any }) => {
   switch (type) {
-    case INSTANCE_SET:
-      return payload;
+    case DRAW_TOGGLE:
+      return !state;
     default:
       return state;
   }

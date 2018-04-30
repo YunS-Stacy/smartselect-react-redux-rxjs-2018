@@ -1,14 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
+import * as injectTapEventPlugin from 'react-tap-event-plugin';
+
 // tslint:disable:no-import-side-effect
 // side-effect imports here
 import './styles/sass/main.scss';
 
-// import {
-//   APP_ID,
-//   APP_PORTAL_URL
-// } from './constants/app-constants';
+injectTapEventPlugin();
 
 import { Provider } from 'react-redux';
 import Home from './components/Home';
@@ -50,5 +49,19 @@ if (process.env.NODE_ENV === 'production') {
         </AppContainer>
       ));
     });
+
+    // // store
+    // module.hot.accept('./store/store', () => {
+    //   const nextStore = require('./store/store').default;
+    //   // tslint:disable-next-line
+    //   console.log('HMR accept store replacement');
+    //   renderRoot((
+    //     <AppContainer>
+    //       <Provider store={nextStore}>
+    //         <Home />
+    //       </Provider>
+    //     </AppContainer>
+    //   ));
+    // });
   }
 }

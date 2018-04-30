@@ -1,5 +1,5 @@
-import { WorkBook } from 'xlsx';
 import * as mapbox from 'mapbox-gl';
+import { Feature, GeometryObject } from 'geojson';
 interface Stats {
   show: boolean;
   spaceUseList: string[];
@@ -15,154 +15,47 @@ interface Stats {
 
 export interface RootState {
   app: boolean;
-  mode: string;
-  query: boolean;
+  slider: {
+    data: any[];
+    fetched: boolean;
+  };
   map: {
+    draw: boolean;
+    step: number;
+    mode: 'intro' | 'query' | 'measure' | 'build' | 'decide' | null;
+    layers: {
+      footprint: 'visible' | 'none' | null;
+      aptParcel: 'visible' | 'none' | null;
+      vacantParcel: 'visible' | 'none' | null;
+      blueprint: 'visible' | 'none' | null;
+    }; // 'footprint', 'visible'
     loaded: boolean;
-    instance: mapbox.Map;
+    instance: any;
     bounds: number[][];
     center: number[];
     pitch: number;
     zoom: number;
     bearing: number;
-    style: {
-      url: string;
-      name: string;
-    };
+    style: string;
     viz: {
       foot: string;
       blueprint: string;
       parcel: string;
       vacant: string;
     };
-    calc: {
-      polygon: {
-        area: number;
-        length: number;
+    geometry: {
+      type: string;
+      properties: {
+        area?: number;
+        length?: number;
+        height?: number;
       };
-      line: {
-        length: number;
-      };
-      num: number;
-      point: boolean;
-    };
+      [key: string]: any;
+    }[];
     height: number;
     comps: {
       lines: any[];
       pts: any[];
     };
-  };
-  user: {
-    identity: any;
-  };
-  webscene: {
-    current: {
-      id: number;
-    };
-  };
-  selection: { layer: string; OID: number }[];
-  vizType: string;
-  stats: Stats;
-  global: {
-    loading: boolean;
-    loadingText: string;
-    step: number;
-  };
-  proforma: {
-    workbook: WorkBook;
-    inputs: {
-      name: string;
-      sheet: string;
-      cell: string;
-      value: string | number;
-      [key: string]: any;
-    }[];
-    inputCates: string[];
-    selectedCate: string;
-    outputs: {
-      name: string;
-      sheet: string;
-      cell: string;
-      value: string | number;
-      [key: string]: any;
-    }[];
-  };
-  parcel: {
-    info: {
-      OBJECTID: number;
-      [key: string]: any;
-    }[];
-    zoning: {
-      value: string;
-      status: boolean;
-    };
-    bldg: {
-      value: string;
-      status: boolean;
-    };
-  };
-  typelists: {
-    zoning: string[];
-    bldg: string[];
-  };
-  geometry: {
-    response: {
-      [key: string]: any;
-    };
-    params: object;
-    override: {
-      [key: string]: any;
-    };
-  };
-  scenario: {
-    compare?: string[];
-    current?: string;
-    services?: {
-      [key: string]: {
-        serviceItemId?: string;
-        status?: string;
-      };
-    };
-    states?: {
-      [key: string]: {
-        src?: string;
-        status?: string;
-        parcel?: {
-          info: object[];
-          zoning: {
-            value: string;
-            status: boolean;
-          };
-          bldg: {
-            value: string;
-            status: boolean;
-          };
-        };
-        proforma?: {
-          workbook: WorkBook;
-          inputs: {
-            name: string;
-            sheet: string;
-            cell: string;
-            value: string | number;
-            [key: string]: any;
-          }[];
-          inputCates: string[];
-          selectedCate: string;
-          outputs: {
-            name: string;
-            sheet: string;
-            cell: string;
-            value: string | number;
-            [key: string]: any;
-          }[];
-        };
-        stats?: Stats;
-      };
-    };
-    show?: boolean;
-  };
-  modals: {
-    [key: string]: boolean;
   };
 }

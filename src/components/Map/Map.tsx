@@ -1,14 +1,30 @@
 import * as React from 'react';
 
+import QuerySlider from './QuerySlider';
+
 interface Props {
+  step: number;
   handleInitMap: (container: HTMLDivElement) => void;
+  handleFetchData: (payload: string) => void;
 }
 
-const Map = ({ handleInitMap }: Props) => (
-  <div
-    id="map"
-    ref={el => handleInitMap(el)}
-  />
-);
+class Map extends React.Component<Props> {
+  container: HTMLDivElement;
+
+  componentDidMount() {
+    console.log('mapinit only once');
+    this.props.handleInitMap(this.container);
+  }
+
+  render() {
+    return (
+    <div
+      id="map"
+      ref={el => this.container = el}
+    >
+    {this.props.step === 1 && <QuerySlider handleFetchData={this.props.handleFetchData}/>}
+    </div>);
+  }
+}
 
 export default Map;

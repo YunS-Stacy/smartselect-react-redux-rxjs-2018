@@ -3,16 +3,20 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Map from './Map';
-import { toggleApp } from '../../reducers/app/actions';
-import { initMap } from '../../reducers/map/actions';
 
 import { RootState } from '../../types';
 import { Dispatch } from '../../types/redux';
+import { fetchData } from '../../reducers/app/actions';
+import { initMap } from '../../reducers/map/actions';
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  // handleToggleApp: bindActionCreators(toggleApp, dispatch),
-  handleInitMap: bindActionCreators(initMap, dispatch),
+const mapStateToProps = ({ map: { step } }: RootState) => ({
+  step,
 });
 
-const MapContainer = connect(null, mapDispatchToProps)(Map);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  handleInitMap: bindActionCreators(initMap, dispatch),
+  handleFetchData: bindActionCreators(fetchData, dispatch),
+});
+
+const MapContainer = connect(mapStateToProps, mapDispatchToProps)(Map as any);
 export default MapContainer;

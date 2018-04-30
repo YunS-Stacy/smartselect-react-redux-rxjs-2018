@@ -6,6 +6,7 @@ import { RootState } from '../../types';
 import MainBtn from '../MainBtn';
 import Map from '../Map';
 import MapMask from '../MapMask';
+import MapPanel from '../MapPanel';
 
 interface Props {
   app: boolean;
@@ -15,9 +16,10 @@ const Home = ({ app }: Props) => (
   <MuiThemeProvider>
     <div className="app-container">
       <section className="map-container">
-        <MainBtn />
-        <MapMask />
-        <Map />
+        {!app && <MainBtn />}
+        {!app && <MapMask />}
+        <Map/>
+        {app && <MapPanel />}
       </section>
     </div>
   </MuiThemeProvider>
