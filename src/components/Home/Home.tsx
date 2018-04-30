@@ -18,7 +18,7 @@ const Home = ({ app }: Props) => (
       <section className="map-container">
         {!app && <MainBtn />}
         {!app && <MapMask />}
-        <Map />
+        <Map/>
         {app && <MapPanel />}
       </section>
     </div>

@@ -1,13 +1,27 @@
-import { LAYER_SET } from '../../constants/action-types';
+import { LAYER_VIZ_SET, MAP_RESET } from '../../constants/action-types';
 import { RootState } from '../../types';
 import { Action } from 'redux';
 
-const initialState: RootState['map']['layers'] = null;
+const initialState: RootState['map']['layers'] = {
+  footprint: 'visible',
+  aptParcel: null,
+  vacantParcel: null,
+  blueprint: null,
+};
 
-export default (state = initialState, { type, payload }: Action & { payload: any }) => {
+export default (state = initialState, { type, payload }: Action & { payload?: any }) => {
   switch (type) {
-    case LAYER_SET:
-      return state.set(payload.name, payload.viz);
+    case LAYER_VIZ_SET:
+      console.log('action set layer viz', {
+        ...state,
+        [payload.name]: payload.viz,
+      });
+      return {
+        ...state,
+        [payload.name]: payload.viz,
+      };
+    case MAP_RESET:
+      return initialState;
     default:
       return state;
   }

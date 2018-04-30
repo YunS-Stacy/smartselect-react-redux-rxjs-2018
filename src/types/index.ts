@@ -15,11 +15,20 @@ interface Stats {
 
 export interface RootState {
   app: boolean;
-  query: boolean;
+  slider: {
+    data: any[];
+    fetched: boolean;
+  };
   map: {
+    draw: boolean;
     step: number;
     mode: 'intro' | 'query' | 'measure' | 'build' | 'decide' | null;
-    layers: Map<string, string>; // 'footprint', 'visible'
+    layers: {
+      footprint: 'visible' | 'none' | null;
+      aptParcel: 'visible' | 'none' | null;
+      vacantParcel: 'visible' | 'none' | null;
+      blueprint: 'visible' | 'none' | null;
+    }; // 'footprint', 'visible'
     loaded: boolean;
     instance: any;
     bounds: number[][];
@@ -27,17 +36,22 @@ export interface RootState {
     pitch: number;
     zoom: number;
     bearing: number;
-    style: {
-      url: string;
-      name: string;
-    };
+    style: string;
     viz: {
       foot: string;
       blueprint: string;
       parcel: string;
       vacant: string;
     };
-    geometry: Map<string, Feature<GeometryObject>[]>;
+    geometry: {
+      type: string;
+      properties: {
+        area?: number;
+        length?: number;
+        height?: number;
+      };
+      [key: string]: any;
+    }[];
     height: number;
     comps: {
       lines: any[];

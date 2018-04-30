@@ -8,12 +8,12 @@ import { RootState } from '../../../types';
 interface Props {
   step: RootState['map']['step'];
   loaded: boolean;
-
+  hasGeometry?: boolean;
   handleMinusStep: () => void;
   handleAddStep: () => void;
   handleToggleApp: () => void;
 }
-const PanelBtns = ({ step, loaded, handleAddStep, handleMinusStep, handleToggleApp }: Props) => (
+const PanelBtns = ({ step, loaded, hasGeometry, handleAddStep, handleMinusStep, handleToggleApp }: Props) => (
   <div style={{ margin: '1em 0 0 2em', float: 'right' }}>
     {step > 0 && (
       <FlatButton
@@ -22,12 +22,21 @@ const PanelBtns = ({ step, loaded, handleAddStep, handleMinusStep, handleToggleA
         disabled={!loaded}
       />
     )}
-    {step < 4 && (
+    {(step < 2 || step === 3) && (
       <RaisedButton
         label="Next"
         primary={true}
         onClick={() => handleAddStep()}
         disabled={!loaded}
+
+      />
+    )}
+    {step === 2 && (
+      <RaisedButton
+        label="Next"
+        primary={true}
+        onClick={() => handleAddStep()}
+        disabled={!loaded || !hasGeometry}
 
       />
     )}

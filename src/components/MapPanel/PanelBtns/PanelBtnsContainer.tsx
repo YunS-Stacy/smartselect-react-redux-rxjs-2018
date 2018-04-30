@@ -13,9 +13,10 @@ import { Dispatch } from '../../../types/redux';
 
 const mapStateToProps = ({
   map: { step },
-}: RootState, { loaded }: { loaded: boolean }) => ({
+}: RootState, { loaded, hasGeometry }: { loaded: boolean; hasGeometry?: boolean }) => ({
   step,
   loaded,
+  hasGeometry,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

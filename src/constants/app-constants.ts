@@ -31,3 +31,9 @@ export const MAPBOX_TOKEN = 'pk.eyJ1IjoieXVuc2hpIiwiYSI6ImNpeHczcjA3ZDAwMTMyd3Bt
 
 export const GOOGLE_TOKEN = 'AIzaSyACCPPFvX0caIW52AJVWIksLZHEFrJZEpU';
 export const ZILLOW_TOKEN = 'X1-ZWz19df6l3etqj_64j9s';
+
+const FIREBASE_SERVER = 'https://smartselect-34c02.firebaseio.com';
+
+export const DATA_URL = {
+  slider: `${FIREBASE_SERVER}/slider.json`,
+};

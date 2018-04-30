@@ -41,12 +41,17 @@ interface Props {
   step: RootState['map']['step'];
   loaded: boolean;
   geometry: RootState['map']['geometry'];
+  height: number;
   handleMinusStep: () => void;
   handleAddStep: () => void;
   handleToggleApp: () => void;
+  handleSetGeometryHeight: (payload: number) => void;
 }
 
-const MapPanel = ({ loaded, step, geometry, handleAddStep, handleMinusStep, handleToggleApp }: Props) => (
+const MapPanel = ({
+  loaded, step, geometry, height,
+  handleAddStep, handleMinusStep, handleToggleApp, handleSetGeometryHeight,
+}: Props) => (
   <Spin
     spinning={!loaded}
     wrapperClassName="spinner leftPanel"
@@ -99,53 +104,58 @@ const MapPanel = ({ loaded, step, geometry, handleAddStep, handleMinusStep, hand
           <div>
               Draw and measure your footprint.
 											<br />
-              <Button
+              {/* <Button
               // className="calculateBtn"
               // onClick={this.handleCalculate}
               >
                 CALCULATE
-              </Button>
+              </Button> */}
               <br />
               <em>
                 *If you don't like it, clean and draw another one!
 											</em>
               <br />
-              {geometry.get('polygon') && (
-                geometry.get('polygon').map(each =>
-                  <div key={each.id}>
-                    <span
-                      style={{
-                        fontSize: '1.15em',
-                        fontWeight: 500,
-                        color: '#2c9ab7',
-                      }}
-                    >
-                      Polygon
-                    </span>
-                    <br />
-                    &ensp;Perimeter:
-                        <strong style={{ fontSize: '1.2em' }}>
-                      {each.properties.length}</strong> miles
-                        <br />
-                    &ensp;Area: <strong style={{ fontSize: '1.2em' }}>
-                      {each.properties.length}</strong> sqft
+              {geometry.find(item => item.geometry.type === 'Polygon') && (
+              geometry.filter(item => item.geometry.type === 'Polygon').map(each =>
+                <div key={each.id}>
+                  <span
+                    style={{
+                      fontSize: '1.15em',
+                      fontWeight: 500,
+                      color: '#2c9ab7',
+                    }}
+                  >
+                    Polygon
+                  </span>
+                  <br />
+                  &ensp;Perimeter:
+                      <strong style={{ fontSize: '1.2em' }}>
+                    {each.properties.length.toFixed(2)}</strong> feet
                       <br />
-                  </div>,
-                ))}
-              <span
-                style={{
-                  fontSize: '1.15em',
-                  fontWeight: 500,
-                  color: '#2c9ab7',
-                }}
-              >
-                Line
-              </span>
-
-              <br />
-              &ensp;Length: <strong style={{ fontSize: '1.2em' }}>
-                {/* {this.props.calData.line.length} */}
-              </strong> miles
+                  &ensp;Area: <strong style={{ fontSize: '1.2em' }}>
+                    {each.properties.area.toFixed(2)}</strong> sqft
+                    <br />
+                </div>,
+              ))}
+              {geometry.find(item => item.geometry.type === 'LineString') && (
+                geometry.filter(item => item.geometry.type === 'LineString').map(each =>
+                  <div key={each.id}>
+                  <span
+                    style={{
+                      fontSize: '1.15em',
+                      fontWeight: 500,
+                      color: '#2c9ab7',
+                    }}
+                  >
+                    Line
+                  </span>
+                  <br />
+                  &ensp;Length:
+                      <strong style={{ fontSize: '1.2em' }}>
+                    {each.properties.length.toFixed(2)}</strong> feet
+                      <br />
+                </div>,
+              ))}
           </div>
           {/* // <div
           //   style={{
@@ -158,7 +168,7 @@ const MapPanel = ({ loaded, step, geometry, handleAddStep, handleMinusStep, hand
           // >
           //   <div style={{ width: '0.5em' }} />
           // </div> */}
-          <PanelBtns loaded={loaded}/>
+          <PanelBtns hasGeometry={geometry.find(item => item.geometry.type === 'Polygon') && true} loaded={loaded}/>
         </StepContent>
       </Step>
       <Step>
@@ -175,11 +185,16 @@ const MapPanel = ({ loaded, step, geometry, handleAddStep, handleMinusStep, hand
               // className="heightSlider"
               axis="y"
               min={0}
-              max={3500}
+              max={1000}
               step={1}
-              defaultValue={2000}
-              // value={this.state.slider}
-              // onChange={this.handleSlider}
+              defaultValue={0}
+              value={height}
+              onChange={(e, val) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log(val);
+                handleSetGeometryHeight(val);
+              }}
               style={{
                 position: 'absolute',
                 height: '8em',
@@ -211,7 +226,7 @@ const MapPanel = ({ loaded, step, geometry, handleAddStep, handleMinusStep, hand
                   color: '#2c9ab7',
                 }}
               >
-                {/* {this.props.height} */}
+                {height}
               </span>
               feet!
             </div>

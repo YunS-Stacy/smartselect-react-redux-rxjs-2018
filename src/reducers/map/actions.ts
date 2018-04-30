@@ -1,9 +1,15 @@
 import {
-  MAP_SET, MAP_INIT, MAP_RESET, INSTANCE_SET,
+  MAP_SET, MAP_CHECK, MAP_INIT, MAP_RESET, INSTANCE_SET,
   IS_LOADED, LAYER_SET, MODE_SET,
   STEP_SET, STEP_MINUS, STEP_ADD,
   GEOMETRY_GET, GEOMETRY_SET,
+  LAYER_VIZ_SET, LAYER_ADD, LAYER_REMOVE, STYLE_SET, GEOMETRY_HEIGHT_SET, GEOMETRY_REMOVE,
 } from '../../constants/action-types';
+
+export const checkMap = (payload: mapboxgl.Map) => ({
+  payload,
+  type: MAP_CHECK,
+});
 
 export const setMap = (payload: string) => ({
   payload,
@@ -57,4 +63,34 @@ export const getGeometry = () => ({
 export const setGeometry = (payload: any) => ({
   payload,
   type: GEOMETRY_SET,
+});
+
+export const removeGeometry = (payload: any) => ({
+  payload,
+  type: GEOMETRY_REMOVE,
+});
+
+export const setGeometryHeight = (payload: number) => ({
+  payload,
+  type: GEOMETRY_HEIGHT_SET,
+});
+
+export const setStyle = (payload: string) => ({
+  payload,
+  type: STYLE_SET,
+});
+
+export const setLayerViz = (payload: {name: string; viz: string}) => ({
+  payload,
+  type: LAYER_VIZ_SET,
+});
+
+export const addLayer = (payload: {name: string; viz: string}) => ({
+  payload,
+  type: LAYER_ADD,
+});
+
+export const removeLayer = (payload: {name: string; viz: string}) => ({
+  payload,
+  type: LAYER_REMOVE,
 });
