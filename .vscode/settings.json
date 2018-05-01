@@ -1,4 +1,18 @@
 {
+  "atomKeymap.promptV3Features": true,
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.formatOnPaste": true,
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "emmet.triggerExpansionOnTab": true,
+  "editor.tabSize": 2,
+  "terminal.integrated.shell.osx": "/bin/bash",
+  "terminal.integrated.shell.linux": "/bin/bash",
+  "window.zoomLevel": 0,
   "tslint.autoFixOnSave": true,
-  "eslint.autoFixOnSave": true
+  "git.autofetch": true,
+  "editor.formatOnType": true,
+  "html.format.indentInnerHtml": true,
+  "git.enableSmartCommit": true,
 }

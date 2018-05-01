@@ -7,17 +7,20 @@ import MainBtn from '../MainBtn';
 import Map from '../Map';
 import MapMask from '../MapMask';
 import MapPanel from '../MapPanel';
+import MapLegend from '../MapLegend';
 
 interface Props {
   app: boolean;
+  step: number;
 }
 
-const Home = ({ app }: Props) => (
+const Home = ({ app, step }: Props) => (
   <MuiThemeProvider>
     <div className="app-container">
       <section className="map-container">
         {!app && <MainBtn />}
         {!app && <MapMask />}
+        {!app && <MapLegend />}
         <Map/>
         {app && <MapPanel />}
       </section>

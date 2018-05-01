@@ -5,9 +5,9 @@ import { RootState } from '../../types';
 import Home from './Home';
 
 const mapStateToProps = ({
-  app,
+  app, map: { step },
 }: RootState) => ({
-  app,
+  app, step,
 });
 
 const HomeContainer = connect(mapStateToProps)(Home);

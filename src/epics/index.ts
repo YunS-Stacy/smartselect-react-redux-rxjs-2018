@@ -4,5 +4,5 @@ import data from './data';
 
 export default combineEpics(
   map,
-  // data,
+  data,
 );

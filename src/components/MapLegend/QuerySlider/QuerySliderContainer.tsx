@@ -10,10 +10,8 @@ import { fetchData } from '../../../reducers/app/actions';
 
 const mapStateToProps = (
   { slider }: RootState,
-  { handleFetchData }: { handleFetchData: (payload: string) => void },
 ) => ({
   slider,
-  handleFetchData,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

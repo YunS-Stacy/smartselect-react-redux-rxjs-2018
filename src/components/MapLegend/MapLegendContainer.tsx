@@ -2,20 +2,21 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import Map from './Map';
+import MapLegend from './MapLegend';
 
 import { RootState } from '../../types';
 import { Dispatch } from '../../types/redux';
 import { fetchData } from '../../reducers/app/actions';
-import { initMap } from '../../reducers/map/actions';
 
-const mapStateToProps = ({ map: { step } }: RootState) => ({
-  step,
+const mapStateToProps = (
+  { slider }: RootState,
+) => ({
+  slider,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  handleInitMap: bindActionCreators(initMap, dispatch),
+  handleFetchData: bindActionCreators(fetchData, dispatch),
 });
 
-const MapContainer = connect(mapStateToProps, mapDispatchToProps)(Map as any);
-export default MapContainer;
+const MapLegendContainer = connect(mapStateToProps, mapDispatchToProps)(MapLegend as any);
+export default MapLegendContainer;

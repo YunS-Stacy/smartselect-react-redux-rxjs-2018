@@ -11,7 +11,7 @@ const PATHS = {
 };
 
 const DEV_SERVER = {
-  port: 8080,
+  port: 3000,
   hot: true,
   hotOnly: true,
   historyApiFallback: true,
@@ -34,7 +34,7 @@ module.exports = (env = {}) => {
   const isDev = !env.build;
   const entry = isDev ? [
     'react-hot-loader/patch',
-    'webpack-dev-server/client?http://localhost:8080/', // WebpackDevServer host and port
+    'webpack-dev-server/client?http://localhost:3000/', // WebpackDevServer host and port
     // 'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
     PATHS.src + '/index.tsx',
   ] : [

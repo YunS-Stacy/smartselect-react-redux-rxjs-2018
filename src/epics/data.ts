@@ -39,7 +39,9 @@ import {
 import {
   APP_TOGGLE,
   FETCH_DATA,
-  FETCH_DATA_CANCELLED
+  FETCH_DATA_CANCELLED,
+  IS_LOADED,
+  STEP_ADD,
 } from '../constants/action-types';
 import { updateHighlights } from '../utils/highlights';
 import { Store, Action } from '../types/redux';
@@ -51,16 +53,14 @@ import { fetchDataFulfilled } from '../reducers/app/actions';
 type IAction = Action & { payload?: any };
 (mapboxgl as any).accessToken = MAPBOX_TOKEN;
 
-// const fetchDataEpic = (action$: ActionsObservable<IAction>) => action$
-//   .ofType(FETCH_DATA)
-//   .filter(val => val.payload === 'slider')
-//   .mergeMap(() => Observable.empty<never>());
-
 const fetchDataEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
-.ofType(FETCH_DATA)
+  .ofType(FETCH_DATA)
+.take(1)
 .filter(() => store.getState().slider.fetched === false)
+.do(() => console.log('begin fetch'))
+// wait until map is loaded
 .pipe(
-  mergeMap(action =>
+  switchMap(action =>
     ajax.getJSON(DATA_URL.slider)
       .pipe(
         map((response) => {

@@ -5,7 +5,6 @@ import { createEpicMiddleware } from 'redux-observable';
 import epics from '../epics';
 import reducers from '../reducers';
 
-import { IDENTITY_GET } from '../constants/action-types';
 import { RootState } from '../types';
 
 const composeEnhancers = (
