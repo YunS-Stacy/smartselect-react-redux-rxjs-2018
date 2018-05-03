@@ -17,6 +17,7 @@ export interface RootState {
   app: boolean;
   slider: {
     data: any[];
+    range: number[];
     fetched: boolean;
   };
   map: {

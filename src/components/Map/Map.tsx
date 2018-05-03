@@ -12,7 +12,6 @@ class Map extends React.Component<Props> {
   container: HTMLDivElement;
 
   componentDidMount() {
-    console.log('mapinit only once');
     this.props.handleInitMap(this.container);
   }
 

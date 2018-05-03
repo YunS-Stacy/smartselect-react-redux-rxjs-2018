@@ -4,7 +4,7 @@ import * as mapboxDraw from '@mapbox/mapbox-gl-draw';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { ajax } from 'rxjs/observable/dom/ajax';
 
-import { Observable } from 'rxjs/Rx';
+import { Observable, AjaxRequest } from 'rxjs/Rx';
 import { of } from 'rxjs/observable/of';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { interval } from 'rxjs/observable/interval';
@@ -39,12 +39,15 @@ import {
 import {
   APP_TOGGLE,
   FETCH_DATA,
-  FETCH_DATA_CANCELLED
+  FETCH_DATA_CANCELLED,
+  POPUP_FETCH
 } from '../constants/action-types';
 import { updateHighlights } from '../utils/highlights';
 import { Store, Action } from '../types/redux';
 import { setInstance, mapLoaded, resetMap, setLayer, setMode, setGeometry, setStep } from '../reducers/map/actions';
-import { MAPBOX_TOKEN, MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES, DATA_URL } from '../constants/app-constants';
+import {
+  MAPBOX_TOKEN, MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES, DATA_URL, getZillowComps
+} from '../constants/app-constants';
 import { FeatureCollection, Feature, GeometryObject, LineString, Polygon, Point, GeoJsonObject } from 'geojson';
 import { fetchDataFulfilled } from '../reducers/app/actions';
 
@@ -56,17 +59,15 @@ type IAction = Action & { payload?: any };
 //   .filter(val => val.payload === 'slider')
 //   .mergeMap(() => Observable.empty<never>());
 
-const fetchDataEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
-.ofType(FETCH_DATA)
-.filter(() => store.getState().slider.fetched === false)
+const fetchSliderEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
+  .ofType(FETCH_DATA)
+// check no data
+  .filter(() => store.getState().slider.fetched === false)
 .pipe(
   mergeMap(action =>
-    ajax.getJSON(DATA_URL.slider)
+    ajax.getJSON(DATA_URL.firebase)
       .pipe(
-        map((response) => {
-          console.log(response, 'response');
-          return fetchDataFulfilled({ data: response, name: 'slider' });
-        }),
+        map(data => fetchDataFulfilled({ data, name: 'slider' })),
         takeUntil(action$.ofType(FETCH_DATA_CANCELLED).pipe(
           filter(action => action.payload === 'slider'),
           mapTo({ type: 'failed' }),
@@ -75,8 +76,40 @@ const fetchDataEpic = (action$: ActionsObservable<IAction>, store: Store) => act
   ),
 );
 
+const request: AjaxRequest = {
+  async: true,
+  crossDomain: true,
+  withCredentials: false,
+  headers: {},
+  method: 'GET',
+  responseType: 'json',
+  timeout: 0,
+};
+
+const fetchPopupEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
+  .ofType(POPUP_FETCH)
+  // check no data
+  .filter(() => store.getState().popup.fetched === false)
+  .do(val => console.log(val))
+  .pipe(
+    mergeMap(action =>
+    ajax.get(getZillowComps('1'), {
+      responseType: 'text',
+
+    })
+        .pipe(
+          map(data => fetchDataFulfilled({ data, name: 'popup' })),
+          takeUntil(action$.ofType(FETCH_DATA_CANCELLED).pipe(
+            filter(action => action.payload === 'slider'),
+            mapTo({ type: 'failed' }),
+          )),
+      ),
+    ),
+);
+
 export const epics = combineEpics(
-  fetchDataEpic,
+  fetchSliderEpic,
+  fetchPopupEpic,
 );
 
 export default epics;
