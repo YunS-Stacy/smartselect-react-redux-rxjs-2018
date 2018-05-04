@@ -1,6 +1,8 @@
 import * as React from 'react';
 
 import QuerySlider from './QuerySlider';
+import InfoCard from './InfoCard';
+import MarkerCard from './MarkerCard';
 
 interface Props {
   step: number;
@@ -22,6 +24,9 @@ class Map extends React.Component<Props> {
       ref={el => this.container = el}
     >
     {this.props.step === 1 && <QuerySlider handleFetchData={this.props.handleFetchData}/>}
+    {this.props.step === 1 && <InfoCard/>}
+    {this.props.step === 1 && <MarkerCard />}
+
     </div>);
   }
 }

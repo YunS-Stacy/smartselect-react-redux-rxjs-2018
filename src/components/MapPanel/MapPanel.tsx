@@ -54,8 +54,7 @@ const MapPanel = ({
 }: Props) => (
   <Spin
     spinning={!loaded}
-    wrapperClassName="spinner leftPanel"
-    // style={{top: '30vh', left: '-38vw', position: 'absolute'}}
+    wrapperClassName="spinner map-panel"
   >
   <Paper
     style={{

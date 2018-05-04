@@ -9,7 +9,7 @@ import { Dispatch } from '../../types/redux';
 import { fetchData } from '../../reducers/app/actions';
 import { initMap } from '../../reducers/map/actions';
 
-const mapStateToProps = ({ map: { step } }: RootState) => ({
+const mapStateToProps = ({ map: { step }, popup: { data } }: RootState) => ({
   step,
 });
 

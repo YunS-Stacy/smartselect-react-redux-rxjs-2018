@@ -1,16 +1,15 @@
 import * as mapbox from 'mapbox-gl';
 import { Feature, GeometryObject } from 'geojson';
-interface Stats {
-  show: boolean;
-  spaceUseList: string[];
-  maxFlrNum: number;
-  areaByUsage: {
-    spaceUse: string;
-    area: number;
-    floors: number;
-    units: number;
-  }[];
-  totalArea: number;
+interface MapMarker {
+  coords?: {
+    lng: number;
+    lat: number;
+  };
+  source?: string;
+  zpid?: string;
+  refprice?: number;
+  address?: string;
+  [key: string]: any;
 }
 
 export interface RootState {
@@ -20,6 +19,12 @@ export interface RootState {
     range: number[];
     fetched: boolean;
   };
+  popup: {
+    data: any[];
+    range: number[];
+    fetched: boolean;
+  };
+  marker: MapMarker;
   map: {
     draw: boolean;
     step: number;

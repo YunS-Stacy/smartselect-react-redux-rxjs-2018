@@ -21,7 +21,7 @@ export const initMap = (payload: HTMLDivElement) => ({
   type: MAP_INIT,
 });
 
-export const setInstance = (payload: any) => ({
+export const setInstance = (payload: mapboxgl.Map) => ({
   payload,
   type: INSTANCE_SET,
 });

@@ -75,4 +75,4 @@ export const DATA_URL = {
 };
 
 export const getZillowComps = (zpid: string | number) =>
-  `${DATA_URL.zillow}?zws-id=${ZILLOW_TOKEN}?&zpid=2101317688&count=3`;
+  `${DATA_URL.zillow}?zws-id=${ZILLOW_TOKEN}&zpid=2101317688&count=3`;

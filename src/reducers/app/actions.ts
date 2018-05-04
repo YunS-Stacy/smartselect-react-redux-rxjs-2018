@@ -3,7 +3,8 @@ import {
   FETCH_DATA,
   FETCH_DATA_FULFILLED,
   FETCH_DATA_CANCELLED,
-  FETCH_DATA_REJECTED
+  FETCH_DATA_REJECTED,
+  FETCH_DATA_LOADING
 } from '../../constants/action-types';
 
 export const toggleApp = () => ({
@@ -27,4 +28,9 @@ export const fetchDataCancelled = (payload: string) => ({
 export const fetchDataRejected = (payload: string) => ({
   payload,
   type: FETCH_DATA_REJECTED,
+});
+
+export const fetchDataLoading = (payload: string) => ({
+  payload,
+  type: FETCH_DATA_LOADING,
 });

@@ -49,7 +49,7 @@ import {
   MAPBOX_TOKEN, MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES, DATA_URL, getZillowComps
 } from '../constants/app-constants';
 import { FeatureCollection, Feature, GeometryObject, LineString, Polygon, Point, GeoJsonObject } from 'geojson';
-import { fetchDataFulfilled } from '../reducers/app/actions';
+import { fetchDataFulfilled, fetchDataLoading } from '../reducers/app/actions';
 
 type IAction = Action & { payload?: any };
 (mapboxgl as any).accessToken = MAPBOX_TOKEN;
@@ -76,15 +76,16 @@ const fetchSliderEpic = (action$: ActionsObservable<IAction>, store: Store) => a
   ),
 );
 
-const request: AjaxRequest = {
+const zillowCompsRequest = (zpid: string) => ({
+  url: getZillowComps(zpid),
   async: true,
   crossDomain: true,
   withCredentials: false,
   headers: {},
   method: 'GET',
-  responseType: 'json',
+  responseType: 'document',
   timeout: 0,
-};
+} as AjaxRequest);
 
 const fetchPopupEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
   .ofType(POPUP_FETCH)
@@ -92,20 +93,23 @@ const fetchPopupEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
   .filter(() => store.getState().popup.fetched === false)
   .do(val => console.log(val))
   .pipe(
-    mergeMap(action =>
-    ajax.get(getZillowComps('1'), {
-      responseType: 'text',
-
-    })
-        .pipe(
-          map(data => fetchDataFulfilled({ data, name: 'popup' })),
-          takeUntil(action$.ofType(FETCH_DATA_CANCELLED).pipe(
-            filter(action => action.payload === 'slider'),
-            mapTo({ type: 'failed' }),
-          )),
+    switchMap(action =>
+      Observable.concat(
+        // set loading
+        Observable.of(fetchDataLoading('popup')),
+        // ajax
+        Observable.ajax(zillowCompsRequest('1'))
+          .pipe(
+            filter(res => res.status === 200),
+            map(res => fetchDataFulfilled({ data: res.response, name: 'popup' })),
+            takeUntil(action$.ofType(FETCH_DATA_CANCELLED).pipe(
+              filter(action => action.payload === 'popup'),
+              mapTo({ type: 'failed' }),
+            )),
+        ),
       ),
     ),
-);
+  );
 
 export const epics = combineEpics(
   fetchSliderEpic,
