@@ -3,16 +3,16 @@
  */
 export const APP_TOGGLE = 'APP_TOGGLE';
 export type APP_TOGGLE = typeof APP_TOGGLE;
-export const FETCH_DATA = 'FETCH_DATA';
-export type FETCH_DATA = typeof FETCH_DATA;
-export const FETCH_DATA_LOADING = 'FETCH_DATA_LOADING';
-export type FETCH_DATA_LOADING = typeof FETCH_DATA_LOADING;
-export const FETCH_DATA_FULFILLED = 'FETCH_DATA_FULFILLED';
-export type FETCH_DATA_FULFILLED = typeof FETCH_DATA_FULFILLED;
-export const FETCH_DATA_CANCELLED = 'FETCH_DATA_CANCELLED';
-export type FETCH_DATA_CANCELLED = typeof FETCH_DATA_CANCELLED;
-export const FETCH_DATA_REJECTED = 'FETCH_DATA_REJECTED';
-export type FETCH_DATA_REJECTED = typeof FETCH_DATA_REJECTED;
+export const DATA_FETCH = 'DATA_FETCH';
+export type DATA_FETCH = typeof DATA_FETCH;
+export const DATA_FETCH_LOADING = 'DATA_FETCH_LOADING';
+export type DATA_FETCH_LOADING = typeof DATA_FETCH_LOADING;
+export const DATA_FETCH_FULFILLED = 'DATA_FETCH_FULFILLED';
+export type DATA_FETCH_FULFILLED = typeof DATA_FETCH_FULFILLED;
+export const DATA_FETCH_CANCELLED = 'DATA_FETCH_CANCELLED';
+export type DATA_FETCH_CANCELLED = typeof DATA_FETCH_CANCELLED;
+export const DATA_FETCH_REJECTED = 'DATA_FETCH_REJECTED';
+export type DATA_FETCH_REJECTED = typeof DATA_FETCH_REJECTED;
 
 /**
  * Map
@@ -68,6 +68,13 @@ export type GEOMETRY_REMOVE = typeof GEOMETRY_REMOVE;
 export const GEOMETRY_HEIGHT_SET = 'GEOMETRY_HEIGHT_SET';
 export type GEOMETRY_HEIGHT_SET = typeof GEOMETRY_HEIGHT_SET;
 
+export const ROUTE_SET = 'ROUTE_SET';
+export type ROUTE_SET = typeof ROUTE_SET;
+export const ROUTE_RESET = 'ROUTE_RESET';
+export type ROUTE_RESET = typeof ROUTE_RESET;
+// export const POPUP_ID_RESET = 'POPUP_ID_RESET';
+// export type POPUP_ID_RESET = typeof POPUP_ID_RESET;
+
 /**
  * Map Draw Control
  */
@@ -85,6 +92,15 @@ export type SLIDER_RANGE_SET = typeof SLIDER_RANGE_SET;
  */
 export const POPUP_FETCH = 'POPUP_FETCH';
 export type POPUP_FETCH = typeof POPUP_FETCH;
+export const POPUP_ID_SET = 'POPUP_ID_SET';
+export type POPUP_ID_SET = typeof POPUP_ID_SET;
+export const POPUP_ID_RESET = 'POPUP_ID_RESET';
+export type POPUP_ID_RESET = typeof POPUP_ID_RESET;
+
+export const POPUP_POSITION_SET = 'POPUP_POSITION_SET';
+export type POPUP_POSITION_SET = typeof POPUP_POSITION_SET;
+export const POPUP_RESET = 'POPUP_RESET';
+export type POPUP_RESET = typeof POPUP_RESET;
 
 /**
  * Marker
@@ -93,3 +109,8 @@ export const MARKER_SET = 'MARKER_SET';
 export type MARKER_SET = typeof MARKER_SET;
 export const MARKER_RESET = 'MARKER_RESET';
 export type MARKER_RESET = typeof MARKER_RESET;
+
+export const MARKER_POSITION_SET = 'MARKER_POSITION_SET';
+export type MARKER_POSITION_SET = typeof MARKER_POSITION_SET;
+
+

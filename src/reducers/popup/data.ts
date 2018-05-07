@@ -1,10 +1,11 @@
 import {
   POPUP_FETCH,
-  FETCH_DATA_FULFILLED,
-  FETCH_DATA_CANCELLED,
-  FETCH_DATA_REJECTED,
+  DATA_FETCH_FULFILLED,
+  DATA_FETCH_CANCELLED,
+  DATA_FETCH_REJECTED,
   STEP_ADD,
-  STEP_MINUS
+  STEP_MINUS,
+  MARKER_SET
 } from '../../constants/action-types';
 import { RootState } from '../../types';
 import { Action } from 'redux';
@@ -13,14 +14,15 @@ const initialState: any[] = null;
 
 export default (state = initialState, { type, payload }: Action & { payload?: any }) => {
   switch (type) {
-    // if fetch another comps, reset state
+    // set other marker
+    case MARKER_SET:
     // case POPUP_FETCH:
     // if map step change, reset state
     case STEP_ADD:
     case STEP_MINUS:
       return initialState;
 
-    case FETCH_DATA_FULFILLED: {
+    case DATA_FETCH_FULFILLED: {
       const { name, data } = payload;
       // if it is popup data
       if (name === 'popup') {
@@ -61,7 +63,7 @@ export default (state = initialState, { type, payload }: Action & { payload?: an
             lastSoldPrice,
             valuationRange,
             zestimate, monthlyChange,
-            position: { lng, lat },
+            coords: { lng, lat },
           };
         });
         return newState;

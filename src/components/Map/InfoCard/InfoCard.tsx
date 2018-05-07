@@ -51,7 +51,6 @@ const InfoCard = ({ data, fetched }: Props) =>
               {data.monthChange >= 0
                 ? <TrendingUp style={{ width: '18px', height: '18px' }}>Price Up</TrendingUp>
                 : <TrendingDown style={{ width: '18px', height: '18px' }}>Price Down</TrendingDown>}
-              {/* {data.monthChange >= 0 ? ` Price Up` : ` Price Down`} */}
             </li>
           </ul>
         </CardText>}

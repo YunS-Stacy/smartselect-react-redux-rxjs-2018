@@ -45,7 +45,7 @@ import {
   INSTANCE_SET, MODE_SET, MAP_RESET, MAP_CHECK,
   GEOMETRY_GET, GEOMETRY_SET,
   STEP_ADD, STEP_MINUS, STEP_SET, LAYER_VIZ_SET,
-  STYLE_SET, GEOMETRY_HEIGHT_SET, SLIDER_RANGE_SET, FETCH_DATA_FULFILLED, MARKER_SET,
+  STYLE_SET, GEOMETRY_HEIGHT_SET, SLIDER_RANGE_SET, DATA_FETCH_FULFILLED, MARKER_SET, POPUP_FETCH, POPUP_ID_SET,
 } from '../constants/action-types';
 import { updateHighlights } from '../utils/highlights';
 import { Store, Action } from '../types/redux';
@@ -55,15 +55,15 @@ import {
 } from '../reducers/map/actions';
 import { MAPBOX_TOKEN, MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES } from '../constants/app-constants';
 import { FeatureCollection, Feature, GeometryObject, LineString, Polygon, Point, GeoJsonObject } from 'geojson';
-import { fetchPopup } from '../reducers/popup/actions';
-import { setMarker } from '../reducers/marker/actions';
+import { fetchPopup, setPopupId, setPopupPosition, resetPopupId } from '../reducers/popup/actions';
+import { setMarker, setMarkerPosition } from '../reducers/marker/actions';
 import { RootState } from '../types';
 
 type IAction = Action & { payload?: any };
 (mapboxgl as any).accessToken = MAPBOX_TOKEN;
 
 let mapping: mapboxgl.Map;
-(window as any).mapping = mapping;
+
 const mappingControls: Map<string, mapboxgl.Control> = new Map();
 
 const scaleControl = new mapboxgl.ScaleControl({ unit: 'imperial' });
@@ -179,17 +179,13 @@ const initMapEpic = (action$: ActionsObservable<Action>) => action$
       const container = document.createElement('div');
       // test if has already a map container
       const oldChild = el.firstChild;
-      oldChild ? el.replaceChild(container, oldChild) : el.appendChild(container);
+      // oldChild ? el.replaceChild(container, oldChild) : el.appendChild(container);
       mapping = new mapboxgl.Map({
         ...MAP_SETTINGS_DEFAULT,
-        container,
+        container: el,
       });
-      (window as any).mapping = mapping;
+      if (process.env.NODE_ENV === 'production') { (window as any).mapping = mapping; }
       return mapping;
-      // mapping.on('load', () => {
-      //   (window as any).mapping = mapping;
-      //   mapping.setLayoutProperty('footprint', 'visibility', 'visible');
-      // });
     }),
     switchMap(val => Observable
       .fromEvent(val, 'load')
@@ -326,41 +322,24 @@ const setModeQueryEpic = (action$: ActionsObservable<Action & { payload: string 
           .mapTo(setLayerViz({ name: 'aptParcel', viz: 'visible' })).do(() => console.log('check')),
       ), // check map after all actions dispatched
 
-    // map events
-      Observable.merge(
-        Observable.fromEvent(mapping, 'mousemove')
-          .filter(() => store.getState().map.step === 1)
-          .map((ev: mapboxgl.MapDataEvent) => {
-            const feature = mapping.queryRenderedFeatures((ev as any).point, { layers: ['aptParcel'] });
-            // change cursor style
-            mapping.getCanvas().style.cursor = feature.length > 0 ? 'pointer' : '';
-            if (feature.length > 0) {
-              return feature;
-            }
-            return null;
-          })
-          // filter null value
-          .filter(val => !!val)
-          .map(feature => fetchPopup(feature[0].properties.zpid)),
-        Observable.fromEvent(mapping, 'click')
-          .filter(() => store.getState().map.step === 1)
-          .do(ev => console.log(ev, 'ev'))
+      // map events
+      Observable.fromEvent(mapping, 'mousemove')
+        .filter(() => store.getState().map.step === 1)
+        .map((ev: mapboxgl.MapDataEvent) => {
+          const feature = mapping.queryRenderedFeatures((ev as any).point, { layers: ['aptParcel'] });
+          // change cursor style
+          mapping.getCanvas().style.cursor = feature.length > 0 ? 'pointer' : '';
 
-          .map((ev: mapboxgl.MapDataEvent) => {
-            const feature = mapping.queryRenderedFeatures((ev as any).point, { layers: ['aptParcel'] });
-            // change cursor style
-            mapping.getCanvas().style.cursor = feature.length > 0 ? 'pointer' : '';
-            if (feature.length > 0) {
-              return { ...feature[0].properties, position: (ev as any).point };
-            }
-            return null;
-          })
-          // filter null value
-          .filter(val => !!val)
-          .do(val => console.log(val))
-          .map(val => setMarker(val)),
-            // check map after all actions dispatched
-      ),
+          if (feature.length > 0) {
+            return { feature: feature[0], position: (ev as any).point };
+          }
+          return null;
+        })
+        // filter null value
+        .filter(val => !!val)
+        .do(val => console.log(val))
+        .map(val => setMarker({ ...val.feature.properties, position: val.position })),
+        // check map after all actions dispatched
     ),
   ),
 );
@@ -705,9 +684,9 @@ const setSliderRangeEpic = (action$: ActionsObservable<Action>) => action$
 
 const setCompsLayerEpic = (action$: ActionsObservable<Action>, store: Store) => action$
   // when get cops data
-  .ofType(MARKER_SET)
+  .ofType(POPUP_FETCH)
   .switchMapTo(
-  action$.ofType(FETCH_DATA_FULFILLED).filter(action => (action as any).payload.name === 'popup')
+  action$.ofType(DATA_FETCH_FULFILLED).filter(action => (action as any).payload.name === 'popup')
     // relates to comps
     // .filter(action => (action as any).payload.name === 'popup')
     // get comps data from store
@@ -718,9 +697,9 @@ const setCompsLayerEpic = (action$: ActionsObservable<Action>, store: Store) => 
       const { marker: { coords: { lng: originLng, lat: originLat } } } = store.getState();
       const originCoords = [originLng, originLat];
       // set geometry and attrs for property query
-      const compsPts = featureCollection(comps.map(({ position: { lng, lat }, zpid }) => point([lng, lat], { zpid })));
+      const compsPts = featureCollection(comps.map(({ coords: { lng, lat }, zpid }) => point([lng, lat], { zpid })));
       const compsLines = featureCollection(
-        comps.map(({ position: { lng, lat } }) => lineString([[lng, lat], originCoords])),
+        comps.map(({ coords: { lng, lat } }) => lineString([[lng, lat], originCoords])),
       );
       // check if exits source, if has source, set data; otherwise, set source and data
       if (mapping.getSource('compsPts')) {
@@ -744,12 +723,73 @@ const setCompsLayerEpic = (action$: ActionsObservable<Action>, store: Store) => 
 
       // calculate bbox, and set fints to that
       const mapBbox = bbox(compsLines);
-      console.log(mapBbox, 'mapbbox');
       mapping.fitBounds((mapBbox as any), { padding: 100 });
-      console.log(compsPts, compsLines, 'featureCollection multiple');
-      return 1;
+      return mapping;
     })
-    .map(val => ({ val, type: 'test' }))
+    .switchMap(val =>
+      Observable.fromEvent(val, 'mousemove')
+      .map((ev: mapboxgl.MapDataEvent) => {
+        const feature = mapping.queryRenderedFeatures((ev as any).point, { layers: ['compsPts'] });
+        // change cursor style
+        mapping.getCanvas().style.cursor = feature.length > 0 ? 'pointer' : '';
+        return feature.length > 0 && feature[0].properties.zpid;
+      })
+      .distinctUntilChanged()
+      // if has feature set id, else reset
+      .map((val) => {
+        if (!val) {
+          return resetPopupId();
+        }
+        return setPopupId(val);
+      }),
+    ),
+);
+
+// after set popup id
+const setPopupPositionEpic = (action$: ActionsObservable<Action>, store: Store) => action$
+.ofType(POPUP_ID_SET)
+// init popup position
+.map((action: any) => {
+  // get zpid
+  const { payload: id } = action;
+  // find data and get coords
+  const selected = store.getState().popup.data.find((item: any) => item.zpid === id);
+
+  console.log('check selected', selected, id);
+
+  const { coords } = store.getState().popup.data.find((item: any) => item.zpid === id);
+  return setPopupPosition(mapping.project(coords));
+});
+
+const mappingEventsEpic = (action$: ActionsObservable<Action>, store: Store) => action$
+.ofType(IS_LOADED).take(1).switchMap(() =>
+  Observable.fromEvent(mapping, 'move')
+  // listen to event when map mode is query
+  .filter(() => store.getState().map.step === 1)
+  .do(val => console.log('map events', val))
+  .switchMapTo(
+    Observable.merge(
+      // set marker position
+      Observable.of(1)
+      .filter(() => store.getState().marker)
+      .map(() => setMarkerPosition(mapping.project(store.getState().marker.coords))),
+      // set popup position
+      Observable.of(1)
+      .filter(() => store.getState().popup.id)
+      .map(() => {
+        const { id } = store.getState().popup;
+        const selected = store.getState().popup.data.find((item: any) => item.zpid === id);
+        console.log('check selected', selected);
+        const { coords } = store.getState().popup.data.find((item: any) => item.zpid === id);
+        return setPopupPosition(mapping.project(coords));
+      }),
+    ).do(val => console.log('pbservable', val)),
+  ),
+
+  // .filter(() => store.getState().marker)
+  // .map(() => mapping.project(store.getState().marker.coords))
+  // .do(val => console.log('check pos', val))
+  // .map(val => setMarkerPosition(val)),
 );
 
 export const epics = combineEpics(
@@ -785,6 +825,9 @@ export const epics = combineEpics(
 
   setSliderRangeEpic,
   setCompsLayerEpic,
+
+  setPopupPositionEpic,
+  mappingEventsEpic,
 );
 
 export default epics;

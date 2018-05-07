@@ -38,8 +38,8 @@ import {
 
 import {
   APP_TOGGLE,
-  FETCH_DATA,
-  FETCH_DATA_CANCELLED,
+  DATA_FETCH,
+  DATA_FETCH_CANCELLED,
   POPUP_FETCH
 } from '../constants/action-types';
 import { updateHighlights } from '../utils/highlights';
@@ -55,20 +55,20 @@ type IAction = Action & { payload?: any };
 (mapboxgl as any).accessToken = MAPBOX_TOKEN;
 
 // const fetchDataEpic = (action$: ActionsObservable<IAction>) => action$
-//   .ofType(FETCH_DATA)
+//   .ofType(DATA_FETCH)
 //   .filter(val => val.payload === 'slider')
 //   .mergeMap(() => Observable.empty<never>());
 
 const fetchSliderEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
-  .ofType(FETCH_DATA)
+  .ofType(DATA_FETCH)
 // check no data
-  .filter(() => store.getState().slider.fetched === false)
+  .filter(action => action.payload === 'slider' && store.getState().slider.fetched === false)
 .pipe(
   mergeMap(action =>
     ajax.getJSON(DATA_URL.firebase)
       .pipe(
         map(data => fetchDataFulfilled({ data, name: 'slider' })),
-        takeUntil(action$.ofType(FETCH_DATA_CANCELLED).pipe(
+        takeUntil(action$.ofType(DATA_FETCH_CANCELLED).pipe(
           filter(action => action.payload === 'slider'),
           mapTo({ type: 'failed' }),
         )),
@@ -87,6 +87,10 @@ const zillowCompsRequest = (zpid: string) => ({
   timeout: 0,
 } as AjaxRequest);
 
+const compsDirectionRequest = (profile: string, coordinates: number[]) => ({
+  url: `https://api.mapbox.com/directions/v5/mapbox/`,
+});
+
 const fetchPopupEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
   .ofType(POPUP_FETCH)
   // check no data
@@ -102,7 +106,7 @@ const fetchPopupEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
           .pipe(
             filter(res => res.status === 200),
             map(res => fetchDataFulfilled({ data: res.response, name: 'popup' })),
-            takeUntil(action$.ofType(FETCH_DATA_CANCELLED).pipe(
+            takeUntil(action$.ofType(DATA_FETCH_CANCELLED).pipe(
               filter(action => action.payload === 'popup'),
               mapTo({ type: 'failed' }),
             )),

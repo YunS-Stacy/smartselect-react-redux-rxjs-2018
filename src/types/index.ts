@@ -1,6 +1,5 @@
 import * as mapbox from 'mapbox-gl';
-import { Feature, GeometryObject } from 'geojson';
-interface MapMarker {
+export interface MapMarker {
   coords?: {
     lng: number;
     lat: number;
@@ -9,6 +8,7 @@ interface MapMarker {
   zpid?: string;
   refprice?: number;
   address?: string;
+  position: mapbox.Point;
   [key: string]: any;
 }
 
@@ -22,10 +22,13 @@ export interface RootState {
   popup: {
     data: any[];
     range: number[];
-    fetched: boolean;
+    fetched: boolean | string;
+    id: string;
+    position: mapbox.Point;
   };
   marker: MapMarker;
   map: {
+    route: mapbox.GeoJSONGeometry;
     draw: boolean;
     step: number;
     mode: 'intro' | 'query' | 'measure' | 'build' | 'decide' | null;
