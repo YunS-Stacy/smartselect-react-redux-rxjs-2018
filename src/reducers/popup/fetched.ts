@@ -24,7 +24,7 @@ export default (state = initialState, { type, payload }: Action & { payload?: an
     case DATA_FETCH_CANCELLED:
       return payload === 'popup' ? false : state;
     case DATA_FETCH_REJECTED:
-      return payload === 'popup' ? false : state;
+      return payload.name === 'popup' ? false : state;
     case POPUP_FETCH:
       return false;
     default:

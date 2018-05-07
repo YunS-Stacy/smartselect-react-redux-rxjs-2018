@@ -25,7 +25,7 @@ export const fetchDataCancelled = (payload: string) => ({
   type: DATA_FETCH_CANCELLED,
 });
 
-export const fetchDataRejected = (payload: string) => ({
+export const fetchDataRejected = (payload: { name: string; message: string }) => ({
   payload,
   type: DATA_FETCH_REJECTED,
 });

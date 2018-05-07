@@ -3,6 +3,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import { RootState } from '../../types';
 
+import SnackMessage from './SnackMessage';
 import MainBtn from '../MainBtn';
 import Map from '../Map';
 import MapMask from '../MapMask';
@@ -21,6 +22,7 @@ const Home = ({ app }: Props) => (
         <Map/>
         {app && <MapPanel />}
       </section>
+      <SnackMessage />
     </div>
   </MuiThemeProvider>
 );

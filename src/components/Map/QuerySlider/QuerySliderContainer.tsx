@@ -22,5 +22,5 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   handleSetSliderRange: bindActionCreators(setSliderRange, dispatch),
 });
 
-const QuerySliderContainer = connect(mapStateToProps, mapDispatchToProps)(QuerySlider as any);
+const QuerySliderContainer = connect(mapStateToProps, mapDispatchToProps)(QuerySlider);
 export default QuerySliderContainer;

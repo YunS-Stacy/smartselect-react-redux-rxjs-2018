@@ -40,16 +40,17 @@ import {
   APP_TOGGLE,
   DATA_FETCH,
   DATA_FETCH_CANCELLED,
-  POPUP_FETCH
+  POPUP_FETCH,
+  DATA_FETCH_REJECTED
 } from '../constants/action-types';
 import { updateHighlights } from '../utils/highlights';
 import { Store, Action } from '../types/redux';
 import { setInstance, mapLoaded, resetMap, setLayer, setMode, setGeometry, setStep } from '../reducers/map/actions';
 import {
-  MAPBOX_TOKEN, MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES, DATA_URL, getZillowComps
+  MAPBOX_TOKEN, MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES, DATA_URL, getZillowComps, getDirections
 } from '../constants/app-constants';
 import { FeatureCollection, Feature, GeometryObject, LineString, Polygon, Point, GeoJsonObject } from 'geojson';
-import { fetchDataFulfilled, fetchDataLoading } from '../reducers/app/actions';
+import { fetchDataFulfilled, fetchDataLoading, fetchDataCancelled, fetchDataRejected } from '../reducers/app/actions';
 
 type IAction = Action & { payload?: any };
 (mapboxgl as any).accessToken = MAPBOX_TOKEN;
@@ -78,18 +79,24 @@ const fetchSliderEpic = (action$: ActionsObservable<IAction>, store: Store) => a
 
 const zillowCompsRequest = (zpid: string) => ({
   url: getZillowComps(zpid),
-  async: true,
   crossDomain: true,
-  withCredentials: false,
-  headers: {},
   method: 'GET',
   responseType: 'document',
-  timeout: 0,
 } as AjaxRequest);
 
-const compsDirectionRequest = (profile: string, coordinates: number[]) => ({
-  url: `https://api.mapbox.com/directions/v5/mapbox/`,
-});
+const compsDirectionRequest = (
+  profile: string,
+  origin: {
+    lat: number; lng: number;
+  },
+  dest: {
+    lat: number; lng: number;
+  },
+) => ({
+  url: getDirections(profile, origin, dest),
+  crossDomain: true,
+  method: 'GET',
+} as AjaxRequest);
 
 const fetchPopupEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
   .ofType(POPUP_FETCH)
@@ -102,14 +109,24 @@ const fetchPopupEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
         // set loading
         Observable.of(fetchDataLoading('popup')),
         // ajax
-        Observable.ajax(zillowCompsRequest('1'))
+        Observable.ajax(zillowCompsRequest(action.payload))
           .pipe(
-            filter(res => res.status === 200),
-            map(res => fetchDataFulfilled({ data: res.response, name: 'popup' })),
-            takeUntil(action$.ofType(DATA_FETCH_CANCELLED).pipe(
-              filter(action => action.payload === 'popup'),
-              mapTo({ type: 'failed' }),
-            )),
+
+          tap((res: any) => {
+            console.log(Array.from((res.response as XMLDocument).getElementsByTagName('code'))[0].innerHTML);
+
+          }),
+          // get response
+          filter(res => res.status === 200),
+          // filter if has a correct response or not
+          map((res: any) =>
+            Number(Array.from((res.response as XMLDocument).getElementsByTagName('code'))[0]
+              .innerHTML) !== 503 ? fetchDataFulfilled({ data: res.response, name: 'popup' })
+              : fetchDataRejected({ name:'popup', message: 'No Comps Found' }),
+          ),
+          takeUntil(action$.ofType(DATA_FETCH_CANCELLED, DATA_FETCH_REJECTED).pipe(
+            filter(action => action.payload === 'popup'),
+          )),
         ),
       ),
     ),

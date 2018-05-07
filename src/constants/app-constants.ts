@@ -74,5 +74,11 @@ export const DATA_URL = {
   zillow: `${ZILLOW_SERVER}`,
 };
 
-export const getZillowComps = (zpid: string | number) =>
-  `${DATA_URL.zillow}?zws-id=${ZILLOW_TOKEN}&zpid=2101317688&count=3`;
+export const DIRECTIONS_API = 'https://api.mapbox.com/directions/v5/mapbox';
+
+export const getZillowComps = (zpid: string) =>
+  `${DATA_URL.zillow}?zws-id=${ZILLOW_TOKEN}&zpid=${zpid}&count=3`;
+
+export const getDirections = (profile: string, origin: {lat: number; lng: number}, dest: {lat: number; lng: number}) =>
+  `${DIRECTIONS_API}/${profile}/${Object.keys(origin).join(',')};${Object.keys(dest).join(',')}
+  ?access_token=${MAPBOX_TOKEN}`;

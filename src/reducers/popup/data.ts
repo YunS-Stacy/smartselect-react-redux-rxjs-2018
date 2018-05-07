@@ -42,7 +42,8 @@ export default (state = initialState, { type, payload }: Action & { payload?: an
           // may have last sold date and price
           const lastSoldDate = el.getElementsByTagName('lastSoldDate')
             && el.getElementsByTagName('lastSoldDate')[0].innerHTML;
-          const lastSoldPrice = el.getElementsByTagName('lastSoldPrice')[0].innerHTML;
+          const lastSoldPrice = el.getElementsByTagName('lastSoldPrice')
+            && el.getElementsByTagName('lastSoldPrice')[0].innerHTML;
           // may have zestimate profile
           const zestimateEl = el.getElementsByTagName('zestimate');
           let zestimate, monthlyChange, valuationRange;

@@ -14,6 +14,7 @@ export interface MapMarker {
 
 export interface RootState {
   app: boolean;
+  message: string;
   slider: {
     data: any[];
     range: number[];

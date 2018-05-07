@@ -15,6 +15,12 @@ export const DATA_FETCH_REJECTED = 'DATA_FETCH_REJECTED';
 export type DATA_FETCH_REJECTED = typeof DATA_FETCH_REJECTED;
 
 /**
+ * Message
+ */
+export const MESSAGE_SET = 'MESSAGE_SET';
+export type MESSAGE_SET = typeof MESSAGE_SET;
+
+/**
  * Map
  */
 export const MAP_CHECK = 'MAP_CHECK';
@@ -112,5 +118,3 @@ export type MARKER_RESET = typeof MARKER_RESET;
 
 export const MARKER_POSITION_SET = 'MARKER_POSITION_SET';
 export type MARKER_POSITION_SET = typeof MARKER_POSITION_SET;
-
-
