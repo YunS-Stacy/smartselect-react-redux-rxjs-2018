@@ -31,9 +31,9 @@
     "turf": "^3.0.14"
   },
   "scripts": {
-    "serve": "node express.js",
+    "start": "node express.js",
     "clean": "rimraf dist",
-    "start": "webpack-dev-server --config configs/webpack.config.js",
+    "start:dev": "webpack-dev-server --config configs/webpack.config.js",
     "build": "yarn run clean && webpack --config configs/webpack.config.js --env.build",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
     "reinstall": "rm -rf node_modules && yarn",
