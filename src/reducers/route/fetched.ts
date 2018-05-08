@@ -1,11 +1,9 @@
 import {
-  DATA_FETCH,
   DATA_FETCH_LOADING,
   DATA_FETCH_FULFILLED,
   DATA_FETCH_CANCELLED,
   DATA_FETCH_REJECTED,
-  POPUP_FETCH,
-  MARKER_SET
+  ROUTE_FETCH
 } from '../../constants/action-types';
 import { RootState } from '../../types';
 import { Action } from 'redux';
@@ -16,14 +14,14 @@ export default (state = initialState, { type, payload }: Action & { payload?: an
   switch (type) {
     // set other marker
     case DATA_FETCH_LOADING:
-      return payload === 'popup' ? 'loading' : state;
+      return payload === 'route' ? 'loading' : state;
     case DATA_FETCH_FULFILLED:
-      return payload && payload.name === 'popup' ? true : state;
+      return payload && payload.name === 'route' ? true : state;
     case DATA_FETCH_CANCELLED:
-      return payload === 'popup' ? false : state;
+      return payload === 'route' ? false : state;
     case DATA_FETCH_REJECTED:
-      return payload.name === 'popup' ? false : state;
-    case POPUP_FETCH:
+      return payload.name === 'route' ? false : state;
+    case ROUTE_FETCH:
       return false;
     default:
       return state;

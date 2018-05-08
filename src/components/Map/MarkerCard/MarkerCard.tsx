@@ -31,21 +31,25 @@ const MarkerCard = ({ marker, fetched, isPopup, handleFetchPopup }: Props) =>
         transform: `translate(${marker.position.x}px, ${marker.position.y}px)`,
       }}
     >
-
-      {/* <IconButton
-        tooltip="Get Comps (Zillow)"
-        tooltipPosition="bottom-center"
-        onClick={() => handleFetchPopup(marker.zpid)}
-        style={{
-          // width: '.5rem',
-          transform: `translate(-50px, -50px)`,
-          backgroundColor: 'white',
-          borderRadius: '50%',
-          boxShadow:'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
-        }}
+      <div
+        className="circular-nav"
       >
-        <Business />
-      </IconButton> */}
+        <IconButton
+          tooltip="Get Comparables"
+          tooltipPosition="top-left"
+          style={{
+            width: '2rem',
+            height: '2rem',
+            borderRadius: '50%',
+            backgroundColor: 'rgb(0, 188, 212)',
+          }}
+          iconStyle={{ color: 'white' }}
+          className="btn-comps"
+          onClick={() => handleFetchPopup(marker.zpid)}
+        >
+          <Business />
+        </IconButton>
+      </div>
       <Spin
         wrapperClassName="Popup-card-spin"
         spinning={fetched === 'loading'}
@@ -62,44 +66,6 @@ const MarkerCard = ({ marker, fetched, isPopup, handleFetchPopup }: Props) =>
               </em>
             </li>
             <br />
-            <li style={{ display: 'flex', justifyContent: 'space-around' }}>
-              <div>
-                <label>Find Comps</label>
-                <IconButton
-                  tooltip="Get Comps (Zillow)"
-                  tooltipPosition="bottom-center"
-                  onClick={() => handleFetchPopup(marker.zpid)}
-                >
-                  <Business />
-                </IconButton>
-              </div>
-
-              <div style={{ marginLeft: '1em' }}>
-                <label>Go To</label>
-                <IconButton
-                  tooltip="Driving Directions"
-                  tooltipPosition="bottom-center"
-                  // onTouchTap={() => { this.props.dispatch({dest: marker.coords, methods: 'driving-traffic' }) }}
-                >
-                  <DirectionsCar />
-                </IconButton>
-                <IconButton
-                  tooltip="Public Transit Directions"
-                  tooltipPosition="bottom-center"
-                  // onTouchTap={() =>
-                  // { this.props.dispatch({ dest: marker.coords, methods: 'cycling' })}}
-                >
-                  <DirectionsBike />
-                </IconButton>
-                <IconButton
-                  tooltip="Cycling Directions"
-                  tooltipPosition="bottom-center"
-                  // onTouchTap={() => { this.props.dispatch({dest: marker.coords, methods: 'walking' }) }}
-                >
-                  <DirectionsWalk />
-                </IconButton>
-              </div>
-            </li>
           </ul>
         </CardText>}
       </Spin>

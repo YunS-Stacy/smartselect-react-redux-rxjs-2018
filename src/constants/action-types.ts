@@ -69,6 +69,8 @@ export const GEOMETRY_GET = 'GEOMETRY_GET';
 export type GEOMETRY_GET = typeof GEOMETRY_GET;
 export const GEOMETRY_SET = 'GEOMETRY_SET';
 export type GEOMETRY_SET = typeof GEOMETRY_SET;
+export const GEOMETRY_RESET = 'GEOMETRY_RESET';
+export type GEOMETRY_RESET = typeof GEOMETRY_RESET;
 export const GEOMETRY_REMOVE = 'GEOMETRY_REMOVE';
 export type GEOMETRY_REMOVE = typeof GEOMETRY_REMOVE;
 export const GEOMETRY_HEIGHT_SET = 'GEOMETRY_HEIGHT_SET';
@@ -78,6 +80,9 @@ export const ROUTE_SET = 'ROUTE_SET';
 export type ROUTE_SET = typeof ROUTE_SET;
 export const ROUTE_RESET = 'ROUTE_RESET';
 export type ROUTE_RESET = typeof ROUTE_RESET;
+
+export const ROUTE_FETCH = 'ROUTE_FETCH';
+export type ROUTE_FETCH = typeof ROUTE_FETCH;
 // export const POPUP_ID_RESET = 'POPUP_ID_RESET';
 // export type POPUP_ID_RESET = typeof POPUP_ID_RESET;
 

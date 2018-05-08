@@ -127,8 +127,7 @@ const MapPanel = ({
                     Polygon
                   </span>
                   <br />
-                  &ensp;Perimeter:
-                      <strong style={{ fontSize: '1.2em' }}>
+                  &ensp;Perimeter: <strong style={{ fontSize: '1.2em' }}>
                     {each.properties.length.toFixed(2)}</strong> feet
                       <br />
                   &ensp;Area: <strong style={{ fontSize: '1.2em' }}>
@@ -223,6 +222,7 @@ const MapPanel = ({
                   fontSize: '1.5em',
                   fontWeight: 600,
                   color: '#2c9ab7',
+                  marginRight: '.25rem',
                 }}
               >
                 {height}

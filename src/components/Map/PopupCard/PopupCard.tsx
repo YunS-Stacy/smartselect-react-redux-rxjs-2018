@@ -14,6 +14,8 @@ interface Props {
   data?: any;
   id?: string;
   position?: mapboxgl.Point;
+
+  handleFetchRoute: (payload: { profile: string; dest: mapboxgl.LngLat }) => void;
 }
 
 const btnStyle = {
@@ -23,7 +25,7 @@ const btnStyle = {
   backgroundColor: 'rgb(0, 188, 212)',
 };
 
-const PopupCard = ({ data, id, position }: Props) =>
+const PopupCard = ({ data, id, position, handleFetchRoute }: Props) =>
   position ? (
     <Card
       style={{
@@ -39,7 +41,6 @@ const PopupCard = ({ data, id, position }: Props) =>
     >
     <div
       className="circular-nav"
-
     >
       <IconButton
         tooltip="Driving Directions"
@@ -47,7 +48,7 @@ const PopupCard = ({ data, id, position }: Props) =>
         style={btnStyle}
         iconStyle={{ color: 'white' }}
         className="btn-driving"
-        // onTouchTap={() => { this.props.dispatch({dest: marker.coords, methods: 'driving-traffic' }) }}
+        onClick={() => handleFetchRoute({ profile: 'driving', dest: data.coords })}
       >
         <DirectionsCar />
       </IconButton>
@@ -56,9 +57,7 @@ const PopupCard = ({ data, id, position }: Props) =>
         tooltipPosition="top-left"
         style={btnStyle}
         iconStyle={{ color: 'white' }}
-
-        // onTouchTap={() =>
-        // { this.props.dispatch({ dest: marker.coords, methods: 'cycling' })}}
+        onClick={() => handleFetchRoute({ profile: 'cycling', dest: data.coords })}
       >
         <DirectionsBike />
       </IconButton>
@@ -67,61 +66,33 @@ const PopupCard = ({ data, id, position }: Props) =>
         tooltipPosition="top-left"
         style={btnStyle}
         iconStyle={{ color: 'white' }}
-
-        // onTouchTap={() => { this.props.dispatch({dest: marker.coords, methods: 'walking' }) }}
+        onClick={() => handleFetchRoute({ profile: 'walking', dest: data.coords })}
       >
         <DirectionsWalk />
       </IconButton>
     </div>
-        {data && <CardHeader
-          style={{ paddingBottom: 0 }}
-          title="COMPS INFO"
-        />}
-        {data && <CardText style={{ fontSize: '0..8rem' }}>
-          <ul style={{ lineHeight: '2.1em' }}>
-            <li><strong>Address: </strong>
-              {data.street}</li>
-            <li><strong>Last Sold Price: </strong>
-              {data.lastSoldPrice ? `$${data.lastSoldPrice}, ` : `No Data Available`}<em>{data.lastSoldDate}</em></li>
-            <li><strong>Zestimate: </strong>
-              {data.zestimate ? `$${data.zestimate}` : `No Data Available`}</li>
-            <li><strong>Value Range: </strong>
-              {(data.valueLow && data.valueHigh) ? `$${data.valueLow} - $${data.valueHigh}` : `No Data Available`}</li>
-            <li>
-              <strong>Monthly Trend: </strong>
-              {data.monthChange >= 0
-                ? <TrendingUp style={{ width: '18px', height: '18px' }}>Price Up</TrendingUp>
-                : <TrendingDown style={{ width: '18px', height: '18px' }}>Price Down</TrendingDown>}
-            </li>
-            <li style={{ display: 'flex', justifyContent: 'space-around' }}>
-              <div>
-                <label>Go To</label>
-                <IconButton
-                  tooltip="Driving Directions"
-                  tooltipPosition="bottom-center"
-                  // onTouchTap={() => { this.props.dispatch({dest: marker.coords, methods: 'driving-traffic' }) }}
-                >
-                  <DirectionsCar />
-                </IconButton>
-                <IconButton
-                  tooltip="Public Transit Directions"
-                  tooltipPosition="bottom-center"
-                  // onTouchTap={() =>
-                  // { this.props.dispatch({ dest: marker.coords, methods: 'cycling' })}}
-                >
-                  <DirectionsBike />
-                </IconButton>
-                <IconButton
-                  tooltip="Cycling Directions"
-                  tooltipPosition="bottom-center"
-                  // onTouchTap={() => { this.props.dispatch({dest: marker.coords, methods: 'walking' }) }}
-                >
-                  <DirectionsWalk />
-                </IconButton>
-              </div>
-            </li>
-          </ul>
-        </CardText>}
+      {data && <CardHeader
+        style={{ paddingBottom: 0 }}
+        title="COMPS INFO"
+      />}
+      {data && <CardText style={{ fontSize: '0..8rem' }}>
+        <ul style={{ lineHeight: '2.1em' }}>
+          <li><strong>Address: </strong>
+            {data.street}</li>
+          <li><strong>Last Sold Price: </strong>
+            {data.lastSoldPrice ? `$${data.lastSoldPrice}, ` : `No Data Available`}<em>{data.lastSoldDate}</em></li>
+          <li><strong>Zestimate: </strong>
+            {data.zestimate ? `$${data.zestimate}` : `No Data Available`}</li>
+          <li><strong>Value Range: </strong>
+            {(data.valueLow && data.valueHigh) ? `$${data.valueLow} - $${data.valueHigh}` : `No Data Available`}</li>
+          <li>
+            <strong>Monthly Trend: </strong>
+            {data.monthChange >= 0
+              ? <TrendingUp style={{ width: '18px', height: '18px' }}>Price Up</TrendingUp>
+              : <TrendingDown style={{ width: '18px', height: '18px' }}>Price Down</TrendingDown>}
+          </li>
+        </ul>
+      </CardText>}
     </Card >
 ) : <div />;
 

@@ -4,7 +4,8 @@ import area from '@turf/area';
 
 import {
   STEP_SET, MAP_RESET, STEP_ADD, STEP_MINUS,
-  GEOMETRY_GET, GEOMETRY_SET, GEOMETRY_HEIGHT_SET, GEOMETRY_REMOVE,
+  GEOMETRY_GET, GEOMETRY_SET, GEOMETRY_RESET,
+  GEOMETRY_HEIGHT_SET, GEOMETRY_REMOVE,
 } from '../../constants/action-types';
 import { RootState } from '../../types';
 import { Action } from 'redux';
@@ -54,7 +55,7 @@ export default (state = initialState, { type, payload }: Action & {
         }
         return item;
       });
-    case STEP_MINUS:
+    case GEOMETRY_RESET:
       return initialState;
     default:
       return state;

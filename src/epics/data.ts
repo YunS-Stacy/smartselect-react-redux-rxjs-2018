@@ -41,7 +41,8 @@ import {
   DATA_FETCH,
   DATA_FETCH_CANCELLED,
   POPUP_FETCH,
-  DATA_FETCH_REJECTED
+  DATA_FETCH_REJECTED,
+  ROUTE_FETCH
 } from '../constants/action-types';
 import { updateHighlights } from '../utils/highlights';
 import { Store, Action } from '../types/redux';
@@ -84,7 +85,13 @@ const zillowCompsRequest = (zpid: string) => ({
   responseType: 'document',
 } as AjaxRequest);
 
-const compsDirectionRequest = (
+/**
+ *
+ * @param profile Routing profiles for Mapbox Directions API: 'driving-traffic', 'driving', 'walking', 'cycling'
+ * @param origin Origin point geomegraphic coordinates
+ * @param dest Origin point geomegraphic coordinates
+ */
+const routeRequest = (
   profile: string,
   origin: {
     lat: number; lng: number;
@@ -110,31 +117,61 @@ const fetchPopupEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
         Observable.of(fetchDataLoading('popup')),
         // ajax
         Observable.ajax(zillowCompsRequest(action.payload))
-          .pipe(
-
-          tap((res: any) => {
-            console.log(Array.from((res.response as XMLDocument).getElementsByTagName('code'))[0].innerHTML);
-
-          }),
-          // get response
+        .pipe(
+          // check http status
           filter(res => res.status === 200),
-          // filter if has a correct response or not
-          map((res: any) =>
-            Number(Array.from((res.response as XMLDocument).getElementsByTagName('code'))[0]
-              .innerHTML) !== 503 ? fetchDataFulfilled({ data: res.response, name: 'popup' })
-              : fetchDataRejected({ name:'popup', message: 'No Comps Found' }),
-          ),
+          tap(res => console.log(res, 'find zpid')),
+          map((res: any) => {
+            const statusCode = Number(Array.from((res.response as XMLDocument).getElementsByTagName('code'))[0]
+              .innerHTML);
+            // filter if has a correct response or not
+            if ((statusCode !== 502) && (statusCode !== 503)) {
+              return fetchDataFulfilled({ data: res.response, name: 'popup' });
+            }
+            return fetchDataRejected({
+              name: 'popup', message: `Property ZPID: ${action.payload} Has Found No Comparables in Zillow Database.`,
+            });
+          }),
           takeUntil(action$.ofType(DATA_FETCH_CANCELLED, DATA_FETCH_REJECTED).pipe(
             filter(action => action.payload === 'popup'),
           )),
         ),
       ),
     ),
-  );
+);
+
+const fetchRouteEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
+  .ofType(ROUTE_FETCH)
+  .do(val => console.log(val))
+  .pipe(
+    switchMap(action =>
+    Observable.concat(
+
+        // set loading
+        Observable.of(fetchDataLoading('route')),
+        // ajax
+        Observable.ajax(routeRequest(action.payload.profile, store.getState().marker.coords, action.payload.dest))
+          .pipe(
+            // check http status
+            filter(res => res.status === 200),
+            tap(res => console.log(res, 'res')),
+            // filter if has a correct response or not
+            map((res: any) =>
+              res.response.code === 'Ok' ? fetchDataFulfilled({ data: res.response.routes[0].geometry, name: 'route' })
+                : fetchDataRejected({ name: 'route', message: 'Fetch Route Error.' }),
+            ),
+            takeUntil(action$.ofType(DATA_FETCH_CANCELLED, DATA_FETCH_REJECTED).pipe(
+              filter(action => action.payload === 'route'),
+            )),
+        ),
+      ),
+    ),
+);
 
 export const epics = combineEpics(
   fetchSliderEpic,
   fetchPopupEpic,
+  fetchRouteEpic,
 );
 
 export default epics;

@@ -6,6 +6,7 @@ import slider from './slider';
 import popup from './popup';
 import marker from './marker';
 import message from './message';
+import route from './route';
 
 export default combineReducers({
   app,
@@ -14,4 +15,5 @@ export default combineReducers({
   popup,
   marker,
   message,
+  route,
 });

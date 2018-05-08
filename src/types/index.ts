@@ -1,4 +1,5 @@
 import * as mapbox from 'mapbox-gl';
+import { Feature, LineString, MultiPoint } from 'geojson';
 export interface MapMarker {
   coords?: {
     lng: number;
@@ -27,9 +28,15 @@ export interface RootState {
     id: string;
     position: mapbox.Point;
   };
+  route: {
+    data: {
+      line: Feature<LineString>;
+      pts: Feature<MultiPoint>;
+    };
+    fetched: boolean | string;
+  };
   marker: MapMarker;
   map: {
-    route: mapbox.GeoJSONGeometry;
     draw: boolean;
     step: number;
     mode: 'intro' | 'query' | 'measure' | 'build' | 'decide' | null;

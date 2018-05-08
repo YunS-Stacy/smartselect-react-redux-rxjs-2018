@@ -15,7 +15,7 @@ const initialState: any[] = null;
 export default (state = initialState, { type, payload }: Action & { payload?: any }) => {
   switch (type) {
     // set other marker
-    case MARKER_SET:
+    // case MARKER_SET:
     // case POPUP_FETCH:
     // if map step change, reset state
     case STEP_ADD:

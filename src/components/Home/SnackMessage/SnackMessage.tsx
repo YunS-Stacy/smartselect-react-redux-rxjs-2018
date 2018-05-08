@@ -17,12 +17,11 @@ class SnackMessage extends React.Component<Props, State> {
   };
 
   componentWillReceiveProps(nextProps: any) {
-    console.log(nextProps.message);
-    if (nextProps.message !== this.props.message) {
-      this.setState({
-        open: true,
-      });
-    }
+
+    this.setState({
+      open: true,
+    });
+
   }
 
   handleClick = () => {
@@ -41,7 +40,7 @@ class SnackMessage extends React.Component<Props, State> {
     return (
       <Snackbar
         open={this.state.open}
-        message={this.props.message}
+        message={this.props.message || ''}
         autoHideDuration={4000}
       />
     );

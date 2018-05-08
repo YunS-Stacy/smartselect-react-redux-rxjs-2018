@@ -79,6 +79,11 @@ export const DIRECTIONS_API = 'https://api.mapbox.com/directions/v5/mapbox';
 export const getZillowComps = (zpid: string) =>
   `${DATA_URL.zillow}?zws-id=${ZILLOW_TOKEN}&zpid=${zpid}&count=3`;
 
+/**
+ *
+ * @param profile Route profiles for Mapbox Direction API
+ * @param origin Origin coordinates {longitude},{latitude}
+ * @param dest Destination coordinates {longitude},{latitude}
+ */
 export const getDirections = (profile: string, origin: {lat: number; lng: number}, dest: {lat: number; lng: number}) =>
-  `${DIRECTIONS_API}/${profile}/${Object.keys(origin).join(',')};${Object.keys(dest).join(',')}
-  ?access_token=${MAPBOX_TOKEN}`;
+  `${DIRECTIONS_API}/${profile}/${origin.lng},${origin.lat};${dest.lng},${dest.lat}?access_token=${MAPBOX_TOKEN}`;
