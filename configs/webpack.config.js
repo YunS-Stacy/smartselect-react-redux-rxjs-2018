@@ -3,7 +3,6 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const autoprefixer = require('autoprefixer');
 
 const PATHS = {
   root: path.resolve(__dirname, '..'),
@@ -149,7 +148,7 @@ module.exports = (env = {}) => {
 
       ...(isDev ? [
         new webpack.HotModuleReplacementPlugin({
-          multiStep: true, // better performance with many files
+          multiStep: false, // better performance with many files
         }),
         new webpack.NamedModulesPlugin(),
       ] : []),
@@ -158,11 +157,6 @@ module.exports = (env = {}) => {
         new webpack.LoaderOptionsPlugin({
           minimize: true,
           debug: false,
-          options: {
-            postcss: [
-              autoprefixer(),
-            ]
-          }
         }),
         new UglifyJsPlugin({
           sourceMap: isDev ? true : false,
