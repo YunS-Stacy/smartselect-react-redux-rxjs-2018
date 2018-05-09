@@ -1,7 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const PATHS = {
   root: path.resolve(__dirname, '..'),
@@ -135,7 +136,7 @@ module.exports = (env = {}) => {
 
       ...(isDev ? [
         new webpack.HotModuleReplacementPlugin({
-          // multiStep: true, // better performance with many files
+          multiStep: true, // better performance with many files
         }),
         new webpack.NamedModulesPlugin(),
       ] : []),
@@ -145,13 +146,15 @@ module.exports = (env = {}) => {
           minimize: true,
           debug: false
         }),
-        new webpack.optimize.UglifyJsPlugin({
-          beautify: false,
-          compress: {
-            screw_ie8: true
-          },
-          comments: false,
+        new UglifyJsPlugin({
           sourceMap: isDev ? true : false,
+          uglifyOptions: {
+            output: {
+              comments: false,
+              beautify: false,
+            },
+            ie8: true,
+          }
         }),
       ] : []),
     ],

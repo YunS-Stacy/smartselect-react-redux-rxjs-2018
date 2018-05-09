@@ -65,7 +65,7 @@ const MapPanel = ({
       backgroundColor: 'rgba(255,255,255,0.8)',
     }}
     zDepth={3}
-    className="leftPanel"
+    className="left-panel"
   >
 
     <Stepper
@@ -180,7 +180,7 @@ const MapPanel = ({
             }}
           >
             <Slider
-              // className="heightSlider"
+              // className="height-slider"
               axis="y"
               min={0}
               max={1000}
@@ -190,7 +190,6 @@ const MapPanel = ({
               onChange={(e, val) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log(val);
                 handleSetGeometryHeight(val);
               }}
               style={{

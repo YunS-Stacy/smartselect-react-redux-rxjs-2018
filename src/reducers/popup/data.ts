@@ -18,6 +18,7 @@ export default (state = initialState, { type, payload }: Action & { payload?: an
     // case MARKER_SET:
     // case POPUP_FETCH:
     // if map step change, reset state
+
     case STEP_ADD:
     case STEP_MINUS:
       return initialState;

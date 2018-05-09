@@ -30,12 +30,8 @@ const PopupCard = ({ data, id, position, handleFetchRoute }: Props) =>
     <Card
       style={{
         position: 'absolute',
-        // width: '20rem',
-        // height: '10rem',
-        top: 0,
+        minWidth: '16rem',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         transform: `translate(${position.x}px, ${position.y}px)`,
       }}
     >

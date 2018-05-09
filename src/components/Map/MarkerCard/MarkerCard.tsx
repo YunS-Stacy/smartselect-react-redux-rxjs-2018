@@ -24,10 +24,8 @@ const MarkerCard = ({ marker, fetched, isPopup, handleFetchPopup }: Props) =>
     <Card
       style={{
         position: 'absolute',
-        top: 0,
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        minWidth: '16rem',
         transform: `translate(${marker.position.x}px, ${marker.position.y}px)`,
       }}
     >

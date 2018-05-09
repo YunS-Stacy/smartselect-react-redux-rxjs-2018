@@ -1,5 +1,5 @@
 {
-  "name": "real-estate-feasibility-js",
+  "name": "smartselect-react-redux-rxjs-2018",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -33,14 +33,15 @@
   "scripts": {
     "start": "node express.js",
     "clean": "rimraf dist",
-    "start:dev": "webpack-dev-server --config configs/webpack.config.js",
+    "dev": "webpack-dev-server --config configs/webpack.config.js",
     "build": "yarn run clean && webpack --config configs/webpack.config.js --env.build",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
     "reinstall": "rm -rf node_modules && yarn",
     "reinstall:win": "rd /s /q node_modules && yarn",
     "test": "jest",
     "test:watch": "jest --watch",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "heroku": "yarn run build && heroku static:deploy && heroku ps:scale web=1 && heroku open && heroku logs --tail"
   },
   "devDependencies": {
     "@types/enzyme": "3.1.8",
@@ -92,7 +93,6 @@
     "webpack-env": "^0.8.0",
     "webpack-merge": "^4.1.2"
   },
-  "description": "![effect of project](./img/EsirMap.png) ## Get ```shell git clone https://github.com/guzhongren/React-Typescript-App-with-ArcGIS-JSAPI.git ``` ## install ```shell cd React-Typescript-App-with-ArcGIS-JSAPI npm install # yarn install ``` ## run ```shell npm run start # yarn run start ```",
   "browserslist": [
     "> 1%",
     "ie > 9"

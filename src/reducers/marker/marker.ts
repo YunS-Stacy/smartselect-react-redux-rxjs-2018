@@ -1,5 +1,5 @@
 import {
-  MARKER_SET, MARKER_POSITION_SET
+  MARKER_SET, MARKER_POSITION_SET, STEP_ADD, STEP_MINUS
 } from '../../constants/action-types';
 import { RootState } from '../../types';
 import { Action } from 'redux';
@@ -18,6 +18,9 @@ export default (state = initialState, { type, payload }: Action & { payload?: an
     case MARKER_POSITION_SET: {
       return { ...state, position: payload };
     }
+    case STEP_ADD:
+    case STEP_MINUS:
+      return initialState;
     default:
       return state;
   }

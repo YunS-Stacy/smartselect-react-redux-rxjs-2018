@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import QuerySlider from './QuerySlider';
-import InfoCard from './InfoCard';
 import MarkerCard from './MarkerCard';
 import PopupCard from './PopupCard';
 

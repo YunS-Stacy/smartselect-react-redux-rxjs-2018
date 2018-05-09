@@ -6,34 +6,16 @@ import { ajax } from 'rxjs/observable/dom/ajax';
 
 import { Observable, AjaxRequest } from 'rxjs/Rx';
 import { of } from 'rxjs/observable/of';
-import { fromEvent } from 'rxjs/observable/fromEvent';
-import { interval } from 'rxjs/observable/interval';
-import { timer } from 'rxjs/observable/timer';
 import { _throw } from 'rxjs/observable/throw';
 import {
-  take,
-  takeLast,
   takeUntil,
-  takeWhile,
   filter,
   map,
   mapTo,
   mergeMap,
   tap,
   throttleTime,
-  distinctUntilChanged,
-  skipWhile,
-  skipUntil,
-  retry,
-  catchError,
-  ignoreElements,
   switchMap,
-  retryWhen,
-  delay,
-  sampleTime,
-  sample,
-  dematerialize,
-  delayWhen,
 } from 'rxjs/operators';
 
 import {
@@ -109,7 +91,6 @@ const fetchPopupEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
   .ofType(POPUP_FETCH)
   // check no data
   .filter(() => store.getState().popup.fetched === false)
-  .do(val => console.log(val))
   .pipe(
     switchMap(action =>
       Observable.concat(
@@ -120,7 +101,6 @@ const fetchPopupEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
         .pipe(
           // check http status
           filter(res => res.status === 200),
-          tap(res => console.log(res, 'find zpid')),
           map((res: any) => {
             const statusCode = Number(Array.from((res.response as XMLDocument).getElementsByTagName('code'))[0]
               .innerHTML);
@@ -142,7 +122,6 @@ const fetchPopupEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
 
 const fetchRouteEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
   .ofType(ROUTE_FETCH)
-  .do(val => console.log(val))
   .pipe(
     switchMap(action =>
     Observable.concat(
@@ -154,7 +133,6 @@ const fetchRouteEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
           .pipe(
             // check http status
             filter(res => res.status === 200),
-            tap(res => console.log(res, 'res')),
             // filter if has a correct response or not
             map((res: any) =>
               res.response.code === 'Ok' ? fetchDataFulfilled({ data: res.response.routes[0].geometry, name: 'route' })

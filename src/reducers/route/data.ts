@@ -1,4 +1,4 @@
-import { ROUTE_SET, MAP_RESET, MARKER_RESET, DATA_FETCH_FULFILLED } from '../../constants/action-types';
+import { ROUTE_SET, MAP_RESET, MARKER_RESET, DATA_FETCH_FULFILLED, STEP_ADD, STEP_MINUS } from '../../constants/action-types';
 import { RootState } from '../../types';
 import { Action } from 'redux';
 import { multiPoint, lineString } from '@turf/helpers';
@@ -10,7 +10,6 @@ export default (state = initialState, { type, payload }: Action & { payload?: an
   switch (type) {
     case DATA_FETCH_FULFILLED:
       if (payload.name === 'route') {
-        console.log('data', payload.data, polyline.toGeoJSON(payload.data));
         const data: LineString = polyline.toGeoJSON(payload.data);
         const pts: number[][] = data.coordinates;
         return ({
@@ -20,7 +19,8 @@ export default (state = initialState, { type, payload }: Action & { payload?: an
       }
       return payload;
     case MAP_RESET:
-    case MARKER_RESET:
+    case STEP_ADD:
+    case STEP_MINUS:
       return initialState;
     default:
       return state;

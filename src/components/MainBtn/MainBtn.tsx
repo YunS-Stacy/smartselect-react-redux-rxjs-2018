@@ -46,10 +46,9 @@ const MainBtn = ({ loaded, handleToggleApp }: Props) => (
   ) : (
     <RefreshIndicator
       size={60}
-      left={0}
-      top={6}
+      left={-30} // width / 2
+      top={-30} // height / 2
       status="loading"
-      // style={style.refresh}
     />
   )}
   </div>
