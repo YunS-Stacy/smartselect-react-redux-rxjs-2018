@@ -9,6 +9,7 @@ import MainBtn from '../MainBtn';
 import Map from '../Map';
 import MapMask from '../MapMask';
 import MapPanel from '../MapPanel';
+import ModelSelection from '../ModelSelection';
 
 interface Props {
   app: boolean;
@@ -25,8 +26,9 @@ const Home = ({ app }: Props) => (
             </MapMask>
           )}
           <Map />
+          <SnackMessage />
         </section>
-        <SnackMessage />
+        <ModelSelection />
       </Layout>
     </div>
   </MuiThemeProvider>

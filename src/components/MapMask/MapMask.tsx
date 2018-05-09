@@ -23,9 +23,9 @@ const MapMask = ({ app, children }: Props) => (
         About Model
     </h2>
   {...children}
-    <div className="icon-wrapper">
+    <a className="icon-wrapper" href="#model-selection">
       <Icon type="down" className="mask-icon" />
-    </div>
+    </a>
   </div>
 );
 
