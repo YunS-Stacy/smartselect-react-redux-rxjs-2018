@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const autoprefixer = require('autoprefixer');
 
 const PATHS = {
   root: path.resolve(__dirname, '..'),
@@ -77,16 +78,28 @@ module.exports = (env = {}) => {
         },
         {
           test: /\.css$/,
-          use: ['style-loader', 'css-loader',
-            // 'postcss-loader',
+          use: [
+            'style-loader',
+            'css-loader', {
+              loader: 'postcss-loader',
+              options: {
+                plugins: [require('autoprefixer')]
+              }
+            },
           ],
         },
         {
           test: /\.scss$/,
           loaders: [
-            'style-loader', 'css-loader',
-            // 'postcss-loader',
-            'sass-loader',
+            'style-loader',
+            'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: [require('autoprefixer')]
+            }
+          },
+          'sass-loader',
           ],
         },
         {
@@ -144,7 +157,12 @@ module.exports = (env = {}) => {
       ...(isBuild ? [
         new webpack.LoaderOptionsPlugin({
           minimize: true,
-          debug: false
+          debug: false,
+          options: {
+            postcss: [
+              autoprefixer(),
+            ]
+          }
         }),
         new UglifyJsPlugin({
           sourceMap: isDev ? true : false,
