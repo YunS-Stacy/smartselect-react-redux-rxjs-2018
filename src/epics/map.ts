@@ -197,13 +197,9 @@ const initMapEpic = (action$: ActionsObservable<Action>) => action$
       if (process.env.NODE_ENV !== 'production') { (window as any).mapping = mapping; }
       return mapping;
     }),
-    switchMap(val =>
-      Observable.concat(
-        Observable.of(mapLoaded(false)),
-        Observable
-          .fromEvent(val, 'load')
-          .mapTo(setLayerViz({ name: 'footprint', viz: 'visible' })),
-    ),
+    switchMap(val => Observable
+      .fromEvent(val, 'load')
+      .mapTo(setLayerViz({ name: 'footprint', viz: 'visible' })),
   ),
 );
 
@@ -727,7 +723,7 @@ const setMarkerEpic = (action$: ActionsObservable<Action>, store: Store) => acti
   .do(() => ['compsLines', 'compsPts', 'routeLine', 'routePts'].forEach((name: string) =>
     mapping.getLayer(name) && mapping.removeLayer(name)),
 )
-  .mapTo({ type: 'test' });
+  .mergeMapTo(Observable.empty<never>());
 
 const mappingEventsEpic = (action$: ActionsObservable<Action>, store: Store) => action$
 .ofType(IS_LOADED).take(1).switchMap(() =>

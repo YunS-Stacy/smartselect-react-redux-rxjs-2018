@@ -2,6 +2,7 @@ import * as React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import { RootState } from '../../types';
+import Layout from '../Layout';
 
 import SnackMessage from './SnackMessage';
 import MainBtn from '../MainBtn';
@@ -16,13 +17,17 @@ interface Props {
 const Home = ({ app }: Props) => (
   <MuiThemeProvider>
     <div className="app-container">
-      <section className="map-container">
-        {!app && <MainBtn />}
-        {!app && <MapMask />}
-        <Map/>
-        {app && <MapPanel />}
-      </section>
-      <SnackMessage />
+      <Layout>
+        <section className="map-container">
+          {app ? <MapPanel /> : (
+            <MapMask>
+              <MainBtn />
+            </MapMask>
+          )}
+          <Map />
+        </section>
+        <SnackMessage />
+      </Layout>
     </div>
   </MuiThemeProvider>
 );
