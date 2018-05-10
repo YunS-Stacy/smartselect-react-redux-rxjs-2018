@@ -16,6 +16,10 @@ export interface MapMarker {
 export interface RootState {
   app: boolean;
   message: string;
+  correlation: {
+    data: any[];
+    fetched: boolean;
+  };
   slider: {
     data: any[];
     range: number[];

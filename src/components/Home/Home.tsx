@@ -10,6 +10,7 @@ import Map from '../Map';
 import MapMask from '../MapMask';
 import MapPanel from '../MapPanel';
 import ModelSelection from '../ModelSelection';
+import ArticleCorrelation from '../ArticleCorrelation';
 
 interface Props {
   app: boolean;
@@ -19,7 +20,7 @@ const Home = ({ app }: Props) => (
   <MuiThemeProvider>
     <div className="app-container">
       <Layout>
-        <section className="map-container">
+        <div className="map-container">
           {app ? <MapPanel /> : (
             <MapMask>
               <MainBtn />
@@ -27,11 +28,13 @@ const Home = ({ app }: Props) => (
           )}
           <Map />
           <SnackMessage />
-        </section>
+        </div>
         <ModelSelection />
+        <ArticleCorrelation />
       </Layout>
     </div>
   </MuiThemeProvider>
 );
 
 export default Home;
+

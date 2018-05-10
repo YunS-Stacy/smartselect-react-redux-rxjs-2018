@@ -68,14 +68,17 @@ const FIREBASE_SERVER = 'https://smartselect-34c02.firebaseio.com';
 const ZILLOW_SERVER = 'https://cors-anywhere.herokuapp.com/www.zillow.com/webservice/GetDeepComps.htm';
 
 export const DATA_URL = {
-  firebase: `${FIREBASE_SERVER}/slider.json`,
-  zillow: `${ZILLOW_SERVER}`,
+  FIREBASE: {
+    SLIDER: `${FIREBASE_SERVER}/slider.json`,
+    CORRELATION: `${FIREBASE_SERVER}/corrPlot.json`,
+  },
+  ZILLOW: `${ZILLOW_SERVER}`,
 };
 
 export const DIRECTIONS_API = 'https://api.mapbox.com/directions/v5/mapbox';
 
 export const getZillowComps = (zpid: string) =>
-  `${DATA_URL.zillow}?zws-id=${ZILLOW_TOKEN}&zpid=${zpid}&count=3`;
+  `${DATA_URL.ZILLOW}?zws-id=${ZILLOW_TOKEN}&zpid=${zpid}&count=3`;
 
 /**
  *

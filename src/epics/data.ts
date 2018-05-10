@@ -49,7 +49,7 @@ const fetchSliderEpic = (action$: ActionsObservable<IAction>, store: Store) => a
   .filter(action => action.payload === 'slider' && store.getState().slider.fetched === false)
 .pipe(
   mergeMap(action =>
-    ajax.getJSON(DATA_URL.firebase)
+    ajax.getJSON(DATA_URL.FIREBASE.SLIDER)
       .pipe(
         map(data => fetchDataFulfilled({ data, name: 'slider' })),
         takeUntil(action$.ofType(DATA_FETCH_CANCELLED).pipe(
@@ -58,6 +58,23 @@ const fetchSliderEpic = (action$: ActionsObservable<IAction>, store: Store) => a
         )),
       ),
   ),
+);
+
+const fetchCorrelationEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
+  .ofType(DATA_FETCH)
+  // check no data
+  .filter(action => action.payload === 'correlation' && store.getState().correlation.fetched === false)
+  .pipe(
+    mergeMap(action =>
+      ajax.getJSON(DATA_URL.FIREBASE.CORRELATION)
+        .pipe(
+          map(data => fetchDataFulfilled({ data, name: 'correlation' })),
+          takeUntil(action$.ofType(DATA_FETCH_CANCELLED).pipe(
+            filter(action => action.payload === 'correlation'),
+            mapTo({ type: 'failed' }),
+          )),
+      ),
+    ),
 );
 
 const zillowCompsRequest = (zpid: string) => ({
@@ -148,6 +165,7 @@ const fetchRouteEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
 
 export const epics = combineEpics(
   fetchSliderEpic,
+  fetchCorrelationEpic,
   fetchPopupEpic,
   fetchRouteEpic,
 );

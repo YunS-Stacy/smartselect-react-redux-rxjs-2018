@@ -1,4 +1,4 @@
-import { ROUTE_SET, MAP_RESET, MARKER_RESET, DATA_FETCH_FULFILLED, STEP_ADD, STEP_MINUS } from '../../constants/action-types';
+import { MAP_RESET, MARKER_RESET, DATA_FETCH_FULFILLED, STEP_ADD, STEP_MINUS } from '../../constants/action-types';
 import { RootState } from '../../types';
 import { Action } from 'redux';
 import { multiPoint, lineString } from '@turf/helpers';
@@ -17,7 +17,7 @@ export default (state = initialState, { type, payload }: Action & { payload?: an
           pts: multiPoint([pts[0], pts[pts.length - 1]]),
         });
       }
-      return payload;
+      return state;
     case MAP_RESET:
     case STEP_ADD:
     case STEP_MINUS:
