@@ -7,7 +7,7 @@ import {
 import { RootState } from '../../types';
 import { Action } from 'redux';
 
-const initialState: any[] = null;
+const initialState: any[] = [];
 
 export default (state = initialState, { type, payload }: Action & { payload?: any }) => {
   switch (type) {

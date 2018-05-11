@@ -24,7 +24,8 @@ import {
   DATA_FETCH_CANCELLED,
   POPUP_FETCH,
   DATA_FETCH_REJECTED,
-  ROUTE_FETCH
+  ROUTE_FETCH,
+  IS_LOADED
 } from '../constants/action-types';
 import { updateHighlights } from '../utils/highlights';
 import { Store, Action } from '../types/redux';
@@ -33,7 +34,7 @@ import {
   MAPBOX_TOKEN, MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES, DATA_URL, getZillowComps, getDirections
 } from '../constants/app-constants';
 import { FeatureCollection, Feature, GeometryObject, LineString, Polygon, Point, GeoJsonObject } from 'geojson';
-import { fetchDataFulfilled, fetchDataLoading, fetchDataCancelled, fetchDataRejected } from '../reducers/app/actions';
+import { fetchDataFulfilled, fetchDataLoading, fetchDataCancelled, fetchDataRejected, fetchData } from '../reducers/app/actions';
 
 type IAction = Action & { payload?: any };
 (mapboxgl as any).accessToken = MAPBOX_TOKEN;
@@ -60,24 +61,39 @@ const fetchSliderEpic = (action$: ActionsObservable<IAction>, store: Store) => a
     ),
 );
 
+// begin fetch other data after map is loaded
+const beginFetchEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
+  .ofType(IS_LOADED)
+  .take(1)
+  // check no data
+  .switchMapTo([fetchData('market'), fetchData('correlation')]);
+
+const fetchMarketEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
+  .ofType(DATA_FETCH)
+  // check no data
+  .filter(action => action.payload === 'market' && store.getState().market.fetched === false)
+  .switchMap(action => Observable.ajax.getJSON(DATA_URL.FIREBASE.MARKET)
+    .pipe(
+      map(data => fetchDataFulfilled({ data, name: 'market' })),
+      takeUntil(action$.ofType(DATA_FETCH_CANCELLED).pipe(
+        filter(action => action.payload === 'market'),
+        mapTo({ type: 'failed' }),
+      )),
+    ),
+);
+
 const fetchCorrelationEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
   .ofType(DATA_FETCH)
   // check no data
   .filter(action => action.payload === 'correlation' && store.getState().correlation.fetched === false)
-  .pipe(
-    switchMap(action => Observable.concat(
-      // set loading
-      Observable.of(fetchDataLoading('correlation')),
-      Observable.ajax.getJSON(DATA_URL.FIREBASE.CORRELATION)
-        .pipe(
-          map(data => fetchDataFulfilled({ data, name: 'correlation' })),
-          takeUntil(action$.ofType(DATA_FETCH_CANCELLED).pipe(
-            filter(action => action.payload === 'correlation'),
-            mapTo({ type: 'failed' }),
-          )),
-      ),
-    ),
-    ),
+  .switchMap(action => Observable.ajax.getJSON(DATA_URL.FIREBASE.CORRELATION)
+    .pipe(
+      map(data => fetchDataFulfilled({ data, name: 'correlation' })),
+      takeUntil(action$.ofType(DATA_FETCH_CANCELLED).pipe(
+        filter(action => action.payload === 'correlation'),
+        mapTo({ type: 'failed' }),
+      )),
+  ),
 );
 
 const zillowCompsRequest = (zpid: string) => ({
@@ -120,7 +136,7 @@ const fetchPopupEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
         Observable.ajax(zillowCompsRequest(action.payload))
           .pipe(
             // check http status
-            filter(res => res.status === 200),
+            filter(res => res.status >= 200 && res.status < 300),
             map((res: any) => {
               const statusCode = Number(Array.from((res.response as XMLDocument).getElementsByTagName('code'))[0]
                 .innerHTML);
@@ -145,14 +161,13 @@ const fetchRouteEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
   .pipe(
     switchMap(action =>
       Observable.concat(
-
         // set loading
         Observable.of(fetchDataLoading('route')),
         // ajax
         Observable.ajax(routeRequest(action.payload.profile, store.getState().marker.coords, action.payload.dest))
           .pipe(
             // check http status
-            filter(res => res.status === 200),
+          filter(res => res.status >= 200 && res.status < 300),
             // filter if has a correct response or not
             map((res: any) =>
               res.response.code === 'Ok' ? fetchDataFulfilled({ data: res.response.routes[0].geometry, name: 'route' })
@@ -168,9 +183,13 @@ const fetchRouteEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
 
 export const epics = combineEpics(
   fetchSliderEpic,
-  fetchCorrelationEpic,
   fetchPopupEpic,
   fetchRouteEpic,
+
+  beginFetchEpic,
+  fetchMarketEpic,
+  fetchCorrelationEpic,
+
 );
 
 export default epics;

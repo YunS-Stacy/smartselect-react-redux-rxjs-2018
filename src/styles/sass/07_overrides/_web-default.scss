@@ -23,3 +23,10 @@ input {
     line-height: inherit;
     background-image: none;
 }
+
+/**
+ * antd fix
+ */
+.ant-spin-spinning {
+  max-height: 100% !important;
+}

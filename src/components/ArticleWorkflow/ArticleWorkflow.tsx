@@ -274,7 +274,7 @@ const data = [
             ],
           },
           {
-            name: 'constiable Selection ',
+            name: 'Feature Selection ',
             children: [
               {
                 name: 'Numerical',
@@ -334,12 +334,12 @@ const data = [
 const ArticleWorkflow = () => (
   <article
     className="article-wrapper"
-    id="correlation-wrapper"
+    id="workflow-wrapper"
   >
     <OverPack
-      location="correlation-wrapper"
+      location="workflow-wrapper"
     >
-      <QueueAnim
+      {/* <QueueAnim
         key="overpack-wrapper"
         leaveReverse={true}
         className="article-body"
@@ -356,20 +356,18 @@ const ArticleWorkflow = () => (
 
                   To find the relationship between constiables, the correlation matrix may serve the goal well.`}
           </p>
-        </div>
-
+        </div> */}
         <Chart
+          data={data}
+          forceFit={true}
           key="queue-chart"
-          className="article-chart"
-          data={data || []}
-          forceFit={false}
-          width={window.innerWidth / 2}
-          height={window.innerWidth / 2}
+          width={window.outerWidth}
+          height={window.outerWidth}
           plotCfg={{
             margin: [0, 150, 150, 50],
           }}
         />
-      </QueueAnim>
+      {/* </QueueAnim> */}
     </OverPack>
   </article>
 );

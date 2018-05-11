@@ -12,11 +12,11 @@ const initialState = false;
 export default (state = initialState, { type, payload }: Action & { payload?: any }) => {
   switch (type) {
     case DATA_FETCH_FULFILLED:
-      return payload && payload.name === 'correlation' ? true : state;
+      return payload && payload.name === 'market' ? true : state;
     case DATA_FETCH_CANCELLED:
-      return payload === 'correlation' ? false : state;
+      return payload === 'market' ? false : state;
     case DATA_FETCH_REJECTED:
-      return payload === 'correlation' ? false : state;
+      return payload === 'market' ? false : state;
     default:
       return state;
   }

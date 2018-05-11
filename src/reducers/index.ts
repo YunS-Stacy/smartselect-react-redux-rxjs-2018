@@ -9,6 +9,7 @@ import popup from './popup';
 import marker from './marker';
 import message from './message';
 import route from './route';
+import market from './market';
 
 export default combineReducers({
   app,
@@ -19,4 +20,5 @@ export default combineReducers({
   marker,
   message,
   route,
+  market,
 });

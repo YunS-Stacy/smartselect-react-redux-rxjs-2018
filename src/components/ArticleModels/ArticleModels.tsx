@@ -53,10 +53,10 @@ const Chart = createG2((chart: any) => {
 const ArticleModels = () => (
   <article
     className="article-wrapper"
-    id="correlation-wrapper"
+    id="models-wrapper"
   >
     <OverPack
-      location="correlation-wrapper"
+      location="models-wrapper"
     >
       <QueueAnim
         key="overpack-wrapper"
@@ -85,7 +85,7 @@ const ArticleModels = () => (
           width={window.innerWidth / 2}
           height={window.innerWidth / 2}
           plotCfg={{
-            margin: [0, 150, 150, 50],
+            margin: [50, 150, 150, 50],
           }}
         />
       </QueueAnim>

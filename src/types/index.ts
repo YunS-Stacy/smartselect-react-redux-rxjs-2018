@@ -13,11 +13,23 @@ export interface MapMarker {
   [key: string]: any;
 }
 
+export interface ChartData {
+  data: any[];
+  fetched: boolean;
+}
+
 export interface RootState {
   app: boolean;
   message: string;
   correlation: {
     data: any[];
+    fetched: boolean;
+  };
+  market: {
+    data: {
+      city: any[];
+      region: any[];
+    };
     fetched: boolean;
   };
   slider: {

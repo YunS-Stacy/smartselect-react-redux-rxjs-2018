@@ -13,6 +13,7 @@ import ModelSelection from '../ModelSelection';
 import ArticleCorrelation from '../ArticleCorrelation';
 import ArticleModels from '../ArticleModels';
 import ArticleWorkflow from '../ArticleWorkflow';
+import ArticleMarket from '../ArticleMarket';
 
 interface Props {
   app: boolean;
@@ -31,10 +32,15 @@ const Home = ({ app }: Props) => (
           <Map />
           <SnackMessage />
         </div>
-        <ModelSelection />
-        <ArticleCorrelation />
-        <ArticleModels />
-        <ArticleWorkflow />
+        {!app && (
+          <>
+            <ArticleMarket />
+            <ArticleCorrelation />
+            <ArticleModels />
+            <ArticleWorkflow />
+          </>
+        )}
+
       </Layout>
     </div>
   </MuiThemeProvider>
