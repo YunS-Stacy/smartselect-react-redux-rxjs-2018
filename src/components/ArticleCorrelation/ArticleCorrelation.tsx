@@ -5,13 +5,14 @@ import * as createG2 from 'g2-react';
 import TweenOne from 'rc-tween-one';
 import QueueAnim from 'rc-queue-anim';
 import ScrollAnim from 'rc-scroll-anim';
+import { Spin } from 'antd';
 
 const OverPack = ScrollAnim.OverPack;
 
 import { RootState } from '../../types';
 
 interface Props {
-  fetched: boolean;
+  fetched: boolean | string;
   data?: any[];
 
   handleFetchData: (payload: string) => void;
@@ -77,15 +78,18 @@ const Chart = createG2((chart: any) => {
   chart.render();
 });
 
-const ArticleCorrelation = ({ fetched, data, handleFetchData }: Props) => {
-
-  return (
-    fetched && (
+class ArticleCorrelation extends React.Component<Props> {
+  componentDidMount() {
+    console.log('mounted');
+    this.props.handleFetchData('correlation');
+  }
+  render() {
+    return (
       <article
+        className="article-wrapper"
         id="correlation-wrapper"
       >
         <OverPack
-          className="article-wrapper"
           location="correlation-wrapper"
         >
           <QueueAnim
@@ -106,22 +110,30 @@ const ArticleCorrelation = ({ fetched, data, handleFetchData }: Props) => {
                   To find the relationship between variables, the correlation matrix may serve the goal well.`}
               </p>
             </div>
-            <Chart
-              key="queue-chart"
-              className="article-chart"
-              data={data}
-              forceFit={false}
-              width={window.innerWidth / 2}
-              height={window.innerWidth / 2}
-              plotCfg={{
-                margin: [0, 150, 150, 50],
-              }}
-            />
+            {this.props.fetched !== false && (
+              <Spin
+                wrapperClassName="article-chart-spin"
+                spinning={this.props.fetched === 'loading'}
+              >
+
+                <Chart
+                  key="queue-chart"
+                  className="article-chart"
+                  data={this.props.data || []}
+                  forceFit={false}
+                  width={window.innerWidth / 2}
+                  height={window.innerWidth / 2}
+                  plotCfg={{
+                    margin: [0, 150, 150, 50],
+                  }}
+                />
+              </Spin>
+            )}
           </QueueAnim>
         </OverPack>
       </article>
-    )
-  );
-};
+    );
+  }
+}
 
 export default ArticleCorrelation;

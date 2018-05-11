@@ -11,6 +11,8 @@ import MapMask from '../MapMask';
 import MapPanel from '../MapPanel';
 import ModelSelection from '../ModelSelection';
 import ArticleCorrelation from '../ArticleCorrelation';
+import ArticleModels from '../ArticleModels';
+import ArticleWorkflow from '../ArticleWorkflow';
 
 interface Props {
   app: boolean;
@@ -31,10 +33,11 @@ const Home = ({ app }: Props) => (
         </div>
         <ModelSelection />
         <ArticleCorrelation />
+        <ArticleModels />
+        <ArticleWorkflow />
       </Layout>
     </div>
   </MuiThemeProvider>
 );
 
 export default Home;
-

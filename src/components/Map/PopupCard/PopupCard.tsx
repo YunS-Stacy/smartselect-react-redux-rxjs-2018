@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import TrendingDown from 'material-ui/svg-icons/action/trending-down';
 import TrendingUp from 'material-ui/svg-icons/action/trending-up';
-import { Spin } from 'antd';
 
 import DirectionsCar from 'material-ui/svg-icons/maps/directions-car';
 import DirectionsBus from 'material-ui/svg-icons/maps/directions-bus';
@@ -35,38 +34,38 @@ const PopupCard = ({ data, id, position, handleFetchRoute }: Props) =>
         transform: `translate(${position.x}px, ${position.y}px)`,
       }}
     >
-    <div
-      className="circular-nav"
-    >
-      <IconButton
-        tooltip="Driving Directions"
-        tooltipPosition="top-left"
-        style={btnStyle}
-        iconStyle={{ color: 'white' }}
-        className="btn-driving"
-        onClick={() => handleFetchRoute({ profile: 'driving', dest: data.coords })}
+      <div
+        className="circular-nav"
       >
-        <DirectionsCar />
-      </IconButton>
-      <IconButton
-        tooltip="Public Transit Directions"
-        tooltipPosition="top-left"
-        style={btnStyle}
-        iconStyle={{ color: 'white' }}
-        onClick={() => handleFetchRoute({ profile: 'cycling', dest: data.coords })}
-      >
-        <DirectionsBike />
-      </IconButton>
-      <IconButton
-        tooltip="Walking Directions"
-        tooltipPosition="top-left"
-        style={btnStyle}
-        iconStyle={{ color: 'white' }}
-        onClick={() => handleFetchRoute({ profile: 'walking', dest: data.coords })}
-      >
-        <DirectionsWalk />
-      </IconButton>
-    </div>
+        <IconButton
+          tooltip="Driving Directions"
+          tooltipPosition="top-left"
+          style={btnStyle}
+          iconStyle={{ color: 'white' }}
+          className="btn-driving"
+          onClick={() => handleFetchRoute({ profile: 'driving', dest: data.coords })}
+        >
+          <DirectionsCar />
+        </IconButton>
+        <IconButton
+          tooltip="Public Transit Directions"
+          tooltipPosition="top-left"
+          style={btnStyle}
+          iconStyle={{ color: 'white' }}
+          onClick={() => handleFetchRoute({ profile: 'cycling', dest: data.coords })}
+        >
+          <DirectionsBike />
+        </IconButton>
+        <IconButton
+          tooltip="Walking Directions"
+          tooltipPosition="top-left"
+          style={btnStyle}
+          iconStyle={{ color: 'white' }}
+          onClick={() => handleFetchRoute({ profile: 'walking', dest: data.coords })}
+        >
+          <DirectionsWalk />
+        </IconButton>
+      </div>
       {data && <CardHeader
         style={{ paddingBottom: 0 }}
         title="COMPS INFO"
@@ -90,6 +89,6 @@ const PopupCard = ({ data, id, position, handleFetchRoute }: Props) =>
         </ul>
       </CardText>}
     </Card >
-) : <div />;
+  ) : <div />;
 
 export default PopupCard;

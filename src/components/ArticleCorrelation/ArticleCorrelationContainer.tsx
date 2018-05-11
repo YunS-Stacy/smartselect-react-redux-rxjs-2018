@@ -17,5 +17,5 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   handleFetchData: bindActionCreators(fetchData, dispatch),
 });
 
-const ArticleCorrelationContainer = connect(mapStateToProps, mapDispatchToProps)(ArticleCorrelation);
+const ArticleCorrelationContainer = connect(mapStateToProps, mapDispatchToProps)(ArticleCorrelation as any);
 export default ArticleCorrelationContainer;

@@ -2,7 +2,8 @@ import {
   DATA_FETCH,
   DATA_FETCH_FULFILLED,
   DATA_FETCH_CANCELLED,
-  DATA_FETCH_REJECTED
+  DATA_FETCH_REJECTED,
+  DATA_FETCH_LOADING,
 } from '../../constants/action-types';
 import { RootState } from '../../types';
 import { Action } from 'redux';
@@ -17,6 +18,8 @@ export default (state = initialState, { type, payload }: Action & { payload?: an
       return payload === 'correlation' ? false : state;
     case DATA_FETCH_REJECTED:
       return payload === 'correlation' ? false : state;
+    case DATA_FETCH_LOADING:
+      return payload === 'correlation' ? 'loading' : state;
     default:
       return state;
   }

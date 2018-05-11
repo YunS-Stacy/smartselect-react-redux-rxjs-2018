@@ -45,19 +45,19 @@ type IAction = Action & { payload?: any };
 
 const fetchSliderEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
   .ofType(DATA_FETCH)
-// check no data
+  // check no data
   .filter(action => action.payload === 'slider' && store.getState().slider.fetched === false)
-.pipe(
-  mergeMap(action =>
-    ajax.getJSON(DATA_URL.FIREBASE.SLIDER)
-      .pipe(
-        map(data => fetchDataFulfilled({ data, name: 'slider' })),
-        takeUntil(action$.ofType(DATA_FETCH_CANCELLED).pipe(
-          filter(action => action.payload === 'slider'),
-          mapTo({ type: 'failed' }),
-        )),
+  .pipe(
+    mergeMap(action =>
+      ajax.getJSON(DATA_URL.FIREBASE.SLIDER)
+        .pipe(
+          map(data => fetchDataFulfilled({ data, name: 'slider' })),
+          takeUntil(action$.ofType(DATA_FETCH_CANCELLED).pipe(
+            filter(action => action.payload === 'slider'),
+            mapTo({ type: 'failed' }),
+          )),
       ),
-  ),
+    ),
 );
 
 const fetchCorrelationEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
@@ -65,8 +65,10 @@ const fetchCorrelationEpic = (action$: ActionsObservable<IAction>, store: Store)
   // check no data
   .filter(action => action.payload === 'correlation' && store.getState().correlation.fetched === false)
   .pipe(
-    mergeMap(action =>
-      ajax.getJSON(DATA_URL.FIREBASE.CORRELATION)
+    switchMap(action => Observable.concat(
+      // set loading
+      Observable.of(fetchDataLoading('correlation')),
+      Observable.ajax.getJSON(DATA_URL.FIREBASE.CORRELATION)
         .pipe(
           map(data => fetchDataFulfilled({ data, name: 'correlation' })),
           takeUntil(action$.ofType(DATA_FETCH_CANCELLED).pipe(
@@ -74,6 +76,7 @@ const fetchCorrelationEpic = (action$: ActionsObservable<IAction>, store: Store)
             mapTo({ type: 'failed' }),
           )),
       ),
+    ),
     ),
 );
 
@@ -115,23 +118,23 @@ const fetchPopupEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
         Observable.of(fetchDataLoading('popup')),
         // ajax
         Observable.ajax(zillowCompsRequest(action.payload))
-        .pipe(
-          // check http status
-          filter(res => res.status === 200),
-          map((res: any) => {
-            const statusCode = Number(Array.from((res.response as XMLDocument).getElementsByTagName('code'))[0]
-              .innerHTML);
-            // filter if has a correct response or not
-            if ((statusCode !== 502) && (statusCode !== 503)) {
-              return fetchDataFulfilled({ data: res.response, name: 'popup' });
-            }
-            return fetchDataRejected({
-              name: 'popup', message: `Property ZPID: ${action.payload} Has Found No Comparables in Zillow Database.`,
-            });
-          }),
-          takeUntil(action$.ofType(DATA_FETCH_CANCELLED, DATA_FETCH_REJECTED).pipe(
-            filter(action => action.payload === 'popup'),
-          )),
+          .pipe(
+            // check http status
+            filter(res => res.status === 200),
+            map((res: any) => {
+              const statusCode = Number(Array.from((res.response as XMLDocument).getElementsByTagName('code'))[0]
+                .innerHTML);
+              // filter if has a correct response or not
+              if ((statusCode !== 502) && (statusCode !== 503)) {
+                return fetchDataFulfilled({ data: res.response, name: 'popup' });
+              }
+              return fetchDataRejected({
+                name: 'popup', message: `Property ZPID: ${action.payload} Has Found No Comparables in Zillow Database.`,
+              });
+            }),
+            takeUntil(action$.ofType(DATA_FETCH_CANCELLED, DATA_FETCH_REJECTED).pipe(
+              filter(action => action.payload === 'popup'),
+            )),
         ),
       ),
     ),
@@ -141,7 +144,7 @@ const fetchRouteEpic = (action$: ActionsObservable<IAction>, store: Store) => ac
   .ofType(ROUTE_FETCH)
   .pipe(
     switchMap(action =>
-    Observable.concat(
+      Observable.concat(
 
         // set loading
         Observable.of(fetchDataLoading('route')),

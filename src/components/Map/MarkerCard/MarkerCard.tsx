@@ -49,7 +49,7 @@ const MarkerCard = ({ marker, fetched, isPopup, handleFetchPopup }: Props) =>
         </IconButton>
       </div>
       <Spin
-        wrapperClassName="Popup-card-spin"
+        wrapperClassName="popup-card-spin"
         spinning={fetched === 'loading'}
       >
         {marker && <CardHeader title="PARCEL INFO" />}
