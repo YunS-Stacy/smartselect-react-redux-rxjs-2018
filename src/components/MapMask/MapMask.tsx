@@ -12,18 +12,18 @@ const MapMask = ({ app, children }: Props) => (
     hidden={app}
   >
     <h2
-        style={{
-          textAlign: 'center',
-          color: 'white',
-          fontSize: '5em',
-          whiteSpace: 'nowrap',
-          fontWeight: 100,
-        }}
+      style={{
+        textAlign: 'center',
+        color: 'white',
+        fontSize: '5rem',
+        whiteSpace: 'nowrap',
+        fontWeight: 100,
+      }}
     >
-        About Model
+      Smart Select
     </h2>
-  {...children}
-    <a className="icon-wrapper" href="#model-selection">
+    {...children}
+    <a className="icon-wrapper" href="#project-wrapper">
       <Icon type="down" className="mask-icon" />
     </a>
   </div>

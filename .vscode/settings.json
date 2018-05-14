@@ -1,4 +1,8 @@
 {
   "tslint.autoFixOnSave": true,
-  "eslint.autoFixOnSave": true
+  "eslint.autoFixOnSave": true,
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "emmet.triggerExpansionOnTab": true
 }

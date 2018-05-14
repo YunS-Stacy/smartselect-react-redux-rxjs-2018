@@ -1,13 +1,25 @@
 .article-wrapper {
-  overflow-x: hidden;
+  overflow: hidden;
   // animation: enter .5s ease-in-out forwards;
-  padding: 1rem 2.5rem;
-  min-height: 50vh;
+  padding: 0 10rem;
   height: auto;
+  min-height: 45vh;
 
   // > .article-heading {
   //   animation: enter .5s ease-in-out 0 forwards;
   // }
+  .article-heading {
+    font-size: 1.5rem;
+  }
+
+  .article-sub-heading {
+    font-size: 1.25rem;
+  }
+
+  .article-text {
+    margin-top: 2rem;
+    line-height: 1.25rem;
+  }
 
   .article-body {
     display: flex;

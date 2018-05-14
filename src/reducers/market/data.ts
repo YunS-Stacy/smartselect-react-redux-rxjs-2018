@@ -16,7 +16,6 @@ export default (state = initialState, { type, payload }: Action & { payload?: an
     case DATA_FETCH_FULFILLED:
       const { name, data } = payload;
       if (name === 'market') {
-        console.log(data);
         // localmarket
         const tempMarket = data;
         const frameMarket = new Frame(tempMarket);

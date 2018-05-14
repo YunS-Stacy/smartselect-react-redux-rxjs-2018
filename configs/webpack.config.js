@@ -17,7 +17,6 @@ const DEV_SERVER = {
   hotOnly: true,
   historyApiFallback: true,
   inline: true,
-  historyApiFallback: true,
   // It suppress error shown in console, so it has to be set to false.
   quiet: false,
   // It suppress everything except error, so it has to be set to false as well

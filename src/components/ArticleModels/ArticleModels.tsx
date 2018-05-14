@@ -47,6 +47,7 @@ const Chart = createG2((chart: any) => {
     Methods: { alias: 'Model Type' },
   });
   chart.intervalDodge().position('Methods*Index').color('type', 'rgb(254, 190, 18)-rgb(29, 145, 192)');
+  chart.legend('title', null);
   chart.render();
 });
 
@@ -82,10 +83,10 @@ const ArticleModels = () => (
           className="article-chart"
           data={frame || []}
           forceFit={false}
-          width={window.innerWidth / 2}
-          height={window.innerWidth / 2}
+          width={window.innerWidth / 3}
+          height={window.innerWidth / 3}
           plotCfg={{
-            margin: [50, 150, 150, 50],
+            margin: [50, 150, 150, 75],
           }}
         />
       </QueueAnim>

@@ -74,7 +74,7 @@ function drawNode(cfg: any, group: any, collapsed: any, isLeaf?: any) {
   const y = cfg.y;
   const pointSize = 5;
   const width = cfg.size;
-  const height = 18;
+  const height = 14;
   const label = cfg.label;
   const shape = group.addShape('rect', {
     attrs: {
@@ -336,39 +336,22 @@ const ArticleWorkflow = () => (
     className="article-wrapper"
     id="workflow-wrapper"
   >
-    <OverPack
-      location="workflow-wrapper"
+    <div
+      key="queue-body"
+      className="article-main"
     >
-      {/* <QueueAnim
-        key="overpack-wrapper"
-        leaveReverse={true}
-        className="article-body"
-      >
-        <div
-          key="queue-body"
-          className="article-main"
-        >
-          <h3 className="article-heading">
-            Correlation Matrix
-              </h3>
-          <p className="article-text">
-            {`Built a large dataset, it's time to find the least constiables that describe the apartment price best.
-
-                  To find the relationship between constiables, the correlation matrix may serve the goal well.`}
-          </p>
-        </div> */}
-        <Chart
-          data={data}
-          forceFit={true}
-          key="queue-chart"
-          width={window.outerWidth}
-          height={window.outerWidth}
-          plotCfg={{
-            margin: [0, 150, 150, 50],
-          }}
-        />
-      {/* </QueueAnim> */}
-    </OverPack>
+      <h3 className="article-heading">Data Process</h3>
+      <Chart
+        data={data}
+        forceFit={false}
+        key="queue-chart"
+        width={window.outerWidth / 3}
+        height={window.outerWidth / 3}
+        plotCfg={{
+          margin: [0, 150, 150, 50],
+        }}
+      />
+    </div>
   </article>
 );
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-// import { Link } from 'dva/router';
+import { Link } from 'react-router-dom';
 import { Row, Col } from 'antd';
 import RaisedButton from 'material-ui/RaisedButton';
 import DropDownMenu from 'material-ui/DropDownMenu';
@@ -12,34 +12,43 @@ const btnStyle = {
   maxHeight: '2.5rem',
 };
 
-const Nav = () => (
-  <nav
-    style={{
-      minHeight: '3rem',
-      padding: '.25rem',
-      display: 'flex',
-    }}
-  >
-    <RaisedButton style={btnStyle}>
-      Home
-    </RaisedButton>
+interface Props {
+  path?: string;
+}
+const Nav = ({ path }: Props) => (
+  <nav className="nav-list">
+    <span className="nav-link"><Link to="/">Home</Link></span>
+    <span className="nav-link"><Link to="/portfolio/urban-planning+design">Paper Portfolio</Link></span>
+    {/portfolio/i.test(path) &&
+      <>
+        <span className="nav-link sub"><Link to="/portfolio/urban-planning+design">Urban Planning + Design</Link></span>
+        <span className="nav-link sub"><Link to="/portfolio/urban-spatial-analysis">Urban Spatial Analysis</Link></span>
+      </>
+    }
+    {/* <RaisedButton
+      // style={btnStyle}
+      containerElement={<Link to="/" />}
+      label="Home"
+    />
     <RaisedButton
-      style={{ ...btnStyle, marginLeft: '1rem' }}
-    >
-      Portfolio
-    </RaisedButton>
+      // style={btnStyle}
+      containerElement={<Link to="/portfolio" />}
+      label="Portfolio"
+    /> */}
+    {/* <Link to="/">
+      <RaisedButton
+        style={{ ...btnStyle, marginLeft: '1rem' }}
+      >
+        Portfolio
+      </RaisedButton>
+    </Link>
     <DropDownMenu
       selectedMenuItemStyle={{ color: '#158cba' }}
       value={'portfolio'}
-      // value={props.portName}
-      // onChange={(e, value) => {
-      //   e.preventDefault();
-      //   props.dispatch({ type: 'smartselect/changePortfolio', portName: value === 0 ? 'design' : 'analysis' });
-      // }}
     >
       <MenuItem value={'design'} primaryText="Urban Design + Planning" />
       <MenuItem value={'analysis'} primaryText="Geospatial Analysis" />
-    </DropDownMenu>
+    </DropDownMenu> */}
   </nav>
 );
 

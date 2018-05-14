@@ -216,9 +216,31 @@ const resetMapEpic = (action$: ActionsObservable<Action>) => action$
         mapping.removeLayer('blueprint');
         mapping.removeSource('blueprint');
       }
-      return setLayerViz({ name: 'footprint', viz: 'visible' });
-      // mapping.setLayoutProperty('footprint', 'visibility', 'visible');
+      if (!/customized/i.test(mapping.getStyle().name)) {
+        mapping.setStyle(MAP_STYLES.customized);
+      }
+      return mapping;
     }),
+  switchMap(val =>
+    // map actions
+    Observable.concat(
+      Observable.concat(
+      // reset geometry
+      Observable.of(resetGeometry()),
+      // actions: check map -> set layer viz(-> check map)
+        Observable.of(setStyle('customized')),
+        // set layer viz after set style,
+        Observable.fromEvent(val, 'data')
+          .filter((val: mapboxgl.MapDataEvent) => val.dataType === 'source' && val.isSourceLoaded)
+          .take(1)
+          .switchMapTo(Observable.from([
+            setLayerViz({ name: 'aptParcel', viz: 'none' }),
+            setLayerViz({ name: 'vacantParcel', viz: 'none' }),
+            setLayerViz({ name: 'footprint', viz: 'visible' }),
+          ])),
+        ),
+      ),
+    ),
   );
 
 const enterAppEpic = (action$: ActionsObservable<Action>, store: Store) => action$
@@ -469,14 +491,14 @@ const setModeMeasureMinusEpic = (action$: ActionsObservable<Action & { payload: 
         //   }
         // })
         .switchMapTo(
-        Observable.concat(
+          Observable.concat(
             // reset geometry
             Observable.of(resetGeometry()),
             Observable.of(setStyle('light')),
             Observable.of(setLayerViz({ name: 'aptParcel', viz: 'none' })),
             Observable.of(setLayerViz({ name: 'vacantParcel', viz: 'visible' })),
           ),
-      ),
+        ),
     ),
 );
 
@@ -594,6 +616,19 @@ const setSliderRangeEpic = (action$: ActionsObservable<Action>) => action$
         'all',
           ['>=', 'refprice', (action as any).payload[0]], ['<=', 'refprice', (action as any).payload[1]],
       ],
+    )),
+    mergeMap(() => Observable.empty<never>()),
+);
+
+// clear layer filter
+const resetSliderRangeEpic = (action$: ActionsObservable<Action>, store: Store) => action$
+  .ofType(STEP_ADD, STEP_MINUS)
+  .filter(() => store.getState().map.step === 0 || store.getState().map.step === 2)
+  .pipe(
+    // check layer exists and set filter
+    tap(action => mapping.getLayer('aptParcel') && mapping.setFilter(
+      'aptParcel',
+      null,
     )),
     mergeMap(() => Observable.empty<never>()),
 );
@@ -779,6 +814,7 @@ export const epics = combineEpics(
   listenDrawSelectEpic,
 
   setSliderRangeEpic,
+  resetSliderRangeEpic,
   setCompsLayerEpic,
   setRouteLayerEpic,
   setPopupPositionEpic,

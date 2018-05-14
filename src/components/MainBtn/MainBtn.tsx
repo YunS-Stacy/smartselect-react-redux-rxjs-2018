@@ -12,11 +12,7 @@ const MainBtn = ({ loaded, handleToggleApp }: Props) => (
   <div className="main-btn-wrapper">
   {loaded === true ? (
   <Button
-    onClick={(e) => {
-      e.stopPropagation();
-      e.preventDefault();
-      handleToggleApp();
-    }}
+    onClick={() => handleToggleApp()}
     className="main-btn"
   >
     GET STARTED

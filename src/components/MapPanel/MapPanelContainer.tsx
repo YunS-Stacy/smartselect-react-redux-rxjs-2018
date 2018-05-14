@@ -11,7 +11,9 @@ import { toggleApp } from '../../reducers/app/actions';
 
 const mapStateToProps = ({
   map: { step, loaded, geometry },
+  slider: { range },
 }: RootState) => ({
+  range,
   step,
   loaded,
   geometry,

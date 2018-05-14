@@ -85,14 +85,12 @@ class QuerySlider extends React.Component<Props> {
           tickCount: 3,
         },
       });
-
       chart.tooltip({
         title: null,
         map: {
           name: 'Price',
           value: 'refprice',
         },
-
         crosshairs: true,
       });
       chart.setMode('select');
@@ -111,7 +109,6 @@ class QuerySlider extends React.Component<Props> {
 
   componentDidMount() {
     this.props.handleFetchData('slider');
-
   }
 
   render() {
@@ -122,16 +119,14 @@ class QuerySlider extends React.Component<Props> {
       const data = tempData.toJSON();
 
       return (
-
         <Paper
           zDepth={3}
           style={{
             position: 'absolute',
-            top: '75vh',
-            left: '0',
+            bottom: '1rem',
+            left: '1rem',
             width: '50vw',
             height: '25vh',
-            right: '17em',
             backgroundColor: 'rgba(255,255,255,0.8)',
             zIndex: 9,
           }}
@@ -161,7 +156,6 @@ class QuerySlider extends React.Component<Props> {
             </ul>
           </div>
         </Paper>
-
       );
     }
     return null;

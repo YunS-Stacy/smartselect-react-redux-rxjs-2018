@@ -1,8 +1,10 @@
 import * as React from 'react';
 
 const Footer = () => (
-  <footer>
-    <p>Yun Shi</p>
+  <footer className="footer-wrapper">
+    <p>
+      Produced by Yun Shi
+    </p>
   </footer>
 );
 

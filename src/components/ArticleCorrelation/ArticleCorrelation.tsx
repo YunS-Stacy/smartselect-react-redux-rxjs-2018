@@ -111,8 +111,8 @@ const ArticleCorrelation = ({ fetched, data }: Props) => (
             className="article-chart"
             data={data}
             forceFit={false}
-            width={window.innerWidth / 2}
-            height={window.innerWidth / 2}
+            width={(window.innerWidth - 320) / 2}
+            height={(window.innerWidth - 420) / 2}
             plotCfg={{
               margin: [0, 150, 150, 50],
             }}

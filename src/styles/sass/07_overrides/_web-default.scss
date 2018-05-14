@@ -1,9 +1,11 @@
 input:focus,
+a:focus,
 select:focus,
 textarea:focus,
 button:focus {
   outline: transparent;
   box-shadow: none;
+  text-decoration: none;
 }
 
 input {

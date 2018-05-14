@@ -8,4 +8,5 @@ declare module 'g2-react';
 declare module 'rc-tween-one';
 declare module 'rc-queue-anim';
 declare module 'rc-scroll-anim';
+declare module 'react-frame-component';
 
