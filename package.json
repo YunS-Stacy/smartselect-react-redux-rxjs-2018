@@ -37,6 +37,7 @@
   },
   "scripts": {
     "start": "node express.js",
+    "heroku:start": "heroku local web",
     "clean": "rimraf dist",
     "dev": "webpack-dev-server --config configs/webpack.config.js",
     "build": "yarn run clean && webpack --config configs/webpack.config.js --env.build",
@@ -45,8 +46,8 @@
     "reinstall:win": "rd /s /q node_modules && yarn",
     "test": "jest",
     "test:watch": "jest --watch",
-    "deploy": "gh-pages -d dist",
-    "heroku": "yarn run build && heroku static:deploy && heroku ps:scale web=1 && heroku open && heroku logs --tail"
+    "deploy:gh": "gh-pages -d dist",
+    "deploy:heroku": "yarn run build && heroku static:deploy && heroku ps:scale web=1 && heroku open && heroku logs --tail"
   },
   "devDependencies": {
     "@types/enzyme": "3.1.8",

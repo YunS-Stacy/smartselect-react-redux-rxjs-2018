@@ -4,5 +4,8 @@
   "emmet.includeLanguages": {
     "javascript": "javascriptreact"
   },
-  "emmet.triggerExpansionOnTab": true
+  "emmet.triggerExpansionOnTab": true,
+  "eslint.enable": false,
+  "tslint.alwaysShowRuleFailuresAsWarnings": true,
+  "tslint.jsEnable": true
 }
