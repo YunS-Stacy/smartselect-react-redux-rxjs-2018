@@ -1,66 +1,44 @@
-import { combineEpics, ActionsObservable } from 'redux-observable';
+import { combineEpics, ActionsObservable, EPIC_END } from 'redux-observable';
 import * as mapboxgl from 'mapbox-gl';
 import * as mapboxDraw from '@mapbox/mapbox-gl-draw';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-// import * as turf from 'turf';
 import center from '@turf/center';
+import bbox from '@turf/bbox';
+import { featureCollection, lineString, point } from '@turf/helpers';
 
 import { Observable } from 'rxjs/Rx';
-import { of } from 'rxjs/observable/of';
-import { fromEvent } from 'rxjs/observable/fromEvent';
-import { interval } from 'rxjs/observable/interval';
-import { timer } from 'rxjs/observable/timer';
-import { _throw } from 'rxjs/observable/throw';
 import {
-  race,
-  take,
-  takeLast,
-  takeUntil,
-  takeWhile,
   filter,
   map,
   mapTo,
   mergeMap,
   tap,
-  throttleTime,
-  debounceTime,
-  distinctUntilChanged,
-  skipWhile,
-  skipUntil,
-  retry,
-  catchError,
-  ignoreElements,
   switchMap,
-  retryWhen,
-  delay,
-  sampleTime,
-  sample,
-  dematerialize,
-  delayWhen,
   switchMapTo,
 } from 'rxjs/operators';
 
 import {
   APP_TOGGLE,
   MAP_INIT, IS_LOADED,
-  INSTANCE_SET, MODE_SET, MAP_RESET, MAP_CHECK,
-  GEOMETRY_GET, GEOMETRY_SET,
-  STEP_ADD, STEP_MINUS, STEP_SET, LAYER_VIZ_SET, STYLE_SET, GEOMETRY_HEIGHT_SET,
+  MAP_RESET,
+  STEP_ADD, STEP_MINUS, STEP_SET, LAYER_VIZ_SET,
+  GEOMETRY_HEIGHT_SET, SLIDER_RANGE_SET, DATA_FETCH_FULFILLED, MARKER_SET, POPUP_FETCH, POPUP_ID_SET,
 } from '../constants/action-types';
-import { updateHighlights } from '../utils/highlights';
 import { Store, Action } from '../types/redux';
 import {
-  setInstance, mapLoaded, checkMap, resetMap,
-  setLayer, setMode, setGeometry, setStep, setLayerViz, setStyle, setGeometryHeight, removeGeometry
+  mapLoaded, resetMap,
+  setGeometry, setStep, setLayerViz, setStyle, setGeometryHeight, removeGeometry, resetGeometry
 } from '../reducers/map/actions';
 import { MAPBOX_TOKEN, MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES } from '../constants/app-constants';
-import { FeatureCollection, Feature, GeometryObject, LineString, Polygon, Point, GeoJsonObject } from 'geojson';
+import { Feature } from 'geojson';
+import { setPopupId, setPopupPosition, resetPopupId } from '../reducers/popup/actions';
+import { setMarker, setMarkerPosition } from '../reducers/marker/actions';
+import { RootState } from '../types';
 
-type IAction = Action & { payload?: any };
 (mapboxgl as any).accessToken = MAPBOX_TOKEN;
 
 let mapping: mapboxgl.Map;
-(window as any).mapping = mapping;
+
 const mappingControls: Map<string, mapboxgl.Control> = new Map();
 
 const scaleControl = new mapboxgl.ScaleControl({ unit: 'imperial' });
@@ -106,6 +84,54 @@ const blueprintLyr: mapboxgl.Layer = {
   },
 };
 
+const routeLineLyr: mapboxgl.Layer = {
+  id: 'routeLine',
+  type: 'line',
+  source: 'routeLine',
+  paint: {
+    'line-color': '#ff5722',
+  },
+  layout: {
+    visibility: 'visible',
+  },
+};
+
+const routePtsLyr: mapboxgl.Layer = {
+  id: 'routePts',
+  type: 'circle',
+  source: 'routePts',
+  paint: {
+    'circle-color': '#ff5722',
+  },
+  layout: {
+    visibility: 'visible',
+  },
+};
+
+const compsLinesLyr: mapboxgl.Layer = {
+  id: 'compsLines',
+  type: 'line',
+  source: 'compsLines',
+  paint: {
+    'line-color': '#ff9d00',
+  },
+  layout: {
+    visibility: 'visible',
+  },
+};
+
+const compsPtsLyr: mapboxgl.Layer = {
+  id: 'compsPts',
+  type: 'circle',
+  source: 'compsPts',
+  paint: {
+    'circle-color': '#ff9d00',
+  },
+  layout: {
+    visibility: 'visible',
+  },
+};
+
 const addMapControl = (name: string) => {
   // haven't added yet
   if (mapping && !mappingControls.has(name)) {
@@ -124,9 +150,6 @@ const removeMapControl = (name: string) => {
   return mapping;
 };
 
-const blueprintSrc: null | mapboxgl.GeoJSONSource =
-mapping && (mapping.getSource('blueprint') as mapboxgl.GeoJSONSource);
-
 const blueprintSrcFromStore = (store: Store) => {
   const features = store
   .getState().map.geometry
@@ -136,13 +159,15 @@ const blueprintSrcFromStore = (store: Store) => {
     ...item,
     id: null,
   }));
-  console.log(store
-    .getState().map.geometry);
   return {
     features,
     type: 'FeatureCollection',
   } as GeoJSON.FeatureCollection<mapboxgl.GeoJSONGeometry>;
 };
+
+const hotModuleReplacementEpic = (action$: ActionsObservable<Action>) => action$
+  .ofType(EPIC_END).do(() => (window as any).mapping = mapping)
+  .mapTo({ type: 'mapping updated' });
 
 const initMapEpic = (action$: ActionsObservable<Action>) => action$
   .ofType(MAP_INIT)
@@ -150,26 +175,18 @@ const initMapEpic = (action$: ActionsObservable<Action>) => action$
     // construct map
     map((action: Action) => {
       const el = document.getElementById('map');
-      // const children = el.child;
-      const container = document.createElement('div');
-      // test if has already a map container
-      const oldChild = el.firstChild;
-      oldChild ? el.replaceChild(container, oldChild) : el.appendChild(container);
+      // oldChild ? el.replaceChild(container, oldChild) : el.appendChild(container);
       mapping = new mapboxgl.Map({
         ...MAP_SETTINGS_DEFAULT,
-        container,
+        container: el,
       });
-      (window as any).mapping = mapping;
+      if (process.env.NODE_ENV !== 'production') { (window as any).mapping = mapping; }
       return mapping;
-      // mapping.on('load', () => {
-      //   (window as any).mapping = mapping;
-      //   mapping.setLayoutProperty('footprint', 'visibility', 'visible');
-      // });
     }),
     switchMap(val => Observable
       .fromEvent(val, 'load')
       .mapTo(setLayerViz({ name: 'footprint', viz: 'visible' })),
-    ),
+  ),
 );
 
 const resetMapEpic = (action$: ActionsObservable<Action>) => action$
@@ -185,16 +202,38 @@ const resetMapEpic = (action$: ActionsObservable<Action>) => action$
         mapping.removeLayer('blueprint');
         mapping.removeSource('blueprint');
       }
-      return setLayerViz({ name: 'footprint', viz: 'visible' });
-      // mapping.setLayoutProperty('footprint', 'visibility', 'visible');
+      if (!/customized/i.test(mapping.getStyle().name)) {
+        mapping.setStyle(MAP_STYLES.customized);
+      }
+      return mapping;
     }),
+  switchMap(val =>
+    // map actions
+    Observable.concat(
+      Observable.concat(
+      // reset geometry
+      Observable.of(resetGeometry()),
+      // actions: check map -> set layer viz(-> check map)
+        Observable.of(setStyle('customized')),
+        // set layer viz after set style,
+        Observable.fromEvent(val, 'data')
+          .filter((val: mapboxgl.MapDataEvent) => val.dataType === 'source' && val.isSourceLoaded)
+          .take(1)
+          .switchMapTo(Observable.from([
+            setLayerViz({ name: 'aptParcel', viz: 'none' }),
+            setLayerViz({ name: 'vacantParcel', viz: 'none' }),
+            setLayerViz({ name: 'footprint', viz: 'visible' }),
+          ])),
+        ),
+      ),
+    ),
   );
 
 const enterAppEpic = (action$: ActionsObservable<Action>, store: Store) => action$
   .ofType(APP_TOGGLE)
   .pipe(
     switchMap(
-      () => of(store.getState().app),
+      () => Observable.of(store.getState().app),
       (_: Action, app: boolean) => {
         if (app) {
           return setStep(0);
@@ -206,40 +245,11 @@ const enterAppEpic = (action$: ActionsObservable<Action>, store: Store) => actio
     // map((app: boolean) => app ? setStep(0) : resetMap()),
 );
 
-// const setCameraEpic = (action$: ActionsObservable<IAction>, store: Store) => action$
-//   .ofType(STEP_SET, STEP_ADD, STEP_MINUS)
-//   .mapTo(store.getState().map.step)
-//   .pipe(    // set camera for each map mode
-//     tap((val: number) => {
-//       if (val === 0) {
-//         return mapping = !/light/i.test(mapping.getStyle().name)
-//         ? mapping.setStyle(MAP_STYLES.light)
-//         : mapping;
-//       }
-//       if (val === 'intro' || payload === 'query') {
-//         mapping.easeTo({
-//           ...MAP_CAMERA.plane,
-//           zoom: 15,
-//         });
-
-//         // mapping.setLayoutProperty('footprint', 'visibility', 'none');
-//         mapping.setStyle(MAP_STYLES.light);
-//         mapping.on('load', () => {
-//           mapping.setLayoutProperty('aptParcel', 'visibility', 'visible');
-//         });
-//         // return setLayer('footprint', mapping.getLayer('footptint').layout.visibility);
-//       }
-//       mapping.easeTo(MAP_CAMERA.perspective);
-//     }),
-//     mergeMap(() => Observable.empty<never>()),
-// );
-
 const setModeIntroEpic = (action$: ActionsObservable<Action>, store: Store) => action$
 .ofType(STEP_SET)
 .pipe(
   filter(action => store.getState().map.step === 0),
   map(() => {
-    console.log('step is 0'),
     mapping.easeTo({
       ...MAP_CAMERA.plane,
       zoom: 15,
@@ -252,107 +262,129 @@ const setModeIntroEpic = (action$: ActionsObservable<Action>, store: Store) => a
 );
 
 const setModeIntroMinusEpic = (action$: ActionsObservable<Action & { payload: string }>, store: Store) => action$
-.ofType(STEP_MINUS)
-.pipe(
-  filter(() => store.getState().map.step === 0),
-  tap(_ => console.log('minus to here')),
-  map(() => mapping.setStyle(MAP_STYLES.customized)),
-  switchMap(val => Observable.concat(
-    // actions: check map -> set layer viz(-> check map)
-    Observable.of(setStyle('customized')),
-    // set layer viz after set style,
-    Observable.fromEvent(val, 'data')
-    .filter((val: mapboxgl.MapDataEvent) => val.isSourceLoaded === true)
-    .take(1)
-    .mapTo(setLayerViz({ name: 'vacantParcel', viz: 'none' })),
-    Observable.of(mapLoaded(false)),
-    // set layer viz after set style,
-    Observable.fromEvent(val, 'data')
-    .filter((val: mapboxgl.MapDataEvent) => val.isSourceLoaded === true)
-    .take(1)
-    .mapTo(setLayerViz({ name: 'aptParcel', viz: 'none' })),
+  .ofType(STEP_MINUS)
+  .pipe(
+    filter(() => store.getState().map.step === 0),
+    map(() => mapping.setStyle(MAP_STYLES.customized)),
+    switchMap(val => Observable.concat(
+      // actions: check map -> set layer viz(-> check map)
+      Observable.of(setStyle('customized')),
+      // set layer viz after set style,
+      // set layer viz after set style,
+      Observable.of(setLayerViz({ name: 'vacantParcel', viz: 'none' })),
+
+      Observable.of(setLayerViz({ name: 'aptParcel', viz: 'none' })),
+
     // check map after all actions dispatched
   )),
 );
 
 const setModeQueryEpic = (action$: ActionsObservable<Action & { payload: string }>, store: Store) => action$
-.ofType(STEP_ADD, STEP_MINUS)
-.pipe(
-  filter(() => store.getState().map.step === 1),
-  map(() => {
-    if (!/light/i.test(mapping.getStyle().name)) {
-      mapping.setStyle(MAP_STYLES.light);
-    }
-    return mapping;
-  }),
-  switchMap(val => Observable.concat(
-    // actions: check map -> set layer viz(-> check map)
-    Observable.of(setStyle('light')),
-    // set layer viz after set style,
-    Observable.fromEvent(val, 'data')
-    .filter((val: mapboxgl.MapDataEvent) => val.dataType === 'source' && val.isSourceLoaded)
-    .take(1)
-    .mapTo(setLayerViz({ name: 'vacantParcel', viz: 'visible' })),
-    // set layer viz after set style,
-    Observable.fromEvent(val, 'data')
-    .filter((val: mapboxgl.MapDataEvent) => val.dataType === 'source' && val.isSourceLoaded)
-    .do(val => console.log(val, 'chain'))
-    .take(1)
-    .mapTo(setLayerViz({ name: 'aptParcel', viz: 'visible' })),
-    // check map after all actions dispatched
-  )),
+  .ofType(STEP_ADD)
+  .pipe(
+    filter(() => store.getState().map.step === 1),
+    map(() => {
+      if (!/light/i.test(mapping.getStyle().name)) {
+        mapping.setStyle(MAP_STYLES.light);
+      }
+      return mapping;
+    }),
+  switchMap(val =>
+    // map actions
+    Observable.concat(
+      Observable.concat(
+      // actions: check map -> set layer viz(-> check map)
+        Observable.of(setStyle('light')),
+        // set layer viz after set style,
+        Observable.fromEvent(val, 'data')
+          .filter((val: mapboxgl.MapDataEvent) => val.dataType === 'source' && val.isSourceLoaded)
+          .take(1)
+          .mapTo(setLayerViz({ name: 'vacantParcel', viz: 'visible' })),
+        // set layer viz after set style,
+        Observable.fromEvent(val, 'data')
+          .filter((val: mapboxgl.MapDataEvent) => val.dataType === 'source' && val.isSourceLoaded)
+          .take(1)
+          .mapTo(setLayerViz({ name: 'aptParcel', viz: 'visible' })),
+      ), // check map after all actions dispatched
+
+      // map events
+      Observable.fromEvent(mapping, 'mousemove')
+        .filter(() => store.getState().map.step === 1)
+        .map((ev: mapboxgl.MapDataEvent) => {
+          const feature = mapping.queryRenderedFeatures((ev as any).point, { layers: ['aptParcel'] });
+          // change cursor style
+          mapping.getCanvas().style.cursor = feature.length > 0 ? 'pointer' : '';
+
+          if (feature.length > 0) {
+            return { feature: feature[0], position: (ev as any).point };
+          }
+          return null;
+        })
+        // filter null value
+        .filter(val => !!val)
+        .map(val => setMarker({ ...val.feature.properties, position: val.position })),
+      // check map after all actions dispatched
+    ),
+  ),
 );
 
 const setModeQueryMinusEpic = (action$: ActionsObservable<Action & { payload: string }>, store: Store) => action$
-.ofType(STEP_MINUS)
-.pipe(
-  filter(() => store.getState().map.step === 1),
-  map(() => removeMapControl('draw')),
-  tap(() => console.log('draw removed')),
-  switchMap(val => Observable.concat(
-    // actions: check map -> set layer viz(-> check map)
-    Observable.of(setStyle('light')),
-    // set layer viz after set style,
-    Observable.fromEvent(val, 'data')
-    .filter((val: mapboxgl.MapDataEvent) => val.isSourceLoaded === true)
-    .take(1)
-    .mapTo(setLayerViz({ name: 'vacantParcel', viz: 'visible' })),
-    // set layer viz after set style,
-    Observable.fromEvent(val, 'data')
-    .filter((val: mapboxgl.MapDataEvent) => val.isSourceLoaded === true)
-    .take(1)
-    .mapTo(setLayerViz({ name: 'aptParcel', viz: 'visible' })),
-    // check map after all actions dispatched
-  )),
-);
+  .ofType(STEP_MINUS)
+  .pipe(
+    filter(() => store.getState().map.step === 1),
+    map(() => removeMapControl('draw')),
+    switchMap(val =>
+      Observable.concat(
+        // actions: check map -> set layer viz(-> check map)
+        // set layer viz after set style,
+        Observable.fromEvent(val, 'data')
+          // wait the control to be removed
+          .filter((val: mapboxgl.MapDataEvent) => val.dataType === 'style')
+          .take(1)
+          .mapTo(setLayerViz({ name: 'aptParcel', viz: 'visible' })),
+        Observable.fromEvent(mapping, 'mousemove')
+          .filter(() => store.getState().map.step === 1)
+          .map((ev: mapboxgl.MapDataEvent) => {
+            const feature = mapping.queryRenderedFeatures((ev as any).point, { layers: ['aptParcel'] });
+            // change cursor style
+            mapping.getCanvas().style.cursor = feature.length > 0 ? 'pointer' : '';
+
+            if (feature.length > 0) {
+              return { feature: feature[0], position: (ev as any).point };
+            }
+            return null;
+          })
+          // filter null value
+          .filter(val => !!val)
+          .map(val => setMarker({ ...val.feature.properties, position: val.position })),
+        ),
+    ),
+  );
 
 const setLayerVizEpic = (action$: ActionsObservable<Action>, store: Store) => action$
-.ofType(LAYER_VIZ_SET)
-.do(val => console.log(val, 'viz set'))
-.pipe(
-  // mergeMap(() => Observable.empty<never>()),
-  switchMap((action: any) => Observable.of(mapping)
-    .do(() =>
-    // check layer
-    mapping.getLayer(action.payload.name)
-    // check layer viz
-    && (mapping.getLayer(action.payload.name) as any).visibility !== action.payload.viz
-    && mapping.setLayoutProperty(action.payload.name, 'visibility', action.payload.viz))
-    .switchMap(() => Observable.of(
-      race(
-        // check the map if loaded
-        Observable.of(mapping).filter(val => val.isStyleLoaded() === true),
-        // (if not), wait for data loading event
-        Observable.fromEvent(mapping, 'data')
+  .ofType(LAYER_VIZ_SET)
+    // mergeMap(() => Observable.empty<never>()),
+  .switchMap((action: any) =>
+    Observable.of(mapping)
+      .map(() => {
+        // check layer
+        const newMapping = mapping.getLayer(action.payload.name)
+          // check layer viz
+          && (mapping.getLayer(action.payload.name) as any).visibility !== action.payload.viz
+          && mapping.setLayoutProperty(action.payload.name, 'visibility', action.payload.viz);
+        // check if layer exists, if no layer exists, then return original map
+        return newMapping || mapping;
+      })
+      .switchMap(val =>
+        Observable.fromEvent(val, 'data')
         .distinctUntilChanged()
         .filter((ev: mapboxgl.MapDataEvent) => ev.dataType === 'source' && ev.isSourceLoaded === true)
-        .do(val => console.log(val))
-        .take(1),
+        .take(1)
+        .mapTo(mapLoaded(true)),
+
       ),
-    ))
-    .mapTo(mapLoaded(true)),
-  ),
-);
+  // .mapTo(mapLoaded(true)),
+  );
 
 // const setStyleEpic = (action$: ActionsObservable<Action>) => action$
 // .ofType(STYLE_SET)
@@ -381,7 +413,6 @@ const setModeMeasureEpic = (action$: ActionsObservable<Action & { payload: strin
 .ofType(STEP_ADD)
 .pipe(
   filter(() => store.getState().map.step === 2),
-  tap(() => console.log('step is 2')),
   map(() => {
     addMapControl('draw');
     return mapping;
@@ -391,9 +422,9 @@ const setModeMeasureEpic = (action$: ActionsObservable<Action & { payload: strin
     Observable.of(setLayerViz({ name: 'vacantParcel', viz: 'visible' })),
     // set layer viz after set style,
     Observable.fromEvent(val, 'data')
-    .filter((val: mapboxgl.MapDataEvent) => val.isSourceLoaded === true)
-    .take(1)
-    .mapTo(setLayerViz({ name: 'aptParcel', viz: 'none' })),
+      .filter((val: mapboxgl.MapDataEvent) => val.isSourceLoaded === true)
+      .take(1)
+      .mapTo(setLayerViz({ name: 'aptParcel', viz: 'none' })),
 
     // Observable.fromEvent(mapping, 'draw.selectionchange')
     // .map((ev: MapboxDrawEvent) => setGeometry(ev.features)),
@@ -401,99 +432,66 @@ const setModeMeasureEpic = (action$: ActionsObservable<Action & { payload: strin
 );
 
 const listenDrawDeleteEpic = (action$: ActionsObservable<Action & { payload: string }>, store: Store) => action$
-.ofType(STEP_ADD, STEP_MINUS)
-.filter(() => store.getState().map.step === 2)
-.map(() => mapping)
-.switchMap(val => Observable
-  .fromEvent(val, 'draw.delete')
-  .map((ev: MapboxDrawEvent) => removeGeometry(ev.features)),
+  .ofType(STEP_ADD, STEP_MINUS)
+  .filter(() => store.getState().map.step === 2)
+  .map(() => mapping)
+  .switchMap(val => Observable
+    .fromEvent(val, 'draw.delete')
+    .map((ev: MapboxDrawEvent) => removeGeometry(ev.features)),
 );
 
 const listenDrawSelectEpic = (action$: ActionsObservable<Action & { payload: string }>, store: Store) => action$
-.ofType(STEP_ADD, STEP_MINUS)
-.filter(() => store.getState().map.step === 2)
-.map(() => mapping)
-.switchMap(val => Observable
-  .fromEvent(val, 'draw.selectionchange')
-  .map((ev: MapboxDrawEvent) => setGeometry(ev.features)),
+  .ofType(STEP_ADD, STEP_MINUS)
+  .filter(() => store.getState().map.step === 2)
+  .map(() => mapping)
+  .switchMap(val => Observable
+    .fromEvent(val, 'draw.selectionchange')
+    .filter(() => store.getState().map.step === 2)
+    .map((ev: MapboxDrawEvent) => setGeometry(ev.features)),
 );
 
 const setModeMeasureMinusEpic = (action$: ActionsObservable<Action & { payload: string }>, store: Store) => action$
   .ofType(STEP_MINUS)
   .pipe(
-    filter(() => store.getState().map.step === 2),
-    tap(() => console.log('step is 2 minus')),
+  filter(() => store.getState().map.step === 2),
     map(() => {
       // add drawing control
       addMapControl('draw');
       mapping.easeTo({
         ...MAP_CAMERA.plane,
       });
-      if (/light/i.test(mapping.getStyle().name)) {
+      // test if not the 'light' style
+      if (!/light/i.test(mapping.getStyle().name)) {
         mapping.setStyle(MAP_STYLES.light);
       }
       return mapping;
-      // if (mapping.getLayer('blueprint')) {
-      //   mapping.removeLayer('blueprint');
-      //   mapping.removeSource('blueprint');
-      // }
-      // return setLayerViz({ name: 'aptParcel', viz: 'none' });
     }),
-    switchMap(() => Observable.concat(
-      Observable.fromEvent(mapping, 'data')
-      .filter((val: mapboxgl.MapDataEvent) => val.isSourceLoaded === true)
-      .take(1)
-      .do(() => {
-        if (mapping.getLayer('blueprint')) {
-          mapping.removeLayer('blueprint');
-          mapping.removeSource('blueprint');
-        }
-      })
-      .mapTo(setStyle('light')),
-      Observable.of(mapLoaded(true)),
-    )),
+    switchMap((val: mapboxgl.Map) =>
+      Observable.fromEvent(val, 'data')
+        .filter((val: mapboxgl.MapDataEvent) => val.isSourceLoaded === true)
+        .take(1)
+        // .do(() => {
+        //   if (mapping.getLayer('blueprint')) {
+        //     mapping.removeLayer('blueprint');
+        //     mapping.removeSource('blueprint');
+        //   }
+        // })
+        .switchMapTo(
+          Observable.concat(
+            // reset geometry
+            Observable.of(resetGeometry()),
+            Observable.of(setStyle('light')),
+            Observable.of(setLayerViz({ name: 'aptParcel', viz: 'none' })),
+            Observable.of(setLayerViz({ name: 'vacantParcel', viz: 'visible' })),
+          ),
+        ),
+    ),
 );
-
-// const drawCreateEventEpic = (action$: ActionsObservable<Action & { payload: string }>, store: Store) => action$
-// .ofType(STEP_ADD, STEP_MINUS)
-// .pipe(
-//   filter(() => (store.getState().map.step === 2)),
-//   switchMap(
-//     // fire when map loaded
-//     () => action$.ofType(IS_LOADED).filter((action: any) => action.payload === true)
-//     .pipe(
-//       switchMap(() => Observable
-//         .fromEvent(mapping, 'draw.create')
-//         .map((ev: MapboxDrawEvent) => setGeometry(ev.features)),
-//       ),
-//     ),
-//   ),
-// );
-
-// const setGeometryEpic = (action$: ActionsObservable<Action & { payload: string }>, store: Store) => action$
-// .ofType(GEOMETRY_SET)
-// .pipe(
-//   // tap(() => {
-//   //   console.log('check source', mapping.getSource('blueprint'));
-//   // // add source for the first time
-//   //   if (!mapping.getSource('blueprint')) {
-//   //     return mapping.addSource('blueprint', {
-//   //       type: 'geojson',
-//   //       data: blueprintSrcFromStore(store),
-//   //     });
-//   //   }
-//   // // modify data frome 2nd time
-//   //   return (mapping.getSource('blueprint') as mapboxgl.GeoJSONSource).setData(blueprintSrcFromStore(store));
-//   // }),
-//   tap(val => console.log(val, 'check source')),
-//   mapTo({ type: 'check source complete' }),
-// );
 
 const setModeBuildEpic = (action$: ActionsObservable<Action>, store: Store) => action$
 .ofType(STEP_ADD)
 .pipe(
   filter(() => store.getState().map.step === 3),
-  tap(() => console.log('step is 3')),
   map(() => {
     removeMapControl('draw');
     mapping.easeTo({
@@ -510,7 +508,6 @@ const setModeBuildEpic = (action$: ActionsObservable<Action>, store: Store) => a
     .filter((val: mapboxgl.MapDataEvent) => val.isSourceLoaded === true)
     .take(1)
     .do(() => {
-      console.log('add source', blueprintSrcFromStore(store));
 
       if (!mapping.getSource('blueprint')) {
         mapping.addSource('blueprint', {
@@ -561,73 +558,16 @@ const setModeDecideEpic = (action$: ActionsObservable<Action>, store: Store) => 
     Observable.of(mapLoaded(true)),
     Observable.of(setLayerViz({ name: 'footprint', viz: 'visible' })),
   )),
-    // Observable.of(checkMap(mapping)),
-  // map(() => {
-  //   const isFootprintViz = mapping.getLayoutProperty('footprint', 'visibility') === 'visible';
-  //   if (!isFootprintViz) {
-  //     mapping.setLayoutProperty('footprint', 'visibility', 'visible');
-  //   }
-  //   return checkMap(mapping);
-  // }),
 );
-
-// const checkMapEpic = (action$: ActionsObservable<Action & {payload: mapboxgl.Map}>, store: Store) => action$
-// .ofType(MAP_CHECK)
-// .do(_ => console.log('check map'))
-// // .debounceTime(1000)
-// .filter(() => store.getState().map.loaded === false)
-// .do(val => console.log('loaded false check map'))
-
-// .pipe(
-//   // check for map style loading
-//   switchMap(
-//     // create observable to observe 'load' event
-//     ({ payload }) => (fromEvent(payload, 'data').debounceTime(1000) as Observable<mapboxgl.MapDataEvent>)
-//     .pipe(
-//       tap(ev => console.log(ev, 'check if there is ')),
-
-//       // return action when has no outstanding network request
-//       // filter(ev => ev.dataType === 'style'),
-//       // distinctUntilChanged(),
-//       tap(ev => console.log(ev)),
-//       switchMap(() => Observable.of(mapping).filter(val => val.isStyleLoaded() === true)
-//       .do(ev => console.log('check complete'))
-//       .mapTo(mapLoaded(true))),
-//       // mapTo(mapLoaded(true)),
-//     ),
-//   ),
-
-  //   .filter(val => val.dataType === 'source' && val.isSourceLoaded)
-  //   (action, obs$) => {
-  //     console.log(obs$, 'check data');
-
-  //     console.log(mapping.isStyleLoaded(), obs$.isSourceLoaded, 'check data');
-  //     return mapLoaded(true);
-  //   },
-  // ),
-// );
 
 const setGeometryHeightEpic = (action$: ActionsObservable<Action>, store: Store) => action$
-.ofType(GEOMETRY_HEIGHT_SET)
-// when mode is build, listen to the event
-.takeWhile(() => store.getState().map.step === 3)
-.pipe(
-  tap(() => {
-    console.log('get height');
-    // set blueprint source data
-    (mapping.getSource('blueprint') as mapboxgl.GeoJSONSource).setData(blueprintSrcFromStore(store));
-  }),
+  .ofType(GEOMETRY_HEIGHT_SET)
+  // when mode is build, listen to the event
+  .takeWhile(() => store.getState().map.step === 3)
+  .pipe(
+  // set blueprint source data
+  tap(() => (mapping.getSource('blueprint') as mapboxgl.GeoJSONSource).setData(blueprintSrcFromStore(store))),
   switchMapTo(Observable.empty<never>()),
-);
-
-const getGeometryEpic = (action$: ActionsObservable<Action>) => action$
-.ofType(GEOMETRY_GET)
-.pipe(
-  map(() => {
-    // get all draws as feature collection on the map
-    const data: FeatureCollection<GeometryObject> = drawControl.getAll();
-    return setGeometry(data.features);
-  }),
 );
 
 // template to dispatch multiple actions in order
@@ -641,11 +581,189 @@ const getGeometryEpic = (action$: ActionsObservable<Action>) => action$
 //   ),
 // );
 
+// query map when aptParcel layer exists and set the slider range
+const setSliderRangeEpic = (action$: ActionsObservable<Action>) => action$
+  .ofType(SLIDER_RANGE_SET)
+  .pipe(
+    // check layer exists and set filter
+    tap(action => mapping.getLayer('aptParcel') && mapping.setFilter(
+        'aptParcel',
+      [
+        'all',
+          ['>=', 'refprice', (action as any).payload[0]], ['<=', 'refprice', (action as any).payload[1]],
+      ],
+    )),
+    mergeMap(() => Observable.empty<never>()),
+);
+
+// clear layer filter
+const resetSliderRangeEpic = (action$: ActionsObservable<Action>, store: Store) => action$
+  .ofType(STEP_ADD, STEP_MINUS)
+  .filter(() => store.getState().map.step === 0 || store.getState().map.step === 2)
+  .pipe(
+    // check layer exists and set filter
+    tap(action => mapping.getLayer('aptParcel') && mapping.setFilter(
+      'aptParcel',
+      null,
+    )),
+    mergeMap(() => Observable.empty<never>()),
+);
+
+const setCompsLayerEpic = (action$: ActionsObservable<Action>, store: Store) => action$
+  // when get cops data
+  .ofType(POPUP_FETCH)
+  .switchMapTo(
+  action$.ofType(DATA_FETCH_FULFILLED).filter(action => (action as any).payload.name === 'popup')
+    // relates to comps
+    // .filter(action => (action as any).payload.name === 'popup')
+    // get comps data from store
+    .map(() => {
+      // prepare layer source
+      const comps: RootState['popup']['data'] = store.getState().popup.data;
+      // get origin parcel position
+      const { marker: { coords: { lng: originLng, lat: originLat } } } = store.getState();
+      const originCoords = [originLng, originLat];
+      // set geometry and attrs for property query
+      const compsPts = featureCollection(comps.map(({ coords: { lng, lat }, zpid }) => point([lng, lat], { zpid })));
+      const compsLines = featureCollection(
+        comps.map(({ coords: { lng, lat } }) => lineString([[lng, lat], originCoords])),
+      );
+      // check if exits source, if has source, set data; otherwise, set source and data
+      if (mapping.getSource('compsPts')) {
+        (mapping.getSource('compsPts') as mapboxgl.GeoJSONSource).setData(compsPts);
+      } else {
+        mapping.addSource('compsPts', { type: 'geojson', data: compsPts });
+      }
+      if (mapping.getSource('compsLines')) {
+        (mapping.getSource('compsLines') as mapboxgl.GeoJSONSource).setData(compsLines);
+      } else {
+        mapping.addSource('compsLines', { type: 'geojson', data: compsLines });
+      }
+
+      if (!mapping.getLayer('compsLines')) {
+        mapping.addLayer(compsLinesLyr);
+      }
+
+      if (!mapping.getLayer('compsPts')) {
+        mapping.addLayer(compsPtsLyr);
+      }
+
+      // calculate bbox, and set fints to that
+      const mapBbox = bbox(compsLines);
+      mapping.fitBounds((mapBbox as any), { padding: 100 });
+      return mapping;
+    })
+    .switchMap(val =>
+      Observable.fromEvent(val, 'mousemove')
+        .filter(() => store.getState().map.step === 1 && !!mapping.getLayer('compsPts'))
+        .map((ev: mapboxgl.MapDataEvent) => {
+        // safe check
+          const feature = mapping.queryRenderedFeatures((ev as any).point, { layers: ['compsPts'] });
+          // change cursor style
+          mapping.getCanvas().style.cursor = feature.length > 0 ? 'pointer' : '';
+          return feature.length > 0 && feature[0].properties.zpid;
+        })
+        .distinctUntilChanged()
+        // if has feature set id, else reset
+        .map((val) => {
+          if (!val) {
+            return resetPopupId();
+          }
+          return setPopupId(val);
+        })
+        .takeUntil(action$.ofType(MARKER_SET)),
+    ),
+);
+
+const setRouteLayerEpic = (action$: ActionsObservable<Action>, store: Store) => action$
+  // when get cops data
+  .ofType(POPUP_FETCH)
+  .switchMapTo(
+    action$.ofType(DATA_FETCH_FULFILLED).filter(action => (action as any).payload.name === 'route')
+      // relates to comps
+      // .filter(action => (action as any).payload.name === 'popup')
+      // get comps data from store
+      .do(() => {
+        // prepare layer source
+        const routeLine: Feature<mapboxgl.GeoJSONGeometry> = store.getState().route.data.line;
+        // get origin and dest coords
+        const routePts: Feature<mapboxgl.GeoJSONGeometry> = store.getState().route.data.pts;
+
+        if (mapping.getSource('routeLine')) {
+          (mapping.getSource('routeLine') as mapboxgl.GeoJSONSource).setData(routeLine);
+        } else {
+          mapping.addSource('routeLine', { type: 'geojson', data: routeLine });
+        }
+
+        if (!mapping.getLayer('routeLine')) {
+          mapping.addLayer(routeLineLyr);
+        }
+
+        if (mapping.getSource('routePts')) {
+          (mapping.getSource('routePts') as mapboxgl.GeoJSONSource).setData(routePts);
+        } else {
+          mapping.addSource('routePts', { type: 'geojson', data: routePts });
+        }
+
+        if (!mapping.getLayer('routePts')) {
+          mapping.addLayer(routePtsLyr);
+        }
+        // calculate bbox, and set fints to that
+        const mapBbox = bbox(routeLine);
+        mapping.fitBounds((mapBbox as any), { padding: 100 });
+      })
+      .switchMapTo(Observable.empty<never>()),
+);
+
+// after set popup id
+const setPopupPositionEpic = (action$: ActionsObservable<Action>, store: Store) => action$
+.ofType(POPUP_ID_SET)
+// init popup position
+.map((action: any) => {
+  // get zpid
+  const { payload: id } = action;
+  // find data and get coords
+  const { coords } = store.getState().popup.data.find((item: any) => item.zpid === id);
+  return setPopupPosition(mapping.project(coords));
+});
+
+const setMarkerEpic = (action$: ActionsObservable<Action>, store: Store) => action$
+  .ofType(MARKER_SET)
+  .do(() => ['compsLines', 'compsPts', 'routeLine', 'routePts'].forEach((name: string) =>
+    mapping.getLayer(name) && mapping.removeLayer(name)),
+)
+  .mergeMapTo(Observable.empty<never>());
+
+const mappingEventsEpic = (action$: ActionsObservable<Action>, store: Store) => action$
+.ofType(IS_LOADED).take(1).switchMap(() =>
+  Observable.fromEvent(mapping, 'move')
+  // listen to event when map mode is query
+  .filter(() => store.getState().map.step === 1)
+  .switchMapTo(
+    Observable.merge(
+      // set marker position
+      Observable.of(1)
+      .filter(() => store.getState().marker)
+      .map(() => setMarkerPosition(mapping.project(store.getState().marker.coords))),
+      // set popup position
+      Observable.of(1)
+      .filter(() => store.getState().popup.id)
+      .map(() => {
+        const { id } = store.getState().popup;
+        const { coords } = store.getState().popup.data.find((item: any) => item.zpid === id);
+        return setPopupPosition(mapping.project(coords));
+      }),
+    ),
+  ),
+);
+
 export const epics = combineEpics(
   // testEpic,
   initMapEpic,
   enterAppEpic,
   resetMapEpic,
+
+  setMarkerEpic,
 
   setModeIntroEpic,
   setModeIntroMinusEpic,
@@ -659,7 +777,6 @@ export const epics = combineEpics(
   setModeBuildEpic,
   setModeBuildMinusEpic,
 
-  // setGeometryEpic,
   setModeDecideEpic,
 
   setLayerVizEpic,
@@ -668,9 +785,16 @@ export const epics = combineEpics(
   setGeometryHeightEpic,
   listenDrawDeleteEpic,
   listenDrawSelectEpic,
-  // drawCreateEventEpic,
-  // getGeometryEpic,
-  // checkMapEpic,
+
+  setSliderRangeEpic,
+  resetSliderRangeEpic,
+  setCompsLayerEpic,
+  setRouteLayerEpic,
+  setPopupPositionEpic,
+  mappingEventsEpic,
+  hotModuleReplacementEpic,
+
+  setMarkerEpic,
 );
 
 export default epics;

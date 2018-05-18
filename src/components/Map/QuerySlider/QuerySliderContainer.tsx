@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -7,6 +6,7 @@ import QuerySlider from './QuerySlider';
 import { RootState } from '../../../types';
 import { Dispatch } from '../../../types/redux';
 import { fetchData } from '../../../reducers/app/actions';
+import { setSliderRange } from '../../../reducers/slider/actions';
 
 const mapStateToProps = (
   { slider }: RootState,
@@ -18,7 +18,8 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   handleFetchData: bindActionCreators(fetchData, dispatch),
+  handleSetSliderRange: bindActionCreators(setSliderRange, dispatch),
 });
 
-const QuerySliderContainer = connect(mapStateToProps, mapDispatchToProps)(QuerySlider as any);
+const QuerySliderContainer = connect(mapStateToProps, mapDispatchToProps)(QuerySlider);
 export default QuerySliderContainer;

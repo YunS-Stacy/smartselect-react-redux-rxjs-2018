@@ -1,24 +1,57 @@
 import * as mapbox from 'mapbox-gl';
-import { Feature, GeometryObject } from 'geojson';
-interface Stats {
-  show: boolean;
-  spaceUseList: string[];
-  maxFlrNum: number;
-  areaByUsage: {
-    spaceUse: string;
-    area: number;
-    floors: number;
-    units: number;
-  }[];
-  totalArea: number;
+import { Feature, LineString, MultiPoint } from 'geojson';
+export interface MapMarker {
+  coords?: {
+    lng: number;
+    lat: number;
+  };
+  source?: string;
+  zpid?: string;
+  refprice?: number;
+  address?: string;
+  position: mapbox.Point;
+  [key: string]: any;
+}
+
+export interface ChartData {
+  data: any[];
+  fetched: boolean;
 }
 
 export interface RootState {
   app: boolean;
-  slider: {
+  message: string;
+  correlation: {
     data: any[];
     fetched: boolean;
   };
+  market: {
+    data: {
+      city: any[];
+      region: any[];
+    };
+    fetched: boolean;
+  };
+  slider: {
+    data: any[];
+    range: number[];
+    fetched: boolean;
+  };
+  popup: {
+    data: any[];
+    range: number[];
+    fetched: boolean | string;
+    id: string;
+    position: mapbox.Point;
+  };
+  route: {
+    data: {
+      line: Feature<LineString>;
+      pts: Feature<MultiPoint>;
+    };
+    fetched: boolean | string;
+  };
+  marker: MapMarker;
   map: {
     draw: boolean;
     step: number;

@@ -3,14 +3,22 @@
  */
 export const APP_TOGGLE = 'APP_TOGGLE';
 export type APP_TOGGLE = typeof APP_TOGGLE;
-export const FETCH_DATA = 'FETCH_DATA';
-export type FETCH_DATA = typeof FETCH_DATA;
-export const FETCH_DATA_FULFILLED = 'FETCH_DATA_FULFILLED';
-export type FETCH_DATA_FULFILLED = typeof FETCH_DATA_FULFILLED;
-export const FETCH_DATA_CANCELLED = 'FETCH_DATA_CANCELLED';
-export type FETCH_DATA_CANCELLED = typeof FETCH_DATA_CANCELLED;
-export const FETCH_DATA_REJECTED = 'FETCH_DATA_REJECTED';
-export type FETCH_DATA_REJECTED = typeof FETCH_DATA_REJECTED;
+export const DATA_FETCH = 'DATA_FETCH';
+export type DATA_FETCH = typeof DATA_FETCH;
+export const DATA_FETCH_LOADING = 'DATA_FETCH_LOADING';
+export type DATA_FETCH_LOADING = typeof DATA_FETCH_LOADING;
+export const DATA_FETCH_FULFILLED = 'DATA_FETCH_FULFILLED';
+export type DATA_FETCH_FULFILLED = typeof DATA_FETCH_FULFILLED;
+export const DATA_FETCH_CANCELLED = 'DATA_FETCH_CANCELLED';
+export type DATA_FETCH_CANCELLED = typeof DATA_FETCH_CANCELLED;
+export const DATA_FETCH_REJECTED = 'DATA_FETCH_REJECTED';
+export type DATA_FETCH_REJECTED = typeof DATA_FETCH_REJECTED;
+
+/**
+ * Message
+ */
+export const MESSAGE_SET = 'MESSAGE_SET';
+export type MESSAGE_SET = typeof MESSAGE_SET;
 
 /**
  * Map
@@ -61,10 +69,22 @@ export const GEOMETRY_GET = 'GEOMETRY_GET';
 export type GEOMETRY_GET = typeof GEOMETRY_GET;
 export const GEOMETRY_SET = 'GEOMETRY_SET';
 export type GEOMETRY_SET = typeof GEOMETRY_SET;
+export const GEOMETRY_RESET = 'GEOMETRY_RESET';
+export type GEOMETRY_RESET = typeof GEOMETRY_RESET;
 export const GEOMETRY_REMOVE = 'GEOMETRY_REMOVE';
 export type GEOMETRY_REMOVE = typeof GEOMETRY_REMOVE;
 export const GEOMETRY_HEIGHT_SET = 'GEOMETRY_HEIGHT_SET';
 export type GEOMETRY_HEIGHT_SET = typeof GEOMETRY_HEIGHT_SET;
+
+export const ROUTE_SET = 'ROUTE_SET';
+export type ROUTE_SET = typeof ROUTE_SET;
+export const ROUTE_RESET = 'ROUTE_RESET';
+export type ROUTE_RESET = typeof ROUTE_RESET;
+
+export const ROUTE_FETCH = 'ROUTE_FETCH';
+export type ROUTE_FETCH = typeof ROUTE_FETCH;
+// export const POPUP_ID_RESET = 'POPUP_ID_RESET';
+// export type POPUP_ID_RESET = typeof POPUP_ID_RESET;
 
 /**
  * Map Draw Control
@@ -73,151 +93,33 @@ export const DRAW_TOGGLE = 'DRAW_TOGGLE';
 export type DRAW_TOGGLE = typeof DRAW_TOGGLE;
 
 /**
- * Global
+ * Slider
  */
-export const GLOBAL_SET = 'GLOBAL_SET';
-export type GLOBAL_SET = typeof GLOBAL_SET;
-
-export const LOADING_SET = 'LOADING_SET';
-export type LOADING_SET = typeof LOADING_SET;
-export const LOADINGTEXT_SET = 'LOADINGTEXT_SET';
-export type LOADINGTEXT_SET = typeof LOADINGTEXT_SET;
-export const ALL_RESET = 'ALL_RESET';
-export type ALL_RESET = typeof ALL_RESET;
-export const INTERACTIVE_TOGGLE = 'INTERACTIVE_TOGGLE';
-export type INTERACTIVE_TOGGLE = typeof INTERACTIVE_TOGGLE;
+export const SLIDER_RANGE_SET = 'SLIDER_RANGE_SET';
+export type SLIDER_RANGE_SET = typeof SLIDER_RANGE_SET;
 
 /**
- * Modal
+ * Popup
  */
-export const MODAL_CONFIG_TOGGLE = 'MODAL_CONFIG_TOGGLE';
-export type MODAL_CONFIG_TOGGLE = typeof MODAL_CONFIG_TOGGLE;
-export const MODAL_COMPARE_TOGGLE = 'MODAL_COMPARE_TOGGLE';
-export type MODAL_COMPARE_TOGGLE = typeof MODAL_COMPARE_TOGGLE;
+export const POPUP_FETCH = 'POPUP_FETCH';
+export type POPUP_FETCH = typeof POPUP_FETCH;
+export const POPUP_ID_SET = 'POPUP_ID_SET';
+export type POPUP_ID_SET = typeof POPUP_ID_SET;
+export const POPUP_ID_RESET = 'POPUP_ID_RESET';
+export type POPUP_ID_RESET = typeof POPUP_ID_RESET;
+
+export const POPUP_POSITION_SET = 'POPUP_POSITION_SET';
+export type POPUP_POSITION_SET = typeof POPUP_POSITION_SET;
+export const POPUP_RESET = 'POPUP_RESET';
+export type POPUP_RESET = typeof POPUP_RESET;
 
 /**
- * Typelists
+ * Marker
  */
-export const TYPELISTS_INIT = 'TYPELISTS_INIT';
-export type TYPELISTS_INIT = typeof TYPELISTS_INIT;
-export const TYPELISTS_SET = 'TYPELISTS_SET';
-export type TYPELISTS_SET = typeof TYPELISTS_SET;
-export const BLDG_SET = 'BLDG_SET';
-export const ZONING_SET = 'ZONING_SET';
+export const MARKER_SET = 'MARKER_SET';
+export type MARKER_SET = typeof MARKER_SET;
+export const MARKER_RESET = 'MARKER_RESET';
+export type MARKER_RESET = typeof MARKER_RESET;
 
-/**
- * Parcel
- */
-export const PARCEL_INFO_RESET = 'PARCEL_INFO_RESET';
-export type PARCEL_INFO_RESET = typeof PARCEL_INFO_RESET;
-export const PARCEL_INFO_SET = 'PARCEL_INFO_SET';
-export type PARCEL_INFO_SET = typeof PARCEL_INFO_SET;
-export const PARCEL_TYPE_SET = 'PARCEL_TYPE_SET';
-export type PARCEL_TYPE_SET = typeof PARCEL_TYPE_SET;
-/**
- * Stepper
- */
-export const STEPPER_SET = 'STEPPER_SET';
-
-/**
- * Proforma
- */
-export const PROFORMA_SET = 'PROFORMA_SET';
-export type PROFORMA_SET = typeof PROFORMA_SET;
-export const PROFORMA_RESET = 'PROFORMA_RESET';
-export type PROFORMA_RESET = typeof PROFORMA_RESET;
-export const PROFORMA_EXPORT = 'PROFORMA_EXPORT';
-export type PROFORMA_EXPORT = typeof PROFORMA_EXPORT;
-export const PROFORMA_IMPORT = 'PROFORMA_IMPORT';
-export type PROFORMA_IMPORT = typeof PROFORMA_IMPORT;
-export const CATE_SET = 'CATE_SET';
-export type CATE_SET = typeof CATE_SET;
-export const WORKBOOK_SET = 'WORKBOOK_SET';
-export const INPUTS_SET = 'INPUTS_SET';
-
-/**
- * Authentication
- */
-export const IDENTITY_GET = 'IDENTITY_GET';
-export type IDENTITY_GET = typeof IDENTITY_GET;
-
-export const IDENTITY_SET = 'IDENTITY_SET';
-
-export const SIGN_IN = 'SIGN_IN';
-export const SIGN_OUT = 'SIGN_OUT';
-export const GET_USER_WEBSCENES = 'GET_USER_WEBSCENES';
-export const SET_USER_WEBSCENES = 'SET_USER_WEBSCENES';
-
-export const RESPONSE_SET = 'RESPONSE_SET';
-export const PARAMS_SET = 'PARAMS_SET';
-
-export const OVERRIDE_GET = 'OVERRIDE_GET';
-export type OVERRIDE_GET = typeof OVERRIDE_GET;
-
-export const OVERRIDE_SET = 'OVERRIDE_SET';
-export type OVERRIDE_SET = typeof OVERRIDE_SET;
-
-/**
- * Scenario
- */
-
-export const SCENARIO_LAYER_GENERATE = 'SCENARIO_LAYER_GENERATE';
-export type SCENARIO_LAYER_GENERATE = typeof SCENARIO_LAYER_GENERATE;
-
-export const SERVICE_SAVE = 'SERVICE_SAVE';
-export type SERVICE_SAVE = typeof SERVICE_SAVE;
-
-export const STATES_DELETE = 'STATES_DELETE';
-export type STATES_DELETE = typeof STATES_DELETE;
-export const STATES_SAVE = 'STATES_SAVE';
-export type STATES_SAVE = typeof STATES_SAVE;
-export const STATES_SWITCH = 'STATES_SWITCH';
-export type STATES_SWITCH = typeof STATES_SWITCH;
-
-export const SCENARIO_SHOW = 'SCENARIO_SHOW';
-export type SCENARIO_SHOW = typeof SCENARIO_SHOW;
-export const SCENARIO_RESET = 'SCENARIO_RESET';
-export type SCENARIO_RESET = typeof SCENARIO_RESET;
-export const SCENARIO_COMPARE = 'SCENARIO_COMPARE';
-export type SCENARIO_COMPARE = typeof SCENARIO_COMPARE;
-
-/**
- * Web Scene
- */
-export const INIT_SCENE = 'INIT_SCENE';
-export type INIT_SCENE = typeof INIT_SCENE;
-
-export const CONTAINER_INIT = 'CONTAINER_INIT';
-export type CONTAINER_INIT = typeof CONTAINER_INIT;
-
-export const SCENEVIEW_SET = 'SCENEVIEW_SET';
-export type SCENEVIEW_SET = typeof SCENEVIEW_SET;
-export const LAYERS_SET = 'LAYERS_SET';
-
-export const VIZ_LAYERS_BY_TYPE = 'VIZ_LAYERS_BY_TYPE';
-
-/**
- * Selection
- */
-export const SELECTION_VALID = 'SELECTION_VALID';
-export type SELECTION_VALID = typeof SELECTION_VALID;
-export const SELECTION_SET = 'SELECTION_SET';
-export const SELECTION_RESET = 'SELECTION_RESET';
-export const HOVER_SET = 'HOVER_SET';
-export const HOVER_RESET = 'HOVER_RESET';
-
-/**
- * Stats
- */
-export const STATS_SET = 'STATS_SET';
-export const STATS_SHOW_SET = 'STATS_SHOW_SET';
-
-/**
- * Environment
- */
-export const SET_ENVIRONMENT = 'SET_ENVIRONMENT';
-export const SET_DATE = 'SET_DATE';
-export const SET_SHADOWS = 'SET_SHADOWS';
-
-export const THUMBNAIL_CREATE = 'THUMBNAIL_CREATE';
-export type THUMBNAIL_CREATE = typeof THUMBNAIL_CREATE;
+export const MARKER_POSITION_SET = 'MARKER_POSITION_SET';
+export type MARKER_POSITION_SET = typeof MARKER_POSITION_SET;

@@ -12,10 +12,6 @@ const initialState: RootState['map']['layers'] = {
 export default (state = initialState, { type, payload }: Action & { payload?: any }) => {
   switch (type) {
     case LAYER_VIZ_SET:
-      console.log('action set layer viz', {
-        ...state,
-        [payload.name]: payload.viz,
-      });
       return {
         ...state,
         [payload.name]: payload.viz,

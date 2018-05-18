@@ -1,20 +1,38 @@
-html {
-  overflow: hidden !important;
-}
-
 .app-container {
-  min-width: 100vw;
-  height: 100vh;
+  min-width: 100%;
+  height: auto;
   display: flex;
+  flex-direction: column;
+  overflow: auto;
 
+  &.fullscreen {
+    overflow: hidden;
 
+    > .map-container {
+      position: absolute;
+      width: 100%;
+    }
+  }
 
-  > .map-container {
-    min-width: 100vw;
-    height: 100%;
+  // >.article-wrapper {
+  //   margin: 1rem 0;
+  // }
+
+  >.map-container {
+    position: relative;
+    min-width: 100%;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 3rem;
+
+    .map-panel {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      z-index: 1,
+    }
 
     > .map-mask, #map {
       position: absolute;
@@ -30,25 +48,44 @@ html {
     > .map-mask {
       background-color: rgba(82, 186, 213, 0.8);
       z-index: 3;
-    }
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
 
-    > .main-btn-container {
-      position: absolute;
-      z-index: 4;
+      > .main-btn-wrapper {
+       position: relative;
+       min-height: 75px;
 
-      > .main-btn {
-        width: 8.8em;
-        height: 3.2em;
-        border-radius: 8px;
-        font-size: 1.2em;
-        background-color: rgba(255,255,255,0.8);
-        color: rgb(82, 186, 213);
+        > .main-btn {
+          height: 60px;
+          border-radius: 8px;
+          font-size: 1.2em;
+          background-color: rgba(255, 255, 255, 0.8);
+          color: rgb(82, 186, 213);
+        }
+      }
+
+      > .icon-wrapper > .mask-icon {
+        color: $white;
+        font-weight: 900;
+        font-size: 1.2rem;
+        animation: moving .5s ease-in-out infinite alternate;
+        cursor: pointer;
+
+        &:hover {
+          /* color | offset-x | offset-y | blur-radius */
+          text-shadow: $white 0 0 10px;
+        }
       }
     }
   }
-
-
 }
+
+
+
+
+
 
 .hidden {
   display: none !important;
@@ -70,3 +107,8 @@ html {
   }
 }
 
+@keyframes moving {
+  to {
+    transform: translateY(15px);
+  }
+}

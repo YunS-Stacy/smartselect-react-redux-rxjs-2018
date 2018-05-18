@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -11,7 +10,9 @@ import { toggleApp } from '../../reducers/app/actions';
 
 const mapStateToProps = ({
   map: { step, loaded, geometry },
+  slider: { range },
 }: RootState) => ({
+  range,
   step,
   loaded,
   geometry,

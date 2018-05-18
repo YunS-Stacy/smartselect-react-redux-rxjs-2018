@@ -1,7 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const OfflinePlugin = require('offline-plugin');
 
 const PATHS = {
   root: path.resolve(__dirname, '..'),
@@ -11,12 +13,11 @@ const PATHS = {
 };
 
 const DEV_SERVER = {
-  port: 8080,
+  port: 3000,
   hot: true,
   hotOnly: true,
   historyApiFallback: true,
   inline: true,
-  historyApiFallback: true,
   // It suppress error shown in console, so it has to be set to false.
   quiet: false,
   // It suppress everything except error, so it has to be set to false as well
@@ -34,12 +35,14 @@ module.exports = (env = {}) => {
   const isDev = !env.build;
   const entry = isDev ? [
     'react-hot-loader/patch',
-    'webpack-dev-server/client?http://localhost:8080/', // WebpackDevServer host and port
+    'webpack-dev-server/client?http://localhost:3000/', // WebpackDevServer host and port
     // 'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
     PATHS.src + '/index.tsx',
   ] : [
       PATHS.src + '/index.tsx',
     ]
+  const PUBLIC_PATH = isDev ? '/' : './';
+
   return {
     node: {
       fs: 'empty'
@@ -53,7 +56,7 @@ module.exports = (env = {}) => {
     },
     output: {
       path: PATHS.dist,
-      publicPath: isDev ? '/' : './',
+      publicPath: PUBLIC_PATH,
       filename: isDev ? 'js/[name].js' : 'js/[name].[hash].js',
       // chunkFilename: '[id].bundle.js',
     },
@@ -76,16 +79,28 @@ module.exports = (env = {}) => {
         },
         {
           test: /\.css$/,
-          use: ['style-loader', 'css-loader',
-            // 'postcss-loader',
+          use: [
+            'style-loader',
+            'css-loader', {
+              loader: 'postcss-loader',
+              options: {
+                plugins: [require('autoprefixer')]
+              }
+            },
           ],
         },
         {
           test: /\.scss$/,
           loaders: [
-            'style-loader', 'css-loader',
-            // 'postcss-loader',
-            'sass-loader',
+            'style-loader',
+            'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: [require('autoprefixer')]
+            }
+          },
+          'sass-loader',
           ],
         },
         {
@@ -109,6 +124,8 @@ module.exports = (env = {}) => {
     // dependencies, which allows browsers to cache those libraries between builds.
     externals: [],
     plugins: [
+
+
       new CopyWebpackPlugin([
         {
           from: PATHS.root + '/assets',
@@ -135,7 +152,7 @@ module.exports = (env = {}) => {
 
       ...(isDev ? [
         new webpack.HotModuleReplacementPlugin({
-          // multiStep: true, // better performance with many files
+          multiStep: false, // better performance with many files
         }),
         new webpack.NamedModulesPlugin(),
       ] : []),
@@ -143,17 +160,20 @@ module.exports = (env = {}) => {
       ...(isBuild ? [
         new webpack.LoaderOptionsPlugin({
           minimize: true,
-          debug: false
+          debug: false,
         }),
-        new webpack.optimize.UglifyJsPlugin({
-          beautify: false,
-          compress: {
-            screw_ie8: true
-          },
-          comments: false,
+        new UglifyJsPlugin({
           sourceMap: isDev ? true : false,
+          uglifyOptions: {
+            output: {
+              comments: false,
+              beautify: false,
+            },
+            ie8: true,
+          }
         }),
       ] : []),
+      new OfflinePlugin(),
     ],
   };
 }

@@ -1,9 +1,10 @@
 import {
   APP_TOGGLE,
-  FETCH_DATA,
-  FETCH_DATA_FULFILLED,
-  FETCH_DATA_CANCELLED,
-  FETCH_DATA_REJECTED
+  DATA_FETCH,
+  DATA_FETCH_FULFILLED,
+  DATA_FETCH_CANCELLED,
+  DATA_FETCH_REJECTED,
+  DATA_FETCH_LOADING
 } from '../../constants/action-types';
 
 export const toggleApp = () => ({
@@ -12,19 +13,24 @@ export const toggleApp = () => ({
 
 export const fetchData = (payload: string) => ({
   payload,
-  type: FETCH_DATA,
+  type: DATA_FETCH,
 });
 
 export const fetchDataFulfilled = (payload: { name: string; data: any }) => ({
   payload,
-  type: FETCH_DATA_FULFILLED,
+  type: DATA_FETCH_FULFILLED,
 });
 
 export const fetchDataCancelled = (payload: string) => ({
-  type: FETCH_DATA_CANCELLED,
+  type: DATA_FETCH_CANCELLED,
 });
 
-export const fetchDataRejected = (payload: string) => ({
+export const fetchDataRejected = (payload: { name: string; message: string }) => ({
   payload,
-  type: FETCH_DATA_REJECTED,
+  type: DATA_FETCH_REJECTED,
+});
+
+export const fetchDataLoading = (payload: string) => ({
+  payload,
+  type: DATA_FETCH_LOADING,
 });

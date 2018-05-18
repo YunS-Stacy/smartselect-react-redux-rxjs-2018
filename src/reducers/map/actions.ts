@@ -3,7 +3,7 @@ import {
   IS_LOADED, LAYER_SET, MODE_SET,
   STEP_SET, STEP_MINUS, STEP_ADD,
   GEOMETRY_GET, GEOMETRY_SET,
-  LAYER_VIZ_SET, LAYER_ADD, LAYER_REMOVE, STYLE_SET, GEOMETRY_HEIGHT_SET, GEOMETRY_REMOVE,
+  LAYER_VIZ_SET, LAYER_ADD, LAYER_REMOVE, STYLE_SET, GEOMETRY_HEIGHT_SET, GEOMETRY_REMOVE, GEOMETRY_RESET,
 } from '../../constants/action-types';
 
 export const checkMap = (payload: mapboxgl.Map) => ({
@@ -21,7 +21,7 @@ export const initMap = (payload: HTMLDivElement) => ({
   type: MAP_INIT,
 });
 
-export const setInstance = (payload: any) => ({
+export const setInstance = (payload: mapboxgl.Map) => ({
   payload,
   type: INSTANCE_SET,
 });
@@ -63,6 +63,10 @@ export const getGeometry = () => ({
 export const setGeometry = (payload: any) => ({
   payload,
   type: GEOMETRY_SET,
+});
+
+export const resetGeometry = () => ({
+  type: GEOMETRY_RESET,
 });
 
 export const removeGeometry = (payload: any) => ({
