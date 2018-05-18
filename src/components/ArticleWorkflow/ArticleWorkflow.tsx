@@ -1,22 +1,6 @@
 import * as React from 'react';
-import g2, { Shape, Layout, Stat } from 'g2';
+import { Shape, Layout, Stat } from 'g2';
 import * as createG2 from 'g2-react';
-
-import TweenOne from 'rc-tween-one';
-import QueueAnim from 'rc-queue-anim';
-import ScrollAnim from 'rc-scroll-anim';
-import { Spin } from 'antd';
-
-const OverPack = ScrollAnim.OverPack;
-
-import { RootState } from '../../types';
-
-interface Props {
-  fetched: boolean | string;
-  data?: any[];
-
-  handleFetchData: (payload: string) => void;
-}
 
 function renderTree(nodes: any, edges: any, dx: any, chart: any) {
   chart.clear();
@@ -75,7 +59,6 @@ function drawNode(cfg: any, group: any, collapsed: any, isLeaf?: any) {
   const pointSize = 5;
   const width = cfg.size;
   const height = 14;
-  const label = cfg.label;
   const shape = group.addShape('rect', {
     attrs: {
       x: x,

@@ -1,8 +1,4 @@
 import * as React from 'react';
-import g2, { Frame } from 'g2';
-import * as createG2 from 'g2-react';
-
-import TweenOne from 'rc-tween-one';
 import QueueAnim from 'rc-queue-anim';
 import ScrollAnim from 'rc-scroll-anim';
 const OverPack = ScrollAnim.OverPack;

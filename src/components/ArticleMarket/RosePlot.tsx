@@ -1,5 +1,4 @@
 import * as React from 'react';
-import g2 from 'g2';
 import * as createG2 from 'g2-react';
 import { Spin } from 'antd';
 import { ChartData } from '../../types';

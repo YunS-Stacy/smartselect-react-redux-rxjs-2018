@@ -1,22 +1,11 @@
 import * as React from 'react';
-import g2, { Stat, Frame } from 'g2';
+import { Frame } from 'g2';
 import * as createG2 from 'g2-react';
 
-import TweenOne from 'rc-tween-one';
 import QueueAnim from 'rc-queue-anim';
 import ScrollAnim from 'rc-scroll-anim';
-import { Spin } from 'antd';
-
 const OverPack = ScrollAnim.OverPack;
 
-import { RootState } from '../../types';
-
-interface Props {
-  fetched: boolean | string;
-  data?: any[];
-
-  handleFetchData: (payload: string) => void;
-}
 const data = [
   {
     Methods: 'OLS Regression',

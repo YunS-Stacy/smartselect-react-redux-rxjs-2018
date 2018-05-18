@@ -3,8 +3,7 @@ import polygonToLine from '@turf/polygon-to-line';
 import area from '@turf/area';
 
 import {
-  STEP_SET, MAP_RESET, STEP_ADD, STEP_MINUS,
-  GEOMETRY_GET, GEOMETRY_SET, GEOMETRY_RESET,
+  GEOMETRY_SET, GEOMETRY_RESET,
   GEOMETRY_HEIGHT_SET, GEOMETRY_REMOVE,
 } from '../../constants/action-types';
 import { RootState } from '../../types';

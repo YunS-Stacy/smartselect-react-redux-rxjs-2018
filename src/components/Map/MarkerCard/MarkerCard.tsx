@@ -3,10 +3,6 @@ import { Card, CardHeader, CardText } from 'material-ui/Card';
 
 import Business from 'material-ui/svg-icons/communication/business';
 
-import DirectionsCar from 'material-ui/svg-icons/maps/directions-car';
-import DirectionsBus from 'material-ui/svg-icons/maps/directions-bus';
-import DirectionsBike from 'material-ui/svg-icons/maps/directions-bike';
-import DirectionsWalk from 'material-ui/svg-icons/maps/directions-walk';
 import IconButton from 'material-ui/IconButton';
 
 import { Spin } from 'antd';

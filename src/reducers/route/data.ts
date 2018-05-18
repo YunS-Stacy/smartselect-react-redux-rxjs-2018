@@ -1,4 +1,4 @@
-import { MAP_RESET, MARKER_RESET, DATA_FETCH_FULFILLED, STEP_ADD, STEP_MINUS } from '../../constants/action-types';
+import { MAP_RESET, DATA_FETCH_FULFILLED, STEP_ADD, STEP_MINUS } from '../../constants/action-types';
 import { RootState } from '../../types';
 import { Action } from 'redux';
 import { multiPoint, lineString } from '@turf/helpers';

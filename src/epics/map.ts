@@ -7,11 +7,7 @@ import bbox from '@turf/bbox';
 import { featureCollection, lineString, point } from '@turf/helpers';
 
 import { Observable } from 'rxjs/Rx';
-import { interval } from 'rxjs/observable/interval';
-import { timer } from 'rxjs/observable/timer';
-import { _throw } from 'rxjs/observable/throw';
 import {
-  race,
   filter,
   map,
   mapTo,
@@ -24,24 +20,21 @@ import {
 import {
   APP_TOGGLE,
   MAP_INIT, IS_LOADED,
-  INSTANCE_SET, MODE_SET, MAP_RESET, MAP_CHECK,
-  GEOMETRY_GET, GEOMETRY_SET,
+  MAP_RESET,
   STEP_ADD, STEP_MINUS, STEP_SET, LAYER_VIZ_SET,
-  STYLE_SET, GEOMETRY_HEIGHT_SET, SLIDER_RANGE_SET, DATA_FETCH_FULFILLED, MARKER_SET, POPUP_FETCH, POPUP_ID_SET,
+  GEOMETRY_HEIGHT_SET, SLIDER_RANGE_SET, DATA_FETCH_FULFILLED, MARKER_SET, POPUP_FETCH, POPUP_ID_SET,
 } from '../constants/action-types';
-import { updateHighlights } from '../utils/highlights';
 import { Store, Action } from '../types/redux';
 import {
-  setInstance, mapLoaded, checkMap, resetMap,
-  setLayer, setMode, setGeometry, setStep, setLayerViz, setStyle, setGeometryHeight, removeGeometry, resetGeometry
+  mapLoaded, resetMap,
+  setGeometry, setStep, setLayerViz, setStyle, setGeometryHeight, removeGeometry, resetGeometry
 } from '../reducers/map/actions';
 import { MAPBOX_TOKEN, MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES } from '../constants/app-constants';
-import { FeatureCollection, Feature, GeometryObject, LineString, Polygon, Point, GeoJsonObject } from 'geojson';
+import { Feature } from 'geojson';
 import { setPopupId, setPopupPosition, resetPopupId } from '../reducers/popup/actions';
-import { setMarker, setMarkerPosition, resetMarker } from '../reducers/marker/actions';
+import { setMarker, setMarkerPosition } from '../reducers/marker/actions';
 import { RootState } from '../types';
 
-type IAction = Action & { payload?: any };
 (mapboxgl as any).accessToken = MAPBOX_TOKEN;
 
 let mapping: mapboxgl.Map;
@@ -157,9 +150,6 @@ const removeMapControl = (name: string) => {
   return mapping;
 };
 
-const blueprintSrc: null | mapboxgl.GeoJSONSource =
-mapping && (mapping.getSource('blueprint') as mapboxgl.GeoJSONSource);
-
 const blueprintSrcFromStore = (store: Store) => {
   const features = store
   .getState().map.geometry
@@ -185,10 +175,6 @@ const initMapEpic = (action$: ActionsObservable<Action>) => action$
     // construct map
     map((action: Action) => {
       const el = document.getElementById('map');
-      // const children = el.child;
-      const container = document.createElement('div');
-      // test if has already a map container
-      const oldChild = el.firstChild;
       // oldChild ? el.replaceChild(container, oldChild) : el.appendChild(container);
       mapping = new mapboxgl.Map({
         ...MAP_SETTINGS_DEFAULT,
@@ -584,16 +570,6 @@ const setGeometryHeightEpic = (action$: ActionsObservable<Action>, store: Store)
   switchMapTo(Observable.empty<never>()),
 );
 
-const getGeometryEpic = (action$: ActionsObservable<Action>) => action$
-.ofType(GEOMETRY_GET)
-.pipe(
-  map(() => {
-    // get all draws as feature collection on the map
-    const data: FeatureCollection<GeometryObject> = drawControl.getAll();
-    return setGeometry(data.features);
-  }),
-);
-
 // template to dispatch multiple actions in order
 // const testEpic = (action$: ActionsObservable<Action>) => action$
 // .ofType('TEST')
@@ -747,8 +723,6 @@ const setPopupPositionEpic = (action$: ActionsObservable<Action>, store: Store) 
   // get zpid
   const { payload: id } = action;
   // find data and get coords
-  const selected = store.getState().popup.data.find((item: any) => item.zpid === id);
-
   const { coords } = store.getState().popup.data.find((item: any) => item.zpid === id);
   return setPopupPosition(mapping.project(coords));
 });
@@ -776,7 +750,6 @@ const mappingEventsEpic = (action$: ActionsObservable<Action>, store: Store) => 
       .filter(() => store.getState().popup.id)
       .map(() => {
         const { id } = store.getState().popup;
-        const selected = store.getState().popup.data.find((item: any) => item.zpid === id);
         const { coords } = store.getState().popup.data.find((item: any) => item.zpid === id);
         return setPopupPosition(mapping.project(coords));
       }),

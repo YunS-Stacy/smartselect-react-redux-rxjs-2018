@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { RootState } from '../../types';
 import Layout from '../Layout';
 
 import SnackMessage from './SnackMessage';

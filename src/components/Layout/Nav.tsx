@@ -1,16 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col } from 'antd';
-import RaisedButton from 'material-ui/RaisedButton';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
-import Menu from 'material-ui/Menu';
-
-import Popover from 'material-ui/Popover';
-
-const btnStyle = {
-  maxHeight: '2.5rem',
-};
 
 interface Props {
   path?: string;

@@ -9,10 +9,9 @@ import './styles/sass/main.scss';
 
 injectTapEventPlugin();
 
-import { Provider } from 'react-redux';
 import App from './App';
 
-import { store, epicMiddleware } from './store/store';
+import { store } from './store/store';
 import { registerServiceWorker } from './registerServiceWorker';
 registerServiceWorker();
 

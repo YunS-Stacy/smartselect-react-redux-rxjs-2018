@@ -1,25 +1,18 @@
 import { combineEpics, ActionsObservable } from 'redux-observable';
 import * as mapboxgl from 'mapbox-gl';
-import * as mapboxDraw from '@mapbox/mapbox-gl-draw';
-import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { ajax } from 'rxjs/observable/dom/ajax';
 
 import { Observable, AjaxRequest } from 'rxjs/Rx';
-import { of } from 'rxjs/observable/of';
-import { _throw } from 'rxjs/observable/throw';
 import {
   takeUntil,
   filter,
   map,
   mapTo,
   mergeMap,
-  tap,
-  throttleTime,
   switchMap,
 } from 'rxjs/operators';
 
 import {
-  APP_TOGGLE,
   DATA_FETCH,
   DATA_FETCH_CANCELLED,
   POPUP_FETCH,
@@ -27,14 +20,14 @@ import {
   ROUTE_FETCH,
   IS_LOADED
 } from '../constants/action-types';
-import { updateHighlights } from '../utils/highlights';
 import { Store, Action } from '../types/redux';
-import { setInstance, mapLoaded, resetMap, setLayer, setMode, setGeometry, setStep } from '../reducers/map/actions';
 import {
-  MAPBOX_TOKEN, MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES, DATA_URL, getZillowComps, getDirections
+  MAPBOX_TOKEN, DATA_URL, getZillowComps, getDirections
 } from '../constants/app-constants';
-import { FeatureCollection, Feature, GeometryObject, LineString, Polygon, Point, GeoJsonObject } from 'geojson';
-import { fetchDataFulfilled, fetchDataLoading, fetchDataCancelled, fetchDataRejected, fetchData } from '../reducers/app/actions';
+import {
+  fetchDataFulfilled, fetchDataLoading,
+  fetchDataRejected, fetchData
+} from '../reducers/app/actions';
 
 type IAction = Action & { payload?: any };
 (mapboxgl as any).accessToken = MAPBOX_TOKEN;

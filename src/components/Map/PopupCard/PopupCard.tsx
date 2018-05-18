@@ -4,7 +4,6 @@ import TrendingDown from 'material-ui/svg-icons/action/trending-down';
 import TrendingUp from 'material-ui/svg-icons/action/trending-up';
 
 import DirectionsCar from 'material-ui/svg-icons/maps/directions-car';
-import DirectionsBus from 'material-ui/svg-icons/maps/directions-bus';
 import DirectionsBike from 'material-ui/svg-icons/maps/directions-bike';
 import DirectionsWalk from 'material-ui/svg-icons/maps/directions-walk';
 import IconButton from 'material-ui/IconButton';

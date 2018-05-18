@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Button, Spin } from 'antd';
+import { Spin } from 'antd';
 import Paper from 'material-ui/Paper';
 
 import { Step, Stepper, StepLabel, StepContent } from 'material-ui/Stepper';
@@ -13,14 +13,6 @@ import PanelBtns from './PanelBtns';
 
 // import SearchInput from '../components/SearchInput';
 // import Joyride from 'react-joyride';
-
-const paperStyle = {
-  position: 'absolute',
-  width: '25vw',
-  margin: '0',
-  padding: '2em',
-  backgroundColor: 'rgba(255,255,255,0.8)',
-};
 
 interface Props {
   step: RootState['map']['step'];

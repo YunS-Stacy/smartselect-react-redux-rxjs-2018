@@ -36,6 +36,7 @@
     "turf": "^3.0.14"
   },
   "scripts": {
+    "postinstall": "yarn run build && yarn start",
     "start": "node express.js",
     "heroku:start": "heroku local web",
     "clean": "rimraf dist",

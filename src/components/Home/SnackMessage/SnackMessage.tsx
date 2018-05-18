@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Snackbar from 'material-ui/Snackbar';
-import RaisedButton from 'material-ui/RaisedButton';
 
 interface Props {
   message?: string;

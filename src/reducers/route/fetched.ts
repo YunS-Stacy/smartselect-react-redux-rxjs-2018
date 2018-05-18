@@ -5,7 +5,6 @@ import {
   DATA_FETCH_REJECTED,
   ROUTE_FETCH
 } from '../../constants/action-types';
-import { RootState } from '../../types';
 import { Action } from 'redux';
 
 const initialState: boolean | string = false;

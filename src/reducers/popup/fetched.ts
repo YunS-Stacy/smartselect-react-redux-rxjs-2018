@@ -1,13 +1,10 @@
 import {
-  DATA_FETCH,
   DATA_FETCH_LOADING,
   DATA_FETCH_FULFILLED,
   DATA_FETCH_CANCELLED,
   DATA_FETCH_REJECTED,
   POPUP_FETCH,
-  MARKER_SET
 } from '../../constants/action-types';
-import { RootState } from '../../types';
 import { Action } from 'redux';
 
 const initialState: boolean | string = false;

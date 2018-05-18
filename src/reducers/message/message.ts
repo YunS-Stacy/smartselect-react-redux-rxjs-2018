@@ -1,4 +1,4 @@
-import { MESSAGE_SET, DATA_FETCH_REJECTED } from '../../constants/action-types';
+import { DATA_FETCH_REJECTED } from '../../constants/action-types';
 import { RootState } from '../../types';
 import { Action } from 'redux';
 

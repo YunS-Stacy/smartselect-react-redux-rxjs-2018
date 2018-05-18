@@ -1,13 +1,8 @@
 import {
-  POPUP_FETCH,
   DATA_FETCH_FULFILLED,
-  DATA_FETCH_CANCELLED,
-  DATA_FETCH_REJECTED,
   STEP_ADD,
   STEP_MINUS,
-  MARKER_SET
 } from '../../constants/action-types';
-import { RootState } from '../../types';
 import { Action } from 'redux';
 
 const initialState: any[] = null;

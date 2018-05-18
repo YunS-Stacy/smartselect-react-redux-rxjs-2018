@@ -1,7 +1,6 @@
 import {
   SLIDER_RANGE_SET, STEP_ADD, STEP_MINUS, MAP_RESET,
 } from '../../constants/action-types';
-import { RootState } from '../../types';
 import { Action } from 'redux';
 
 const initialState: string = null;

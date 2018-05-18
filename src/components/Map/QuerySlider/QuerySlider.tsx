@@ -1,20 +1,10 @@
 import * as React from 'react';
 
-import { Spin } from 'antd';
 import Paper from 'material-ui/Paper';
 
 import { RootState } from '../../../types';
-import { getLegendColor } from '../../../constants/app-constants';
-import g2, { Stat, Frame } from 'g2';
+import { Stat, Frame } from 'g2';
 import * as createG2 from 'g2-react';
-
-const sliderStyle = {
-  position: 'absolute',
-  width: '90vw',
-  bottom: '5em',
-  border: '0',
-  height: '2px',
-};
 
 const legendArray = [
   [0, 'transparent'],

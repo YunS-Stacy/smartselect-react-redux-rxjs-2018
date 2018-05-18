@@ -1,13 +1,8 @@
 import {
-  DATA_FETCH,
   DATA_FETCH_FULFILLED,
-  DATA_FETCH_CANCELLED,
-  DATA_FETCH_REJECTED
 } from '../../constants/action-types';
-import { RootState } from '../../types';
 import { Action } from 'redux';
 import { Frame } from 'g2';
-import marker from '../marker';
 
 const initialState: any[] = [];
 

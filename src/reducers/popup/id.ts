@@ -1,7 +1,6 @@
 import {
   POPUP_ID_SET, POPUP_ID_RESET, MARKER_SET
 } from '../../constants/action-types';
-import { RootState } from '../../types';
 import { Action } from 'redux';
 
 const initialState: string = null;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import g2, { Shape } from 'g2';
+import { Shape } from 'g2';
 import * as createG2 from 'g2-react';
 import { Spin } from 'antd';
 import { ChartData } from '../../types';
@@ -20,7 +20,6 @@ const Chart = createG2((chart: any) => {
   Shape.registShape('interval', 'max', {
     getShapePoints: (cfg: any) => {
       const x = cfg.x;
-      const y = cfg.y;
       const y0 = cfg.y0;
       const width = cfg.size;
       return [
