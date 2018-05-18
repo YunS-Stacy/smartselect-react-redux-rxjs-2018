@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const OfflinePlugin = require('offline-plugin');
 
 const PATHS = {
   root: path.resolve(__dirname, '..'),
@@ -40,6 +41,8 @@ module.exports = (env = {}) => {
   ] : [
       PATHS.src + '/index.tsx',
     ]
+  const PUBLIC_PATH = isDev ? '/' : './';
+
   return {
     node: {
       fs: 'empty'
@@ -53,7 +56,7 @@ module.exports = (env = {}) => {
     },
     output: {
       path: PATHS.dist,
-      publicPath: isDev ? '/' : './',
+      publicPath: PUBLIC_PATH,
       filename: isDev ? 'js/[name].js' : 'js/[name].[hash].js',
       // chunkFilename: '[id].bundle.js',
     },
@@ -121,6 +124,8 @@ module.exports = (env = {}) => {
     // dependencies, which allows browsers to cache those libraries between builds.
     externals: [],
     plugins: [
+
+
       new CopyWebpackPlugin([
         {
           from: PATHS.root + '/assets',
@@ -168,6 +173,7 @@ module.exports = (env = {}) => {
           }
         }),
       ] : []),
+      new OfflinePlugin(),
     ],
   };
 }

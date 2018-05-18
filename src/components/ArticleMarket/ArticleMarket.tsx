@@ -33,9 +33,10 @@ const ArticleMarket = ({ fetched, city, region }: Props) => (
              Market
           </h3>
           <p className="article-text">
-            {`Built a large dataset, it's time to find the least variables that describe the apartment price best.
-
-              To find the relationship between variables, the market matrix may serve the goal well.`}
+            {`It can be observed that in Philadelphia,
+            the local housing market maintains a healthy state in recent years, which reflects a stable housing demand.
+          Location is, unsprisingly, an important factor.
+          The house prices vary wildly from one neighborhood to another.`}
           </p>
         </div>
         <div className="article-inline-charts" key="queue-chart">

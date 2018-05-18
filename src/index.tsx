@@ -2,24 +2,26 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+
+import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 
 // tslint:disable:no-import-side-effect
 // side-effect imports here
 import './styles/sass/main.scss';
 
-injectTapEventPlugin();
-
 import App from './App';
 
 import { store } from './store/store';
-import { registerServiceWorker } from './registerServiceWorker';
-registerServiceWorker();
 
 const renderRoot = (app: JSX.Element) => {
   ReactDOM.render(app, document.getElementById('root'));
 };
 
 if (process.env.NODE_ENV === 'production') {
+  // install service worker if it is a production build
+  OfflinePluginRuntime.install();
+
   renderRoot((
     <App store={store} />
   ));

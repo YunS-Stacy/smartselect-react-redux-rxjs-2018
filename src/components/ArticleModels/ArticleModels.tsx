@@ -58,12 +58,11 @@ const ArticleModels = () => (
           className="article-main"
         >
           <h3 className="article-heading">
-            Correlation Matrix
+            Model Performance
               </h3>
           <p className="article-text">
-            {`Built a large dataset, it's time to find the least variables that describe the apartment price best.
-
-                  To find the relationship between variables, the correlation matrix may serve the goal well.`}
+            {`When comparing the different models for price prediction. The final decision relies heavily on k-fold cross-validation result (in this case, k = 5).
+            The chart shows the testing results, and thus Random Forests algorithm is the winner.`}
           </p>
         </div>
 

@@ -7,5 +7,5 @@
   "emmet.triggerExpansionOnTab": true,
   "eslint.enable": false,
   "tslint.alwaysShowRuleFailuresAsWarnings": true,
-  "tslint.jsEnable": true
+  "tslint.jsEnable": false
 }
