@@ -2,9 +2,7 @@ import * as React from 'react';
 
 const Footer = () => (
   <footer className="footer-wrapper">
-    <p>
-      Produced by Yun Shi
-    </p>
+    <code>© 2018 Yun Shi.</code>
   </footer>
 );
 

@@ -1,4 +1,5 @@
 .app-container {
+  background-color: #f7f7f7;
   min-width: 100%;
   height: auto;
   display: flex;
@@ -11,6 +12,61 @@
     > .map-container {
       position: absolute;
       width: 100%;
+    }
+  }
+
+  >.section-projects {
+    display: flex;
+    justify-content: center;
+
+    >.article-project {
+      width: 80%;
+      display: flex;
+
+      align-items: center;
+  
+      >.article-link-wrapper {
+        display: flex;
+        flex-direction: row;
+        color: #9e9e9e;
+        
+        > .header-article {
+          >.title-article {
+            font-size: 1.75rem;
+          }
+        }
+        .footer-article {
+          font-family: Courier, "Courier New", monospace, serif;
+          transition: transform .5s ease-in-out;
+        }
+
+        >.header-article {
+          padding: 2rem 3rem;
+          min-width: 50%;
+        }
+
+        >.figure-article {
+          overflow: hidden;
+
+          > .img-article {
+            max-width: 100%;
+            height: auto;
+            transition: transform .5s ease-in-out;
+          }
+        }
+
+
+        &:hover {
+          .footer-article {
+            color: $theme;
+            transform: translateX(1rem);
+          } 
+          
+          .img-article { 
+            transform: scale(1.05);
+          }
+         }
+      }
     }
   }
 

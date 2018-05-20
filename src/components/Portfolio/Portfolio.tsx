@@ -2,7 +2,7 @@ import * as React from 'react';
 import Layout from '../Layout';
 const Portfolio = ({ match: { path, params: { type } } }: any) => (
   <div
-    className={`app-container`}
+    className="app-container"
   >
     <Layout path={path}>
       {/design/gi.test(type) &&

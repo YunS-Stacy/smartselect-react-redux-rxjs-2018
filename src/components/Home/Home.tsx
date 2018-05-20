@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import Layout from '../Layout';
 
-import SnackMessage from './SnackMessage';
+import SnackMessage from '../SnackMessage';
 import MainBtn from '../MainBtn';
 import Map from '../Map';
 import MapMask from '../MapMask';
