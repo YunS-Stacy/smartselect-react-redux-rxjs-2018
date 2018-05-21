@@ -26,6 +26,11 @@ input {
     background-image: none;
 }
 
+code {
+  font-size: 1rem !important;
+  font-family: $font-family-mono !important;
+}
+
 /**
  * antd fix
  */
