@@ -42,10 +42,9 @@ const PanelBtns = ({ step, loaded, hasGeometry, handleAddStep, handleMinusStep, 
     )}
     {step === 4 && (
       <FlatButton
-        label="Close Application"
+        label="Finish"
         onClick={() => handleToggleApp()}
         disabled={!loaded}
-
       />
   )}
   </div>);

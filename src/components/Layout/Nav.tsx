@@ -7,6 +7,8 @@ interface Props {
 const Nav = ({ path }: Props) => (
   <nav className="nav-list">
     <span className="nav-link"><Link to="/">Home</Link></span>
+    <span className="nav-link"><Link to="/about">About Me</Link></span>
+
     <span className="nav-link"><Link to="/portfolio/urban-planning+design">Paper Portfolio</Link></span>
     {/portfolio/i.test(path) &&
       <>
