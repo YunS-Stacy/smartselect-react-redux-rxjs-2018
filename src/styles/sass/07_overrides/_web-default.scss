@@ -32,3 +32,10 @@ input {
 .ant-spin-spinning {
   max-height: 100% !important;
 }
+
+/**
+ * mapbox fix
+ */
+.mapboxgl-canvas {
+  width: 100% !important;
+}
