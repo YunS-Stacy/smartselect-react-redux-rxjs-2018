@@ -83,6 +83,16 @@
             transform: scale(1.05);
           }
          }
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+
+      .map-panel {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1;
+        max-height: 90%;
       }
     }
   }
@@ -99,13 +109,7 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 3rem;
-
-    .map-panel {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      z-index: 1,
-    }
+    overflow: hidden;
 
     > .map-mask, #map {
       position: absolute;
