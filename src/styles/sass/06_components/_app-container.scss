@@ -6,18 +6,6 @@
   flex-direction: column;
   overflow: auto;
 
-  &.fullscreen {
-    overflow: hidden;
-
-    >.map-container {
-      position: absolute;
-      width: 100%;
-      overflow: hidden;
-      height: 100%;
-      margin-bottom: 0;
-    }
-  }
-
   >.section-projects {
     display: flex;
     justify-content: center;
@@ -72,7 +60,6 @@
           }
         }
 
-
         &:hover {
           .article-footer {
             color: $theme;
@@ -82,17 +69,7 @@
           .article-img { 
             transform: scale(1.05);
           }
-         }
-      width: 100vw;
-      height: 100vh;
-      margin: 0;
-
-      .map-panel {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        z-index: 1;
-        max-height: 90%;
+        }
       }
     }
   }
@@ -156,6 +133,28 @@
       }
     }
   }
+
+  &.fullscreen {
+    overflow: hidden;
+
+    >.map-container {
+      position: absolute;
+      width: 100%;
+      overflow: hidden;
+      height: 100%;
+      margin-bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+
+      .map-panel {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1;
+        max-height: 90%;
+      }
+    }
   }
 }
 
