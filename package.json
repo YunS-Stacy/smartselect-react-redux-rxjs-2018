@@ -35,7 +35,7 @@
     "turf": "^3.0.14"
   },
   "scripts": {
-    "postinstall": "yarn run build && yarn start",
+    "postinstall": "yarn run build",
     "start": "node server.js",
     "heroku:start": "heroku local web",
     "clean": "rimraf dist",
@@ -79,6 +79,7 @@
     "gh-pages": "^1.1.0",
     "html-webpack-plugin": "^3.0.7",
     "jest": "^22.4.2",
+    "logrocket": "^0.6.16",
     "node-sass": "^4.8.2",
     "offline-plugin": "^5.0.3",
     "postcss-loader": "^2.1.3",

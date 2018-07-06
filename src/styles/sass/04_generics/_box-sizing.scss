@@ -1,15 +1,16 @@
 *,
 *::before,
 *::after {
-    box-sizing: inherit;
+  box-sizing: inherit;
 }
 
 html {
-    width: 100%;
-    box-sizing: border-box;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 body {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
 }

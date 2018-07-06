@@ -1,9 +1,9 @@
 var __wpo = {
   "assets": {
     "main": [
-      "./js/vendor.c3ecd78a1caa06663d6d.js",
-      "./js/main.c3ecd78a1caa06663d6d.js",
-      "./js/manifest.c3ecd78a1caa06663d6d.js",
+      "./js/vendor.daafa4646ce1e0cf13a2.js",
+      "./js/main.daafa4646ce1e0cf13a2.js",
+      "./js/manifest.daafa4646ce1e0cf13a2.js",
       "./assets/favicon.ico",
       "./"
     ],
@@ -12,15 +12,15 @@ var __wpo = {
   },
   "externals": [],
   "hashesMap": {
-    "8e23a0cad0218ef7de597e424a73b7dfd3a8d87c": "./js/vendor.c3ecd78a1caa06663d6d.js",
-    "a8fb7bbb996c133c6f6a651a075c269dbdd54c3c": "./js/main.c3ecd78a1caa06663d6d.js",
-    "aed7d267ac0a1ab6523c96a20975276afa7867d0": "./js/manifest.c3ecd78a1caa06663d6d.js",
-    "543e8cf850558dc466a1e352f5470d00a84e59d9": "./assets/favicon.ico",
-    "1ebf7def08ad38cdec7af0e84ddcc330dfe562c1": "./"
+    "30cc33c0c9c44584f11229efc2463e7d2a9cd5c8": "./js/vendor.daafa4646ce1e0cf13a2.js",
+    "184f9711ae34251a0f99d4abe44cf83228d47b52": "./js/main.daafa4646ce1e0cf13a2.js",
+    "aed7d267ac0a1ab6523c96a20975276afa7867d0": "./js/manifest.daafa4646ce1e0cf13a2.js",
+    "99238c3fd5ce7e3bb717c9352d61f6fee989d2be": "./assets/favicon.ico",
+    "cd513088cf465a55bf8562d8f3dd8563bf3936a2": "./"
   },
   "strategy": "changed",
   "responseStrategy": "cache-first",
-  "version": "5/19/2018, 11:18:02 AM",
+  "version": "2018-7-6 12:04:18",
   "name": "webpack-offline",
   "pluginVersion": "5.0.3",
   "relativePaths": false

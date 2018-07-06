@@ -65,7 +65,7 @@ export const GOOGLE_TOKEN = 'AIzaSyACCPPFvX0caIW52AJVWIksLZHEFrJZEpU';
 export const ZILLOW_TOKEN = 'X1-ZWz19df6l3etqj_64j9s';
 
 const FIREBASE_SERVER = 'https://smartselect-34c02.firebaseio.com';
-const ZILLOW_SERVER = 'https://cors-anywhere.herokuapp.com/zillow.com/webservice/GetDeepComps.htm';
+const ZILLOW_SERVER = 'https://cors-anywhere.herokuapp.com/www.zillow.com/webservice/GetDeepComps.htm';
 
 export const DATA_URL = {
   FIREBASE: {

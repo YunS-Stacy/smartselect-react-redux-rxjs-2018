@@ -12,7 +12,8 @@ import './styles/sass/main.scss';
 
 import App from './App';
 
-import { store } from './store/store';
+import store from './store';
+import * as LogRocket from 'logrocket';
 
 const renderRoot = (app: JSX.Element) => {
   ReactDOM.render(app, document.getElementById('root'));
@@ -21,6 +22,7 @@ const renderRoot = (app: JSX.Element) => {
 if (process.env.NODE_ENV === 'production') {
   // install service worker if it is a production build
   OfflinePluginRuntime.install();
+  LogRocket.init('o2z2ah/smartselect');
 
   renderRoot((
     <App store={store} />
