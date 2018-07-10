@@ -20,7 +20,7 @@ var __wpo = {
   },
   "strategy": "changed",
   "responseStrategy": "cache-first",
-  "version": "2018-7-6 12:04:18",
+  "version": "2018-7-10 14:23:48",
   "name": "webpack-offline",
   "pluginVersion": "5.0.3",
   "relativePaths": false
