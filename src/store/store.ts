@@ -4,6 +4,7 @@ import { createEpicMiddleware } from 'redux-observable';
 
 import epics from '../epics';
 import reducers from '../reducers';
+import * as LogRocket from 'logrocket';
 
 import { RootState } from '../types';
 
@@ -23,7 +24,10 @@ export const epicMiddleware = createEpicMiddleware(epics);
 
 function configureStore(initialState?: RootState) {
   // configure middlewares
-  const middlewares = [epicMiddleware];
+  const middlewares = process.env.NODE_ENV === 'production' ? [
+    epicMiddleware,
+    LogRocket.reduxMiddleware(),
+  ] : [epicMiddleware];
 
   // compose enhancers
   const enhancer = composeEnhancers(
