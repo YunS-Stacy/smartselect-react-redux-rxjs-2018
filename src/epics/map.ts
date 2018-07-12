@@ -29,13 +29,13 @@ import {
   mapLoaded, resetMap,
   setGeometry, setStep, setLayerViz, setStyle, setGeometryHeight, removeGeometry, resetGeometry
 } from '../reducers/map/actions';
-import { MAPBOX_TOKEN, MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES } from '../constants/app-constants';
+import { MAP_SETTINGS_DEFAULT, MAP_CAMERA, MAP_STYLES } from '../constants/app-constants';
 import { Feature } from 'geojson';
 import { setPopupId, setPopupPosition, resetPopupId } from '../reducers/popup/actions';
 import { setMarker, setMarkerPosition } from '../reducers/marker/actions';
 import { RootState } from '../types';
 
-(mapboxgl as any).accessToken = MAPBOX_TOKEN;
+(mapboxgl as any).accessToken = process.env.MAPBOX_TOKEN;
 
 let mapping: mapboxgl.Map;
 
@@ -55,7 +55,7 @@ const drawControl = new mapboxDraw({
 });
 
 const geocoderControl = new MapboxGeocoder({
-  accessToken: MAPBOX_TOKEN,
+  accessToken: process.env.MAPBOX_TOKEN,
 });
 
 const controlSet = new Map()
