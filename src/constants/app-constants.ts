@@ -59,10 +59,6 @@ export const getLegendColor = (datum: number) => {
   // console.log(color, 'color');
   return color;
 };
-export const MAPBOX_TOKEN = 'pk.eyJ1IjoieXVuc2hpIiwiYSI6ImNpeHczcjA3ZDAwMTMyd3Btb3Fzd3hpODIifQ.SWiqUD9o_DkHZuJBPIEHPA';
-
-export const GOOGLE_TOKEN = 'AIzaSyACCPPFvX0caIW52AJVWIksLZHEFrJZEpU';
-export const ZILLOW_TOKEN = 'X1-ZWz19df6l3etqj_64j9s';
 
 const FIREBASE_SERVER = 'https://smartselect-34c02.firebaseio.com';
 const ZILLOW_SERVER = 'https://cors-anywhere.herokuapp.com/www.zillow.com/webservice/GetDeepComps.htm';
@@ -79,7 +75,7 @@ export const DATA_URL = {
 export const DIRECTIONS_API = 'https://api.mapbox.com/directions/v5/mapbox';
 
 export const getZillowComps = (zpid: string) =>
-  `${DATA_URL.ZILLOW}?zws-id=${ZILLOW_TOKEN}&zpid=${zpid}&count=3`;
+  `${DATA_URL.ZILLOW}?zws-id=${process.env.ZILLOW_TOKEN}&zpid=${zpid}&count=3`;
 
 /**
  *
@@ -88,4 +84,5 @@ export const getZillowComps = (zpid: string) =>
  * @param dest Destination coordinates {longitude},{latitude}
  */
 export const getDirections = (profile: string, origin: {lat: number; lng: number}, dest: {lat: number; lng: number}) =>
-  `${DIRECTIONS_API}/${profile}/${origin.lng},${origin.lat};${dest.lng},${dest.lat}?access_token=${MAPBOX_TOKEN}`;
+  `${DIRECTIONS_API}/${profile}/${origin.lng},${origin.lat};${dest.lng},${dest.lat}
+  ?access_token=${process.env.MAPBOX_TOKEN}`;
