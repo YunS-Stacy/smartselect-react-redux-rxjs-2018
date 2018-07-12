@@ -1,9 +1,9 @@
 var __wpo = {
   "assets": {
     "main": [
-      "./js/vendor.daafa4646ce1e0cf13a2.js",
-      "./js/main.daafa4646ce1e0cf13a2.js",
-      "./js/manifest.daafa4646ce1e0cf13a2.js",
+      "./js/vendor.d29f322c65ed07be30ab.js",
+      "./js/main.d29f322c65ed07be30ab.js",
+      "./js/manifest.d29f322c65ed07be30ab.js",
       "./assets/favicon.ico",
       "./"
     ],
@@ -12,15 +12,15 @@ var __wpo = {
   },
   "externals": [],
   "hashesMap": {
-    "30cc33c0c9c44584f11229efc2463e7d2a9cd5c8": "./js/vendor.daafa4646ce1e0cf13a2.js",
-    "184f9711ae34251a0f99d4abe44cf83228d47b52": "./js/main.daafa4646ce1e0cf13a2.js",
-    "aed7d267ac0a1ab6523c96a20975276afa7867d0": "./js/manifest.daafa4646ce1e0cf13a2.js",
+    "08cc61b6daed228388324e953e8cc79889cd29e1": "./js/vendor.d29f322c65ed07be30ab.js",
+    "c75bbb63f7dacbae07b9462cd71929d17e09a6f3": "./js/main.d29f322c65ed07be30ab.js",
+    "aed7d267ac0a1ab6523c96a20975276afa7867d0": "./js/manifest.d29f322c65ed07be30ab.js",
     "99238c3fd5ce7e3bb717c9352d61f6fee989d2be": "./assets/favicon.ico",
-    "cd513088cf465a55bf8562d8f3dd8563bf3936a2": "./"
+    "84b13605e6ceffa10f040fddf3d768d371dbe7a5": "./"
   },
   "strategy": "changed",
   "responseStrategy": "cache-first",
-  "version": "2018-7-10 14:23:48",
+  "version": "2018-7-12 12:54:03",
   "name": "webpack-offline",
   "pluginVersion": "5.0.3",
   "relativePaths": false

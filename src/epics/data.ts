@@ -21,16 +21,14 @@ import {
   IS_LOADED
 } from '../constants/action-types';
 import { Store, Action } from '../types/redux';
-import {
-  MAPBOX_TOKEN, DATA_URL, getZillowComps, getDirections
-} from '../constants/app-constants';
+import { DATA_URL, getZillowComps, getDirections } from '../constants/app-constants';
 import {
   fetchDataFulfilled, fetchDataLoading,
   fetchDataRejected, fetchData
 } from '../reducers/app/actions';
 
 type IAction = Action & { payload?: any };
-(mapboxgl as any).accessToken = MAPBOX_TOKEN;
+(mapboxgl as any).accessToken = process.env.MAPBOX_TOKEN;
 
 // const fetchDataEpic = (action$: ActionsObservable<IAction>) => action$
 //   .ofType(DATA_FETCH)
